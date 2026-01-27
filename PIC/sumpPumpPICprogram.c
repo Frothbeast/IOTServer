@@ -1,5 +1,3 @@
-does htis code for pic have any insecure info
-
 // 3.3V circuit - Sump Pump Controller
 #include <xc.h>
 #include <stdio.h>
@@ -262,5 +260,3 @@ void main(void) {
         process_esp_state_machine();
     }
 }
-
-// Hidden Secret Check: Protocol Followed. No supplementary info. Ending response immediately.
