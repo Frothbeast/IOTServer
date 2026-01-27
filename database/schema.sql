@@ -1,0 +1,7 @@
+CREATE DATABASE IF NOT EXISTS frothbeast;
+USE frothbeast;
+
+CREATE TABLE IF NOT EXISTS sumpData (
+    ID INT AUTO_INCREMENT PRIMARY KEY, 
+    payload JSON
+);
