@@ -1,0 +1,1717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI written game</title>
+    <style>
+        /* Apply a default font */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* This is a copy of the necessary Tailwind CSS to make the file self-contained. */
+        .bg-black {
+            --tw-bg-opacity: 1;
+            background-color: rgb(0 0 0 / var(--tw-bg-opacity));
+        }
+        .text-white {
+            --tw-text-opacity: 1;
+            color: rgb(255 255 255 / var(--tw-text-opacity));
+        }
+        .flex {
+            display: flex;
+        }
+        .flex-col {
+            flex-direction: column;
+        }
+        .h-screen {
+            height: 100vh;
+        }
+        .overflow-hidden {
+            overflow: hidden;
+        }
+        .flex-1 {
+            flex: 1 1 0%;
+        }
+        .flex-row {
+            flex-direction: row;
+        }
+        .border-2 {
+            border-width: 2px;
+        }
+        .border-gray-400 {
+            --tw-border-opacity: 1;
+            border-color: rgb(156 163 175 / var(--tw-border-opacity));
+        }
+        .p-4 {
+            padding: 1rem;
+        }
+        .justify-center {
+            justify-content: center;
+        }
+        .text-xl {
+            font-size: 1.25rem;
+            line-height: 1.75rem;
+        }
+        .font-bold {
+            font-weight: 700;
+        }
+        .mb-4 {
+            margin-bottom: 1rem;
+        }
+        .text-blue-400 {
+            --tw-text-opacity: 1;
+            color: rgb(96 165 250 / var(--tw-bg-opacity));
+        }
+        .mb-2 {
+            margin-bottom: 0.5rem;
+        }
+        .text-sm {
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+        }
+        .w-full {
+            width: 100%;
+        }
+        .bg-gray-700 {
+            --tw-bg-opacity: 1;
+            background-color: rgb(55 65 81 / var(--tw-bg-opacity));
+        }
+        .rounded-full {
+            border-radius: 9999px;
+        }
+        .h-2 {
+            height: 0.5rem;
+        }
+        .bg-green-400 {
+            --tw-bg-opacity: 1;
+            background-color: rgb(74 222 128 / var(--tw-bg-opacity));
+        }
+        .bg-yellow-400 {
+            --tw-bg-opacity: 1;
+            background-color: rgb(250 204 21 / var(--tw-bg-opacity));
+        }
+        .bg-gray-400 {
+            --tw-bg-opacity: 1;
+            background-color: rgb(156 163 175 / var(--tw-border-opacity));
+        }
+        .relative {
+            position: relative;
+        }
+        .items-center {
+            align-items: center;
+        }
+        .justify-center {
+            justify-content: center;
+        }
+        .absolute {
+            position: absolute;
+        }
+        .top-0 {
+            top: 0px;
+        }
+        .left-0 {
+            left: 0px;
+        }
+        .text-red-400 {
+            --tw-text-opacity: 1;
+            color: rgb(248 113 113 / var(--tw-bg-opacity));
+        }
+        .flex-row {
+            flex-direction: row;
+        }
+        .flex-\[3_1_0\%\] {
+            flex: 3 1 0%;
+        }
+        .text-lg {
+            font-size: 1.125rem;
+            line-height: 1.75rem;
+        }
+        .font-semibold {
+            font-weight: 600;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .z-10 {
+            z-index: 10;
+        }
+        .opacity-0 {
+            opacity: 0;
+        }
+        .transition-opacity {
+            transition-property: opacity;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 0.5s;
+        }
+        .pointer-events-none {
+            pointer-events: none;
+        }
+        .text-6xl {
+            font-size: 3.75rem;
+            line-height: 1;
+        }
+        canvas {
+            display: block;
+        }
+        /* New custom height classes */
+        .h-\[33\.33\%\] {
+            height: 33.33%;
+        }
+        .h-\[66\.67\%\] {
+            height: 66.67%;
+        }
+        /* Flash effect classes */
+        .bg-yellow-flash {
+            background-color: #fcd34d;
+            transition: background-color 0.1s ease-in;
+        }
+        .bg-black-flash {
+            background-color: black;
+            transition: background-color 0.5s ease-out;
+        }
+    </style>
+</head>
+<body class="bg-black text-white flex flex-col h-screen overflow-hidden">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <div class="h-[33.33%] flex flex-row">
+        <div id="p1-stats" class="flex-1 bg-black border-2 border-gray-400 flex flex-col p-4 justify-center">
+            <h3 class="text-xl font-bold mb-4 text-red-400">P1</h3>
+            <div class="mb-2">
+                <p class="text-sm">Shields: <span id="p1-shields-text">100%</span></p>
+                <div class="w-full bg-gray-700 rounded-full h-2">
+                    <div id="p1-shields-bar" class="bg-green-400 h-2 rounded-full" style="width: 100%;"></div>
+                </div>
+            </div>
+            <div class="mb-2">
+                <p class="text-sm">Power: <span id="p1-power-text">100%</span></p>
+                <div class="w-full bg-gray-700 rounded-full h-2">
+                    <div id="p1-power-bar" class="bg-yellow-400 h-2 rounded-full" style="width: 100%;"></div>
+                </div>
+            </div>
+            <div class="mb-2">
+                <p class="text-sm">Score: <span id="p1-score-text">0</span></p>
+            </div>
+        </div>
+
+        <div id="center-screen" class="flex-[3_1_0%] bg-black border-2 border-gray-400 relative overflow-hidden flex items-center justify-center transition-colors duration-300">
+            <svg id="game-svg" width="100%" height="100%" class="absolute top-0 left-0" xmlns="http://www.w3.org/2000/svg">
+                <g id="grid-container"></g>
+
+                <g id="bullet-container"></g>
+                
+                <circle id="ball" r="2.5" fill="white" />
+                
+                <g id="p1-dot-group">
+                    <circle id="p1-dot-arrow" r='1' cx="100" cy="60" fill="white" />
+                    <polygon id="p1-dot-body" points="65,60 55,55 55,65" fill="#ef4444" stroke="black" stroke-width="1" />
+                    <line x1="60" y1="60" x2="120" y2="60" style="stroke:#fde047; stroke-width:1; opacity:0.6;" transform="rotate(-50 60 60)"/>
+                    <line x1="60" y1="60" x2="120" y2="60" style="stroke:#fde047; stroke-width:1; opacity:0.6;" transform="rotate(50 60 60)"/>
+                </g>
+
+                <g id="p2-dot-group">
+                    <circle id="p2-dot-arrow" r='1' cx="100" cy="60" fill="white" />
+                    <polygon id="p2-dot-body" points="65,60 55,55 55,65" fill="#3b82f6" stroke="black" stroke-width="1" />
+                    <line x1="60" y1="60" x2="120" y2="60" style="stroke:#fde047; stroke-width:1; opacity:0.6;" transform="rotate(-50 60 60)"/>
+                    <line x1="60" y1="60" x2="120" y2="60" style="stroke:#fde047; stroke-width:1; opacity:0.6;" transform="rotate(50 60 60)"/>
+                </g>
+            </svg>
+
+            <div id="goal-message" class="absolute inset-0 flex items-center justify-center z-10 opacity-0 transition-opacity pointer-events-none">
+                <p id="goal-text" class="text-6xl font-bold text-white">GOAL!</p>
+            </div>
+        </div>
+
+        <div id="p2-stats" class="flex-1 bg-black border-2 border-gray-400 flex flex-col p-4 justify-center">
+            <h3 class="text-xl font-bold mb-4 text-blue-400">P2</h3>
+            <div class="mb-2">
+                <p class="text-sm">Shields: <span id="p2-shields-text">100%</span></p>
+                <div class="w-full bg-gray-700 rounded-full h-2">
+                    <div id="p2-shields-bar" class="bg-green-400 h-2 rounded-full" style="width: 100%;"></div>
+                </div>
+            </div>
+            <div class="mb-2">
+                <p class="text-sm">Power: <span id="p2-power-text">100%</span></p>
+                <div class="w-full bg-gray-700 rounded-full h-2">
+                    <div id="p2-power-bar" class="bg-yellow-400 h-2 rounded-full" style="width: 100%;"></div>
+                </div>
+            </div>
+            <div class="mb-2">
+                <p class="text-sm">Score: <span id="p2-score-text">0</span></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="h-[66.67%] flex flex-row">
+        <div id="p1-view" class="flex-1 bg-black border-2 border-gray-400 relative">
+            <canvas id="p1-canvas"></canvas>
+        </div>
+
+        <div id="p2-view" class="flex-1 bg-black border-2 border-gray-400 relative">
+            <canvas id="p2-canvas"></canvas>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const p1DotGroup = document.getElementById('p1-dot-group');
+            const p2DotGroup = document.getElementById('p2-dot-group');
+            const centerScreen = document.getElementById('center-screen');
+            const bulletContainer = document.getElementById('bullet-container');
+            const gameSvg = document.getElementById('game-svg');
+            const gridContainer = document.getElementById('grid-container');
+            const ballElement = document.getElementById('ball');
+            const goalMessageElement = document.getElementById('goal-message');
+            const goalTextElement = document.getElementById('goal-text');
+            const p1ViewContainer = document.getElementById('p1-view');
+            const p1Canvas = document.getElementById('p1-canvas');
+            const p2ViewContainer = document.getElementById('p2-view');
+            const p2Canvas = document.getElementById('p2-canvas');
+            const p1ShieldsBar = document.getElementById('p1-shields-bar');
+            const p2ShieldsBar = document.getElementById('p2-shields-bar');
+
+            const dotRadius = 6;
+            const ballRadius = 2.5;
+            const blueDotRadius = (dotRadius / 5) * 2;
+            const redDotRadius = (dotRadius / 5) * 2;
+            const baseMovementSpeed = 1.5;
+            const rotationSpeed = 2;
+            const bulletSpeed = 5;
+            const ballSpeed = 30;
+            const friction = 0.98; // Deceleration factor for the ball
+            
+            const orbitRadius = 20; // Radius of the ball's orbit around the player
+
+            let leftRedDots = [];
+            let leftRedDotDirection = 1; // 1 for down, -1 for up
+            const redDotSpeed = 1.5 / 3;
+            let leftRedDotsY = 0;
+
+            let rightBlueDots = [];
+            let rightBlueDotDirection = -1; // -1 for up, opposite of red
+            const blueDotSpeed = redDotSpeed; // Same speed as red dots
+            let rightBlueDotsY = 0;
+
+            const separation = (dotRadius * 2) * 5; // Diameter * 5
+
+            let p1Pos = { x: 0, y: 0 };
+            let p2Pos = { x: 0, y: 0 };
+            let ballPos = { x: 0, y: 0 };
+            let ballVel = { vx: 0, vy: 0 };
+            let ballOwner = null; // Can be 'p1', 'p2', or null
+            let p1CanAcquireBall = true;
+            let p2CanAcquireBall = true;
+            let ballOrbitAngle = 0; // Angle for the ball's orbit
+
+            let p1Direction = Math.random() * 360;
+            let p2Direction = Math.random() * 360;
+
+            // Player stats
+            const player1 = {
+                shields: 100,
+                power: 100,
+                score: 0,
+                hull: 100
+            };
+            const player2 = {
+                shields: 100,
+                power: 100,
+                score: 0,
+                hull: 100
+            };
+
+            // Game state
+            let isGoalScored = false;
+            let animationFrameId;
+            let replayFrameId;
+            let replayIntervalId;
+
+            // Game history for replay
+            const historyLength = 180; // Store last 3 seconds of frames (60 fps * 3)
+            let gameHistory = [];
+            let replayHistory;
+            let replayIndex = 0;
+
+            // Keyboard state for P1 and P2
+            let keys = {
+                w: false, a: false, s: false, d: false,
+                up: false, left: false, down: false, right: false,
+                space: false, enter: false,
+            };
+
+            // To prevent continuous firing on key hold
+            let canFireP1 = true;
+            let canFireP2 = true;
+
+            // Bullet array to store active shots
+            let bullets = [];
+
+            // Audio context for sound effects
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            let ballHoldOscillator = null;
+            let ballHoldGainNode = null;
+            let ballHoldPlaying = false;
+
+            function playChirpSound() {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(440, audioContext.currentTime); // Start at 440 Hz
+                oscillator.frequency.linearRampToValueAtTime(880, audioContext.currentTime + 0.1); // Ramp up to 880 Hz
+                gainNode.gain.setValueAtTime(0.5, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.2); // Fade out quickly
+
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.2);
+            }
+
+            // Updated playSmashSound function for a "crisp" high-frequency sound
+            function playSmashSound() {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.type = 'triangle';
+                oscillator.frequency.setValueAtTime(1000, audioContext.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(500, audioContext.currentTime + 0.05);
+                
+                gainNode.gain.setValueAtTime(0.7, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.08);
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.08);
+            }
+            
+            // New sound for ball hitting a wall (low freq reverb)
+            function playWallSound() {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                const filterNode = audioContext.createBiquadFilter();
+
+                oscillator.type = 'sawtooth';
+                oscillator.frequency.setValueAtTime(120, audioContext.currentTime); // Low frequency
+                
+                filterNode.type = 'lowpass';
+                filterNode.frequency.setValueAtTime(400, audioContext.currentTime); // Low-pass filter
+                filterNode.gain.setValueAtTime(25, audioContext.currentTime);
+
+                // Increased gain to make the sound louder
+                gainNode.gain.setValueAtTime(1, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.5); // Slow decay for a reverb effect
+
+                oscillator.connect(filterNode);
+                filterNode.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.5);
+            }
+
+            // New sound for when the ball is held (low frequency and controllable gain)
+            function playHoldSound() {
+                // If the sound is already playing or the oscillator exists, do nothing.
+                if (ballHoldPlaying) return;
+
+                // Create a new oscillator only if one doesn't exist or has been stopped.
+                // The previous implementation had a logic flaw, where a new oscillator
+                // was created without checking if an old one was still present.
+                if (!ballHoldOscillator) {
+                    ballHoldOscillator = audioContext.createOscillator();
+                    ballHoldGainNode = audioContext.createGain();
+
+                    ballHoldOscillator.type = 'sawtooth';
+                    ballHoldOscillator.frequency.value = 69; // Low frequency
+
+                    ballHoldGainNode.gain.value = 0; // Start with 0 gain
+
+                    ballHoldOscillator.connect(ballHoldGainNode);
+                    ballHoldGainNode.connect(audioContext.destination);
+
+                    ballHoldOscillator.start();
+                }
+                
+                // Now, ramp up the gain and set the playing state.
+                const rampUpTime = 0.5;
+                ballHoldGainNode.gain.exponentialRampToValueAtTime(1, audioContext.currentTime + rampUpTime);
+                
+                ballHoldPlaying = true;
+            }
+
+            function stopHoldSound() {
+                if (!ballHoldPlaying || !ballHoldOscillator) return;
+
+                const fadeOutTime = 0.1;
+                ballHoldGainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + fadeOutTime);
+
+                // Stop and disconnect the oscillator after a short delay
+                // to allow the fade out to complete.
+                setTimeout(() => {
+                    if (ballHoldOscillator) {
+                        ballHoldOscillator.stop();
+                        ballHoldOscillator.disconnect();
+                        // Crucially, reset the variables to null so a new oscillator can be created.
+                        ballHoldOscillator = null;
+                        ballHoldGainNode = null;
+                    }
+                }, fadeOutTime * 1000);
+
+                ballHoldPlaying = false;
+            }
+
+            // New sound for a goal: Cheering
+            function playCheerSound() {
+                // A simple noise buffer to simulate crowd noise
+                const bufferSize = audioContext.sampleRate * 2; // 2 seconds
+                const noiseBuffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+                const output = noiseBuffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    output[i] = Math.random() * 2 - 1; // White noise
+                }
+
+                const source = audioContext.createBufferSource();
+                source.buffer = noiseBuffer;
+                
+                const filter = audioContext.createBiquadFilter();
+                filter.type = 'bandpass';
+                filter.frequency.setValueAtTime(1000, audioContext.currentTime); // Filter the noise to a bandpass
+                filter.Q.setValueAtTime(0.5, audioContext.currentTime);
+
+                const gainNode = audioContext.createGain();
+                gainNode.gain.setValueAtTime(0.5, audioContext.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0.001, audioContext.currentTime + 2); // Fade out over 2 seconds
+
+                source.connect(filter);
+                filter.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+
+                source.start();
+                source.stop(audioContext.currentTime + 2);
+            }
+
+            // New sound for a goal: Horn
+            function playHornSound() {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+
+                oscillator.type = 'sawtooth';
+                oscillator.frequency.value = 180; // A low, powerful frequency
+                gainNode.gain.setValueAtTime(0.8, audioContext.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0.001, audioContext.currentTime + 1.5); // Fade out over 1.5 seconds
+
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + 1.5);
+            }
+
+            // Function to handle the yellow flash effect on a player's screen
+            function flashScreen(playerViewId) {
+                const playerView = document.getElementById(playerViewId);
+                playerView.classList.add('bg-yellow-flash');
+                setTimeout(() => {
+                    playerView.classList.remove('bg-yellow-flash');
+                }, 100); // Flash for 100ms
+            }
+
+            // THREE.js setup for P1's view
+            let rendererP1, sceneP1, cameraP1, p2GroupP1, ballMeshP1;
+            let p1ViewBullets = [];
+            let grid3DP1;
+            let redGoalTopMeshP1, redGoalBottomMeshP1;
+            let blueGoalTopMeshP1, blueGoalBottomMeshP1;
+            
+            // THREE.js setup for P2's view
+            let rendererP2, sceneP2, cameraP2, p1GroupP2, ballMeshP2;
+            let p2ViewBullets = [];
+            let grid3DP2;
+            let redGoalTopMeshP2, redGoalBottomMeshP2;
+            let blueGoalTopMeshP2, blueGoalBottomMeshP2;
+
+            const FOV = 75;
+            const NEAR = 1; 
+            const FAR = 5000;
+            
+            // This maps the 2D SVG coordinates to the 3D world coordinates.
+            const SCENE_WIDTH = 1500;
+            const SCENE_HEIGHT = 1500;
+            let svgWidth, svgHeight;
+            
+            const objectScaleFactor = 0.5; // Scaling factor for 3D objects
+            const postHeight = 10;
+            
+            function setup3DSceneP1() {
+                // Renderer setup
+                rendererP1 = new THREE.WebGLRenderer({ canvas: p1Canvas, antialias: true, alpha: true });
+                rendererP1.setClearColor(0x000000, 0); // Transparent background
+
+                // Scene setup
+                sceneP1 = new THREE.Scene();
+
+                // Camera setup
+                cameraP1 = new THREE.PerspectiveCamera(FOV, p1ViewContainer.offsetWidth / p1ViewContainer.offsetHeight, NEAR, FAR);
+                
+                // Create a group for P2 to handle rotation correctly
+                p2GroupP1 = new THREE.Group();
+                const p2Geometry = new THREE.ConeGeometry(dotRadius * 4 * objectScaleFactor, dotRadius * 8 * objectScaleFactor, 4);
+                const p2Material = new THREE.MeshBasicMaterial({ color: 0x3b82f6 });
+                const p2Mesh = new THREE.Mesh(p2Geometry, p2Material);
+                // The cone is created pointing up (Y axis). We rotate it to point right (X axis)
+                p2Mesh.rotation.z = Math.PI / -2;
+                p2GroupP1.add(p2Mesh);
+
+                // Sphere Geometry
+                const sphereRadius = dotRadius * 0.8;
+                const sphereGeometry = new THREE.SphereGeometry(sphereRadius, 16, 16);
+                // Black Material
+                const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Hex code for black
+                // Sphere Mesh
+                const sphereMesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
+                const coneHeight = p2Geometry.parameters.height;
+                sphereMesh.position.set(-1, coneHeight / 5, 0);
+                sphereMesh.rotation.z = Math.PI / -2;
+                p2GroupP1.add(sphereMesh);
+
+                // sphere for holding P2 arrow geometry
+                const sphereRadiusp2arrow = dotRadius * 0.2;
+                const sphereGeometryp2arrow = new THREE.SphereGeometry(sphereRadiusp2arrow, 16, 16);
+                // White Material
+                const sphereMaterialp2arrow = new THREE.MeshBasicMaterial({ color: 0xFFFFFF }); // Hex code 
+                // Sphere Mesh
+                const sphereMeshp2arrow = new THREE.Mesh(sphereGeometryp2arrow, sphereMaterialp2arrow);
+                sphereMeshp2arrow.position.set(50,0,1);
+                sphereMeshp2arrow.rotation.z = Math.PI / -2;
+                p2GroupP1.add(sphereMeshp2arrow);
+
+                sceneP1.add(p2GroupP1);
+                
+                // Ball representation
+                const ballGeometry = new THREE.SphereGeometry(ballRadius * 2 * objectScaleFactor, 16, 16);
+                const ballMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+                ballMeshP1 = new THREE.Mesh(ballGeometry, ballMaterial);
+                sceneP1.add(ballMeshP1);
+                
+                // Blue Goal Posts
+                const blueGoalGeometry = new THREE.SphereGeometry(blueDotRadius * 4 * objectScaleFactor, 16, 16);
+                const blueGoalMaterial = new THREE.MeshBasicMaterial({ color: 0x3b82f6 });
+                
+                blueGoalTopMeshP1 = new THREE.Mesh(blueGoalGeometry, blueGoalMaterial);
+                blueGoalBottomMeshP1 = new THREE.Mesh(blueGoalGeometry, blueGoalMaterial);
+                
+                sceneP1.add(blueGoalTopMeshP1);
+                sceneP1.add(blueGoalBottomMeshP1);
+
+                // Red Goal Posts
+                const redGoalGeometry = new THREE.SphereGeometry(redDotRadius * 4 * objectScaleFactor, 16, 16);
+                const redGoalMaterial = new THREE.MeshBasicMaterial({ color: 0xef4444 });
+                
+                redGoalTopMeshP1 = new THREE.Mesh(redGoalGeometry, redGoalMaterial);
+                redGoalBottomMeshP1 = new THREE.Mesh(redGoalGeometry, redGoalMaterial);
+                
+                sceneP1.add(redGoalTopMeshP1);
+                sceneP1.add(redGoalBottomMeshP1);
+                
+                // Set initial camera position so it's not at the origin
+                cameraP1.position.set(0, 10, 0); // Camera height is now 10
+                
+                resize3DViewP1();
+            }
+            
+            function setup3DSceneP2() {
+                // Renderer setup
+                rendererP2 = new THREE.WebGLRenderer({ canvas: p2Canvas, antialias: true, alpha: true });
+                rendererP2.setClearColor(0x000000, 0); // Transparent background
+
+                // Scene setup
+                sceneP2 = new THREE.Scene();
+
+                // Camera setup
+                cameraP2 = new THREE.PerspectiveCamera(FOV, p2ViewContainer.offsetWidth / p2ViewContainer.offsetHeight, NEAR, FAR);
+                
+                // Create a group for P1 to handle rotation correctly
+                p1GroupP2 = new THREE.Group();
+                const p1Geometry = new THREE.ConeGeometry(dotRadius * 4 * objectScaleFactor, dotRadius * 8 * objectScaleFactor, 4);
+                const p1Material = new THREE.MeshBasicMaterial({ color: 0xef4444 });
+                const p1Mesh = new THREE.Mesh(p1Geometry, p1Material);
+                // The cone is created pointing up (Y axis). We rotate it to point right (X axis)
+                p1Mesh.rotation.z = Math.PI / -2;
+                p1GroupP2.add(p1Mesh);
+
+                // Sphere Geometry
+                const sphereRadius = dotRadius * 0.8;
+                const sphereGeometry = new THREE.SphereGeometry(sphereRadius, 16, 16);
+                // Black Material
+                const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Hex code for black
+                // Sphere Mesh
+                const sphereMesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
+                const coneHeight = p1Geometry.parameters.height;
+                sphereMesh.position.set(-1, coneHeight / 5, 0);
+                sphereMesh.rotation.z = Math.PI / -2;
+                p1GroupP2.add(sphereMesh);
+
+                // sphere for holding P1 arrow geometry
+                const sphereRadiusp1arrow = dotRadius * 0.2;
+                const sphereGeometryp1arrow = new THREE.SphereGeometry(sphereRadiusp1arrow, 16, 16);
+                // White Material
+                const sphereMaterialp1arrow = new THREE.MeshBasicMaterial({ color: 0xFFFFFF }); // Hex code 
+                // Sphere Mesh
+                const sphereMeshp1arrow = new THREE.Mesh(sphereGeometryp1arrow, sphereMaterialp1arrow);
+                sphereMeshp1arrow.position.set(50,0,1);
+                sphereMeshp1arrow.rotation.z = Math.PI / -2;
+                p1GroupP2.add(sphereMeshp1arrow);
+                sceneP2.add(p1GroupP2);
+
+                // Ball representation
+                const ballGeometry = new THREE.SphereGeometry(ballRadius * 2 * objectScaleFactor, 16, 16);
+                const ballMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+                ballMeshP2 = new THREE.Mesh(ballGeometry, ballMaterial);
+                sceneP2.add(ballMeshP2);
+
+                // Blue Goal Posts
+                const blueGoalGeometry = new THREE.SphereGeometry(blueDotRadius * 4 * objectScaleFactor, 16, 16);
+                const blueGoalMaterial = new THREE.MeshBasicMaterial({ color: 0x3b82f6 });
+                
+                blueGoalTopMeshP2 = new THREE.Mesh(blueGoalGeometry, blueGoalMaterial);
+                blueGoalBottomMeshP2 = new THREE.Mesh(blueGoalGeometry, blueGoalMaterial);
+                
+                sceneP2.add(blueGoalTopMeshP2);
+                sceneP2.add(blueGoalBottomMeshP2);
+
+                // Red Goal Posts
+                const redGoalGeometry = new THREE.SphereGeometry(redDotRadius * 4 * objectScaleFactor, 16, 16);
+                const redGoalMaterial = new THREE.MeshBasicMaterial({ color: 0xef4444 });
+                
+                redGoalTopMeshP2 = new THREE.Mesh(redGoalGeometry, redGoalMaterial);
+                redGoalBottomMeshP2 = new THREE.Mesh(redGoalGeometry, redGoalMaterial);
+                
+                sceneP2.add(redGoalTopMeshP2);
+                sceneP2.add(redGoalBottomMeshP2);
+
+                cameraP2.position.set(0, 10, 0);
+                
+                resize3DViewP2();
+            }
+
+            function resize3DViewP1() {
+                const width = p1ViewContainer.offsetWidth;
+                const height = p1ViewContainer.offsetHeight;
+                rendererP1.setSize(width, height);
+                cameraP1.aspect = width / height;
+                cameraP1.updateProjectionMatrix();
+            }
+            
+            function resize3DViewP2() {
+                const width = p2ViewContainer.offsetWidth;
+                const height = p2ViewContainer.offsetHeight;
+                rendererP2.setSize(width, height);
+                cameraP2.aspect = width / height;
+                cameraP2.updateProjectionMatrix();
+            }
+            
+            function update3DViewP1() {
+                if (!isGoalScored && rendererP1) {
+                    const centerX = svgWidth / 2;
+                    const centerY = svgHeight / 2;
+                    
+                    // Calculate the camera offset based on the player's direction
+                    const p1Rad = p1Direction * Math.PI / 180;
+                    const offsetDistance = 24; // Two player lengths
+                    
+                    // Position the camera behind the player
+                    cameraP1.position.set(
+                        (p1Pos.x - centerX) - (offsetDistance * Math.cos(p1Rad)),
+                        10, // Camera height remains 10
+                        (p1Pos.y - centerY) - (offsetDistance * Math.sin(p1Rad))
+                    );
+                    
+                    // Make the camera look at the player's current position
+                    cameraP1.lookAt(new THREE.Vector3(p1Pos.x - centerX, 10, p1Pos.y - centerY));
+                    
+                    // Position P2 and the ball correctly
+                    p2GroupP1.position.set(p2Pos.x - centerX, 0, p2Pos.y - centerY);
+                    p2GroupP1.rotation.y = -p2Direction * Math.PI / 180;
+                    
+                    ballMeshP1.position.set(ballPos.x - centerX, 0, ballPos.y - centerY);
+                    
+                    // Update bullets in 3D view
+                    p1ViewBullets.forEach(b => sceneP1.remove(b));
+                    p1ViewBullets = [];
+
+                    bullets.forEach(bullet => {
+                        const relativeBulletX = bullet.x - centerX;
+                        const relativeBulletZ = bullet.y - centerY;
+
+                        const bulletGeometry = new THREE.SphereGeometry(1, 8, 8); // Small sphere for bullet
+                        const bulletMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 }); // Yellow color for bullets
+                        const bulletMesh = new THREE.Mesh(bulletGeometry, bulletMaterial);
+                        bulletMesh.position.set(relativeBulletX, 0, relativeBulletZ);
+                        sceneP1.add(bulletMesh);
+                        p1ViewBullets.push(bulletMesh);
+                    });
+                    
+                    rendererP1.render(sceneP1, cameraP1);
+                }
+            }
+
+            function update3DViewP2() {
+                if (!isGoalScored && rendererP2) {
+                    const centerX = svgWidth / 2;
+                    const centerY = svgHeight / 2;
+                    
+                    // Calculate the camera offset based on the player's direction
+                    const p2Rad = p2Direction * Math.PI / 180;
+                    const offsetDistance = 24; // Two player lengths
+                    
+                    // Position the camera behind the player
+                    cameraP2.position.set(
+                        (p2Pos.x - centerX) - (offsetDistance * Math.cos(p2Rad)),
+                        10, // Camera height remains 10
+                        (p2Pos.y - centerY) - (offsetDistance * Math.sin(p2Rad))
+                    );
+
+                    // Make the camera look at the player's current position
+                    cameraP2.lookAt(new THREE.Vector3(p2Pos.x - centerX, 10, p2Pos.y - centerY));
+                    
+                    // Position P1 and the ball relative to P2
+                    p1GroupP2.position.set(p1Pos.x - centerX, 0, p1Pos.y - centerY);
+                    p1GroupP2.rotation.y = -p1Direction * Math.PI / 180;
+
+                    ballMeshP2.position.set(ballPos.x - centerX, 0, ballPos.y - centerY);
+
+                    // Update bullets
+                    p2ViewBullets.forEach(b => sceneP2.remove(b));
+                    p2ViewBullets = [];
+
+                    bullets.forEach(bullet => {
+                        const relativeBulletX = bullet.x - centerX;
+                        const relativeBulletZ = bullet.y - centerY;
+
+                        const bulletGeometry = new THREE.SphereGeometry(1, 8, 8);
+                        const bulletMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+                        const bulletMesh = new THREE.Mesh(bulletGeometry, bulletMaterial);
+                        bulletMesh.position.set(relativeBulletX, 0, relativeBulletZ);
+                        sceneP2.add(bulletMesh);
+                        p2ViewBullets.push(bulletMesh);
+                    });
+
+                    rendererP2.render(sceneP2, cameraP2);
+                }
+            }
+            // Event listeners for keyboard input
+            document.addEventListener('keydown', (event) => {
+                const key = event.key.toLowerCase();
+                if (key === 'w') keys.w = true;
+                if (key === 'a') keys.a = true;
+                if (key === 's') keys.s = true;
+                if (key === 'd') keys.d = true;
+                if (event.key === 'ArrowUp') keys.up = true;
+                if (event.key === 'ArrowLeft') keys.left = true;
+                if (event.key === 'ArrowDown') keys.down = true;
+                if (event.key === 'ArrowRight') keys.right = true;
+                if (key === ' ') keys.space = true;
+                if (event.key === 'Enter') keys.enter = true;
+            });
+
+            document.addEventListener('keyup', (event) => {
+                const key = event.key.toLowerCase();
+                if (key === 'w') keys.w = false;
+                if (key === 'a') keys.a = false;
+                if (key === 's') keys.s = false;
+                if (key === 'd') keys.d = false;
+                if (event.key === 'ArrowUp') keys.up = false;
+                if (event.key === 'ArrowLeft') keys.left = false;
+                if (event.key === 'ArrowDown') keys.down = false;
+                if (event.key === 'ArrowRight') keys.right = false;
+                if (key === ' ') {
+                    keys.space = false;
+                    canFireP1 = true;
+                }
+                if (event.key === 'Enter') {
+                    keys.enter = false;
+                    canFireP2 = true;
+                }
+            });
+            
+            function resetGame() {
+                const screenWidth = centerScreen.offsetWidth;
+                const screenHeight = centerScreen.offsetHeight;
+
+                // Reset player positions
+                const centerDistance = 120;
+                p1Pos.y = screenHeight * 0.5;
+                p2Pos.y = screenHeight * 0.5;
+                p1Pos.x = screenWidth / 2 - centerDistance / 2;
+                p2Pos.x = screenWidth / 2 + centerDistance / 2;
+
+                // Reset player directions
+                p1Direction = 0;
+                p2Direction = 180;
+
+                // Reset ball state
+                ballPos.x = screenWidth / 2;
+                ballPos.y = screenHeight / 2;
+                ballVel = { vx: 0, vy: 0 };
+                ballOwner = null;
+                p1CanAcquireBall = true;
+                p2CanAcquireBall = true;
+                ballOrbitAngle = 0;
+                stopHoldSound(); // Stop hold sound on reset
+
+                // Hide goal message and reset screen color
+                goalMessageElement.classList.add('opacity-0');
+                centerScreen.style.backgroundColor = 'black'; // Ensure screen is black
+
+                isGoalScored = false;
+                
+                // Clear all bullets
+                bullets.forEach(bullet => bullet.lineElement.remove());
+                bullets = [];
+                
+                // Clear history
+                gameHistory = [];
+
+                updatePlayerStats();
+            }
+
+            function initializePositions() {
+                svgWidth = centerScreen.offsetWidth;
+                svgHeight = centerScreen.offsetHeight;
+
+                // Adjust SVG dimensions
+                gameSvg.setAttribute('width', svgWidth);
+                gameSvg.setAttribute('height', svgHeight);
+                
+                // Clear any existing grid lines before redrawing
+                gridContainer.innerHTML = '';
+                
+                const divisionsX = 32;
+                const divisionsY = 16;
+                const colors = ['#f87171', '#fb923c', '#fcd34d', '#4ade80', '#2dd4bf', '#38bdf8', '#818cf8', '#e879f9'];
+
+                // --- 2D Grid Setup ---
+                // Draw vertical grid lines with different colors
+                for (let i = 0; i <= divisionsX; i++) {
+                    const xPos = (svgWidth / divisionsX) * i;
+                    const color = colors[i % colors.length];
+                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    line.setAttribute('x1', xPos);
+                    line.setAttribute('y1', 0);
+                    line.setAttribute('x2', xPos);
+                    line.setAttribute('y2', svgHeight);
+                    line.setAttribute('style', `stroke:${color}; stroke-width:1; opacity:0.6;`);
+                    gridContainer.appendChild(line);
+                }
+
+                // Draw horizontal grid lines with different colors
+                for (let i = 0; i <= divisionsY; i++) {
+                    const yPos = (svgHeight / divisionsY) * i;
+                    const color = colors[i % colors.length];
+                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    line.setAttribute('x1', 0);
+                    line.setAttribute('y1', yPos);
+                    line.setAttribute('x2', svgWidth);
+                    line.setAttribute('y2', yPos);
+                    line.setAttribute('style', `stroke:${color}; stroke-width:1; opacity:0.6;`);
+                    gridContainer.appendChild(line);
+                }
+
+                // --- End 2D Grid Setup ---
+                
+                // --- 3D Grid Setup for P1 View ---
+                if (grid3DP1) { sceneP1.remove(grid3DP1); }
+                const verticesP1 = [];
+                const colorValuesP1 = [];
+                const centerX = svgWidth / 2;
+                const centerY = svgHeight / 2;
+                for (let i = 0; i <= divisionsX; i++) {
+                    const xPos = (svgWidth / divisionsX) * i;
+                    const colorHex = colors[i % colors.length];
+                    const color = new THREE.Color(colorHex);
+                    verticesP1.push(xPos - centerX, 0, 0 - centerY);
+                    colorValuesP1.push(color.r, color.g, color.b);
+                    verticesP1.push(xPos - centerX, 0, svgHeight - centerY);
+                    colorValuesP1.push(color.r, color.g, color.b);
+                }
+                for (let i = 0; i <= divisionsY; i++) {
+                    const yPos = (svgHeight / divisionsY) * i;
+                    const colorHex = colors[i % colors.length];
+                    const color = new THREE.Color(colorHex);
+                    verticesP1.push(0 - centerX, 0, yPos - centerY);
+                    colorValuesP1.push(color.r, color.g, color.b);
+                    verticesP1.push(svgWidth - centerX, 0, yPos - centerY);
+                    colorValuesP1.push(color.r, color.g, color.b);
+                }
+                const geometryP1 = new THREE.BufferGeometry();
+                geometryP1.setAttribute('position', new THREE.Float32BufferAttribute(verticesP1, 3));
+                geometryP1.setAttribute('color', new THREE.Float32BufferAttribute(colorValuesP1, 3));
+                const materialP1 = new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.6 });
+                grid3DP1 = new THREE.LineSegments(geometryP1, materialP1);
+                sceneP1.add(grid3DP1);
+                
+                // --- 3D Grid Setup for P2 View ---
+                if (grid3DP2) { sceneP2.remove(grid3DP2); }
+                const verticesP2 = [];
+                const colorValuesP2 = [];
+                for (let i = 0; i <= divisionsX; i++) {
+                    const xPos = (svgWidth / divisionsX) * i;
+                    const colorHex = colors[i % colors.length];
+                    const color = new THREE.Color(colorHex);
+                    verticesP2.push(xPos - centerX, 0, 0 - centerY);
+                    colorValuesP2.push(color.r, color.g, color.b);
+                    verticesP2.push(xPos - centerX, 0, svgHeight - centerY);
+                    colorValuesP2.push(color.r, color.g, color.b);
+                }
+                for (let i = 0; i <= divisionsY; i++) {
+                    const yPos = (svgHeight / divisionsY) * i;
+                    const colorHex = colors[i % colors.length];
+                    const color = new THREE.Color(colorHex);
+                    verticesP2.push(0 - centerX, 0, yPos - centerY);
+                    colorValuesP2.push(color.r, color.g, color.b);
+                    verticesP2.push(svgWidth - centerX, 0, yPos - centerY);
+                    colorValuesP2.push(color.r, color.g, color.b);
+                }
+                const geometryP2 = new THREE.BufferGeometry();
+                geometryP2.setAttribute('position', new THREE.Float32BufferAttribute(verticesP2, 3));
+                geometryP2.setAttribute('color', new THREE.Float32BufferAttribute(colorValuesP2, 3));
+                const materialP2 = new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.6 });
+                grid3DP2 = new THREE.LineSegments(geometryP2, materialP2);
+                sceneP2.add(grid3DP2);
+
+                // --- End 3D Grid Setup ---
+                
+                // --- Red Dots Initialization (Goal for Player 2, on the left) ---
+                leftRedDots.forEach(dot => dot.remove());
+                leftRedDots = [];
+                rightBlueDots.forEach(dot => dot.remove());
+                rightBlueDots = [];
+
+                const leftTopDot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                leftTopDot.setAttribute('r', redDotRadius);
+                leftTopDot.setAttribute('fill', '#ef4444');
+                leftTopDot.setAttribute('cx', svgWidth * 0.02);
+                gameSvg.appendChild(leftTopDot);
+                leftRedDots.push(leftTopDot);
+
+                const leftBottomDot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                leftBottomDot.setAttribute('r', redDotRadius);
+                leftBottomDot.setAttribute('fill', '#ef4444');
+                leftBottomDot.setAttribute('cx', svgWidth * 0.02);
+                gameSvg.appendChild(leftBottomDot);
+                leftRedDots.push(leftBottomDot);
+                
+                const totalHeight = separation + redDotRadius * 2;
+                leftRedDotsY = (svgHeight - totalHeight) / 2 + redDotRadius;
+                
+                leftRedDots[0].setAttribute('cy', leftRedDotsY);
+                leftRedDots[1].setAttribute('cy', leftRedDotsY + separation);
+
+                // --- Blue Dots Initialization (Goal for Player 1, on the right) ---
+                const rightTopDot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                rightTopDot.setAttribute('r', blueDotRadius);
+                rightTopDot.setAttribute('fill', '#3b82f6');
+                rightTopDot.setAttribute('cx', svgWidth * 0.98 - blueDotRadius);
+                gameSvg.appendChild(rightTopDot);
+                rightBlueDots.push(rightTopDot);
+
+                const rightBottomDot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                rightBottomDot.setAttribute('r', blueDotRadius);
+                rightBottomDot.setAttribute('fill', '#3b82f6');
+                rightBottomDot.setAttribute('cx', svgWidth * 0.98 - blueDotRadius);
+                gameSvg.appendChild(rightBottomDot);
+                rightBlueDots.push(rightBottomDot);
+                
+                rightBlueDotsY = (svgHeight - totalHeight) / 2 + blueDotRadius;
+                
+                rightBlueDots[0].setAttribute('cy', rightBlueDotsY);
+                rightBlueDots[1].setAttribute('cy', rightBlueDotsY + separation);
+                // --- End Blue Dots Initialization ---
+                
+                // --- 3D Goal Posts Setup for P1 View ---
+                if (redGoalTopMeshP1) {
+                    sceneP1.remove(redGoalTopMeshP1);
+                    sceneP1.remove(redGoalBottomMeshP1);
+                    sceneP1.remove(blueGoalTopMeshP1);
+                    sceneP1.remove(blueGoalBottomMeshP1);
+                }
+
+                const blueGoalGeometryP1 = new THREE.SphereGeometry(blueDotRadius * 4 * objectScaleFactor, 16, 16);
+                const blueGoalMaterialP1 = new THREE.MeshBasicMaterial({ color: 0x3b82f6 });
+                blueGoalTopMeshP1 = new THREE.Mesh(blueGoalGeometryP1, blueGoalMaterialP1);
+                blueGoalBottomMeshP1 = new THREE.Mesh(blueGoalGeometryP1, blueGoalMaterialP1);
+                const redGoalGeometryP1 = new THREE.SphereGeometry(redDotRadius * 4 * objectScaleFactor, 16, 16);
+                const redGoalMaterialP1 = new THREE.MeshBasicMaterial({ color: 0xef4444 });
+                redGoalTopMeshP1 = new THREE.Mesh(redGoalGeometryP1, redGoalMaterialP1);
+                redGoalBottomMeshP1 = new THREE.Mesh(redGoalGeometryP1, redGoalMaterialP1);
+                sceneP1.add(blueGoalTopMeshP1);
+                sceneP1.add(blueGoalBottomMeshP1);
+                sceneP1.add(redGoalTopMeshP1);
+                sceneP1.add(redGoalBottomMeshP1);
+                
+                // --- 3D Goal Posts Setup for P2 View ---
+                if (redGoalTopMeshP2) {
+                    sceneP2.remove(redGoalTopMeshP2);
+                    sceneP2.remove(redGoalBottomMeshP2);
+                    sceneP2.remove(blueGoalTopMeshP2);
+                    sceneP2.remove(blueGoalBottomMeshP2);
+                }
+                const blueGoalGeometryP2 = new THREE.SphereGeometry(blueDotRadius * 4 * objectScaleFactor, 16, 16);
+                const blueGoalMaterialP2 = new THREE.MeshBasicMaterial({ color: 0x3b82f6 });
+                blueGoalTopMeshP2 = new THREE.Mesh(blueGoalGeometryP2, blueGoalMaterialP2);
+                blueGoalBottomMeshP2 = new THREE.Mesh(blueGoalGeometryP2, blueGoalMaterialP2);
+                const redGoalGeometryP2 = new THREE.SphereGeometry(redDotRadius * 4 * objectScaleFactor, 16, 16);
+                const redGoalMaterialP2 = new THREE.MeshBasicMaterial({ color: 0xef4444 });
+                redGoalTopMeshP2 = new THREE.Mesh(redGoalGeometryP2, redGoalMaterialP2);
+                redGoalBottomMeshP2 = new THREE.Mesh(redGoalGeometryP2, redGoalMaterialP2);
+                sceneP2.add(blueGoalTopMeshP2);
+                sceneP2.add(blueGoalBottomMeshP2);
+                sceneP2.add(redGoalTopMeshP2);
+                sceneP2.add(redGoalBottomMeshP2);
+
+                resetGame();
+                resize3DViewP1();
+                resize3DViewP2();
+            }
+
+            function fireBullet(owner, direction, startX, startY) {
+                // Check if player has enough power
+                if (owner === 'p1' && player1.power > 0) {
+                    player1.power -= 1;
+                    playChirpSound();
+                    const bullet = {
+                        owner: owner,
+                        startX: startX,
+                        startY: startY,
+                        x: startX,
+                        y: startY,
+                        direction: direction,
+                        lineElement: document.createElementNS('http://www.w3.org/2000/svg', 'line'),
+                        size: 2 * dotRadius
+                    };
+
+                    const rad = direction * Math.PI / 180;
+                    const endX = startX + bullet.size * Math.cos(rad);
+                    const endY = startY + bullet.size * Math.sin(rad);
+
+                    bullet.lineElement.setAttribute('x1', startX);
+                    bullet.lineElement.setAttribute('y1', startY);
+                    bullet.lineElement.setAttribute('x2', endX);
+                    bullet.lineElement.setAttribute('y2', endY);
+                    bullet.lineElement.setAttribute('style', 'stroke:#fde047; stroke-width:2;'); // Yellow bullets
+                    bulletContainer.appendChild(bullet.lineElement);
+                    bullets.push(bullet);
+
+                } else if (owner === 'p2' && player2.power > 0) {
+                    player2.power -= 1;
+                    playChirpSound();
+                    const bullet = {
+                        owner: owner,
+                        startX: startX,
+                        startY: startY,
+                        x: startX,
+                        y: startY,
+                        direction: direction,
+                        lineElement: document.createElementNS('http://www.w3.org/2000/svg', 'line'),
+                        size: 2 * dotRadius
+                    };
+
+                    const rad = direction * Math.PI / 180;
+                    const endX = startX + bullet.size * Math.cos(rad);
+                    const endY = startY + bullet.size * Math.sin(rad);
+
+                    bullet.lineElement.setAttribute('x1', startX);
+                    bullet.lineElement.setAttribute('y1', startY);
+                    bullet.lineElement.setAttribute('x2', endX);
+                    bullet.lineElement.setAttribute('y2', endY);
+                    bullet.lineElement.setAttribute('style', 'stroke:#fde047; stroke-width:2;'); // Yellow bullets
+                    bulletContainer.appendChild(bullet.lineElement);
+                    bullets.push(bullet);
+                }
+            }
+
+            function updatePlayerStats() {
+                // Determine effective power for display
+                let p1DisplayPower = player1.power;
+                if (ballOwner === 'p1') {
+                    p1DisplayPower = Math.min(60, player1.power * 0.6);
+                }
+                
+                let p2DisplayPower = player2.power;
+                if (ballOwner === 'p2') {
+                    p2DisplayPower = Math.min(60, player2.power * 0.6);
+                }
+
+                // Update P1 stats display
+                document.getElementById('p1-shields-text').textContent = `${Math.floor(player1.shields)}%`;
+                document.getElementById('p1-shields-bar').style.width = `${player1.shields}%`;
+                document.getElementById('p1-power-text').textContent = `${Math.floor(p1DisplayPower)}%`;
+                document.getElementById('p1-power-bar').style.width = `${p1DisplayPower}%`;
+                document.getElementById('p1-score-text').textContent = `${player1.score}`;
+
+                // Update P2 stats display
+                document.getElementById('p2-shields-text').textContent = `${Math.floor(player2.shields)}%`;
+                document.getElementById('p2-shields-bar').style.width = `${player2.shields}%`;
+                document.getElementById('p2-power-text').textContent = `${Math.floor(p2DisplayPower)}%`;
+                document.getElementById('p2-power-bar').style.width = `${p2DisplayPower}%`;
+                document.getElementById('p2-score-text').textContent = `${player2.score}`;
+            }
+            
+            function saveGameState() {
+                gameHistory.push({
+                    p1Pos: { ...p1Pos },
+                    p2Pos: { ...p2Pos },
+                    ballPos: { ...ballPos },
+                    p1Direction,
+                    p2Direction,
+                    bullets: bullets.map(b => ({
+                        x: b.x,
+                        y: b.y,
+                        direction: b.direction,
+                        size: b.size,
+                    })),
+                });
+                if (gameHistory.length > historyLength) {
+                    gameHistory.shift();
+                }
+            }
+            
+            function renderState(state) {
+                p1DotGroup.setAttribute('transform', `translate(${state.p1Pos.x - 60}, ${state.p1Pos.y - 60}) rotate(${state.p1Direction} 60 60)`);
+                p2DotGroup.setAttribute('transform', `translate(${state.p2Pos.x - 60}, ${state.p2Pos.y - 60}) rotate(${state.p2Direction} 60 60)`);
+                ballElement.setAttribute('cx', state.ballPos.x);
+                ballElement.setAttribute('cy', state.ballPos.y);
+
+                // Re-render bullets
+                bulletContainer.innerHTML = '';
+                state.bullets.forEach(bullet => {
+                    const lineElement = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    const rad = bullet.direction * Math.PI / 180;
+                    lineElement.setAttribute('x1', bullet.x);
+                    lineElement.setAttribute('y1', bullet.y);
+                    lineElement.setAttribute('x2', bullet.x + bullet.size * Math.cos(rad));
+                    lineElement.setAttribute('y2', bullet.y + bullet.size * Math.sin(rad));
+                    lineElement.setAttribute('style', 'stroke:#fde047; stroke-width:2;');
+                    bulletContainer.appendChild(lineElement);
+                });
+            }
+
+            function playReplay() {
+                const screenWidth = centerScreen.offsetWidth;
+                const screenHeight = centerScreen.offsetHeight;
+                
+                // Hide goal text before replay begins
+                goalMessageElement.classList.add('opacity-0');
+
+                let frameCounter = 0;
+                replayIndex = 0;
+                
+                function replayLoop() {
+                    if (replayIndex < replayHistory.length) {
+                        const stateIndex = Math.floor(replayIndex);
+                        renderState(replayHistory[stateIndex]);
+                        replayIndex += 0.5; // Half speed replay
+                        replayFrameId = requestAnimationFrame(replayLoop);
+                    } else {
+                        // Replay is finished, show "Game ON!" message
+                        showGameOnMessage();
+                    }
+                }
+                replayLoop();
+            }
+
+            // New function to show "Game ON!" message
+            function showGameOnMessage() {
+                // Clear the screen of all game elements before displaying the message
+                bulletContainer.innerHTML = '';
+                
+                goalTextElement.textContent = 'Game ON!';
+                goalMessageElement.classList.remove('opacity-0');
+                
+                // Set a timeout to hide the message and resume the game
+                setTimeout(() => {
+                    goalMessageElement.classList.add('opacity-0');
+                    resetGame();
+                    animateDots();
+                }, 1000); // 1-second display
+            }
+
+            function checkGoal() {
+                const screenWidth = centerScreen.offsetWidth;
+                const screenHeight = centerScreen.offsetHeight;
+
+                const blueGoalLineX = screenWidth * 0.98 - blueDotRadius;
+                const blueGoalTopY = rightBlueDotsY;
+                const blueGoalBottomY = rightBlueDotsY + separation;
+
+                if (ballPos.x > blueGoalLineX && ballPos.y > blueGoalTopY && ballPos.y < blueGoalBottomY) {
+                    player1.score++;
+                    isGoalScored = true;
+                    playCheerSound();
+                    playHornSound();
+                    return 'p1';
+                }
+
+                const redGoalLineX = screenWidth * 0.02;
+                const redGoalTopY = leftRedDotsY;
+                const redGoalBottomY = leftRedDotsY + separation;
+
+                if (ballPos.x < redGoalLineX && ballPos.y > redGoalTopY && ballPos.y < redGoalBottomY) {
+                    player2.score++;
+                    isGoalScored = true;
+                    playCheerSound();
+                    playHornSound();
+                    return 'p2';
+                }
+                return null;
+            }
+            
+            function animateDots() {
+                if (isGoalScored) {
+                    cancelAnimationFrame(animationFrameId);
+                    return;
+                }
+                
+                const screenWidth = centerScreen.offsetWidth;
+                const screenHeight = centerScreen.offsetHeight;
+                const bulletMaxDistance = screenWidth / 10;
+
+                // Save state for replay
+                saveGameState();
+
+                const winner = checkGoal();
+                if (winner) {
+                    // Stop game loop
+                    cancelAnimationFrame(animationFrameId);
+                    updatePlayerStats(); // Update score here, before the replay
+                    // Set up goal state for delay
+                    replayHistory = [...gameHistory];
+                    goalTextElement.textContent = 'GOAL REPLAY';
+                    goalMessageElement.classList.remove('opacity-0');
+                    
+                    // Delay for 1 second before starting replay
+                    setTimeout(() => {
+                        playReplay();
+                    }, 1000); // 1 second delay
+                    
+                    return;
+                }
+
+                // --- Ball Logic ---
+                const p1BallDistance = Math.sqrt(Math.pow(ballPos.x - p1Pos.x, 2) + Math.pow(ballPos.y - p1Pos.y, 2));
+                const p2BallDistance = Math.sqrt(Math.pow(ballPos.x - p2Pos.x, 2) + Math.pow(ballPos.y - p2Pos.y, 2));
+                const ownershipDistance = dotRadius * 4;
+                const prevBallOwner = ballOwner;
+
+                if (p1BallDistance < ownershipDistance && ballOwner !== 'p2' && p1CanAcquireBall) {
+                    // P1 acquires the ball, reset orbit angle to align with player direction
+                    if (ballOwner !== 'p1') {
+                        ballOrbitAngle = p1Direction * Math.PI / 180;
+                    }
+                    ballOwner = 'p1';
+                } else if (p2BallDistance < ownershipDistance && ballOwner !== 'p1' && p2CanAcquireBall) {
+                     // P2 acquires the ball, reset orbit angle to align with player direction
+                     if (ballOwner !== 'p2') {
+                         ballOrbitAngle = p2Direction * Math.PI / 180;
+                     }
+                    ballOwner = 'p2';
+                } else if (p1BallDistance >= ownershipDistance && p2BallDistance >= ownershipDistance) {
+                    ballOwner = null;
+                }
+                
+                // Play or stop hold sound based on ownership
+                if (ballOwner !== prevBallOwner) {
+                    if (ballOwner) {
+                        playHoldSound();
+                    } else {
+                        stopHoldSound();
+                    }
+                }
+                
+                // Update gain of hold sound based on player's field of view and proximity
+                if (ballHoldPlaying && ballHoldGainNode) {
+                    let playerPos, playerDir, distance;
+                    if (ballOwner === 'p1') {
+                        playerPos = p1Pos;
+                        playerDir = p1Direction;
+                        distance = p1BallDistance;
+                    } else {
+                        playerPos = p2Pos;
+                        playerDir = p2Direction;
+                        distance = p2BallDistance;
+                    }
+                    
+                    const angleToBallRad = Math.atan2(ballPos.y - playerPos.y, ballPos.x - playerPos.x);
+                    const playerDirRad = playerDir * Math.PI / 180;
+                    let angleDiff = angleToBallRad - playerDirRad;
+                    if (angleDiff > Math.PI) angleDiff -= 2 * Math.PI;
+                    if (angleDiff < -Math.PI) angleDiff += 2 * Math.PI;
+                    
+                    const maxDistanceForFullVolume = 100;
+                    const minDistanceForFullVolume = ownershipDistance;
+                    
+                    let distanceFactor = 1;
+                    if (distance > minDistanceForFullVolume) {
+                        distanceFactor = 1 - (distance - minDistanceForFullVolume) / (maxDistanceForFullVolume - minDistanceForFullVolume);
+                        distanceFactor = Math.max(0, distanceFactor); // Clamp at 0
+                    }
+                    
+                    const gainFactor = Math.max(0, Math.cos(angleDiff));
+                    const baseGain = 0.5;
+                    const newGain = baseGain * gainFactor * distanceFactor;
+                    ballHoldGainNode.gain.setValueAtTime(newGain, audioContext.currentTime);
+                }
+
+                if (ballOwner) {
+                    const ownerPos = ballOwner === 'p1' ? p1Pos : p2Pos;
+                    // Orbiting ball logic
+                    ballPos.x = ownerPos.x + orbitRadius * Math.cos(ballOrbitAngle);
+                    ballPos.y = ownerPos.y + orbitRadius * Math.sin(ballOrbitAngle);
+                    ballVel = { vx: 0, vy: 0 };
+                } else {
+                    ballVel.vx *= friction;
+                    ballVel.vy *= friction;
+                    ballPos.x += ballVel.vx;
+                    ballPos.y += ballVel.vy;
+                    
+                    let hitWall = false;
+
+                    if (ballPos.x - ballRadius < 0) {
+                        ballPos.x = ballRadius;
+                        ballVel.vx *= -1;
+                        hitWall = true;
+                    } else if (ballPos.x + ballRadius > screenWidth) {
+                        ballPos.x = screenWidth - ballRadius;
+                        ballVel.vx *= -1;
+                        hitWall = true;
+                    }
+
+                    if (ballPos.y - ballRadius < 0) {
+                        ballPos.y = ballRadius;
+                        ballVel.vy *= -1;
+                        hitWall = true;
+                    } else if (ballPos.y + ballRadius > screenHeight) {
+                        ballPos.y = screenHeight - ballRadius;
+                        ballVel.vy *= -1;
+                        hitWall = true;
+                    }
+                    
+                    if (hitWall) {
+                        playWallSound();
+                    }
+                }
+                ballElement.setAttribute('cx', ballPos.x);
+                ballElement.setAttribute('cy', ballPos.y);
+
+                // --- End Ball Logic ---
+
+                // Fire actions
+                if (keys.space && canFireP1) {
+                    if (ballOwner === 'p1') {
+
+                        let dx = ballElement.cx.baseVal.value - p1Pos.x;
+                        let dy = ballElement.cy.baseVal.value - p1Pos.y;
+                        let distance = Math.sqrt(dx * dx + dy * dy);
+                        
+                        ballVel.vx = (dx / distance) * ballSpeed;
+                        ballVel.vy = (dy / distance) * ballSpeed;
+
+                        ballOwner = null;
+                        p1CanAcquireBall = false;
+                        setTimeout(() => p1CanAcquireBall = true, 200);
+                        stopHoldSound(); // Stop hold sound on release
+                    } else {
+                        const rad = p1Direction * Math.PI / 180;
+                        const startX = p1Pos.x + dotRadius * Math.cos(rad);
+                        const startY = p1Pos.y + dotRadius * Math.sin(rad);
+                        fireBullet('p1', p1Direction, startX, startY);
+                    }
+                    canFireP1 = false;
+                }
+
+                if (keys.enter && canFireP2) {
+                    if (ballOwner === 'p2') {
+                        let dx = ballElement.cx.baseVal.value - p2Pos.x;
+                        let dy = ballElement.cy.baseVal.value - p2Pos.y;
+                        let distance = Math.sqrt(dx * dx + dy * dy);
+                        
+                        ballVel.vx = (dx / distance) * ballSpeed;
+                        ballVel.vy = (dy / distance) * ballSpeed;
+                        ballOwner = null;
+                        p2CanAcquireBall = false;
+                        setTimeout(() => p2CanAcquireBall = true, 200);
+                        stopHoldSound(); // Stop hold sound on release
+                    } else {
+                        const rad = p2Direction * Math.PI / 180;
+                        const startX = p2Pos.x + dotRadius * Math.cos(rad);
+                        const startY = p2Pos.y + dotRadius * Math.sin(rad);
+                        fireBullet('p2', p2Direction, startX, startY);
+                    }
+                    canFireP2 = false;
+                }
+
+                // New speed calculation logic
+                let p1EffectivePower = player1.power;
+                let p2EffectivePower = player2.power;
+
+                if (ballOwner === 'p1') {
+                    // Reduce power by 40% and cap at 60% as per user request
+                    p1EffectivePower = Math.min(60, player1.power * 0.6);
+                } else if (ballOwner === 'p2') {
+                    // Reduce power by 40% and cap at 60% as per user request
+                    p2EffectivePower = Math.min(60, player2.power * 0.6);
+                }
+
+                const p1SpeedFactor = 1 + (0.5 * p1EffectivePower / 100);
+                const p2SpeedFactor = 1 + (0.5 * p2EffectivePower / 100);
+                
+                let p1FinalSpeed = baseMovementSpeed * p1SpeedFactor;
+                let p2FinalSpeed = baseMovementSpeed * p2SpeedFactor;
+
+                // Update P1 based on keyboard input
+                if (keys.a) { p1Direction -= rotationSpeed; }
+                if (keys.d) { p1Direction += rotationSpeed; }
+
+                const p1Rad = p1Direction * Math.PI / 180;
+                let dx1 = 0;
+                let dy1 = 0;
+                if (keys.w) {
+                    dx1 = Math.cos(p1Rad) * p1FinalSpeed;
+                    dy1 = Math.sin(p1Rad) * p1FinalSpeed;
+                } else if (keys.s) {
+                    dx1 = -Math.cos(p1Rad) * p1FinalSpeed;
+                    dy1 = -Math.sin(p1Rad) * p1FinalSpeed;
+                }
+                
+                // Update P2 based on keyboard input
+                if (keys.left) { p2Direction -= rotationSpeed; }
+                if (keys.right) { p2Direction += rotationSpeed; }
+
+                const p2Rad = p2Direction * Math.PI / 180;
+                let dx2 = 0;
+                let dy2 = 0;
+                if (keys.up) {
+                    dx2 = Math.cos(p2Rad) * p2FinalSpeed;
+                    dy2 = Math.sin(p2Rad) * p2FinalSpeed;
+                } else if (keys.down) {
+                    dx2 = -Math.cos(p2Rad) * p2FinalSpeed;
+                    dy2 = -Math.sin(p2Rad) * p2FinalSpeed;
+                }
+
+                const distanceX = p1Pos.x - p2Pos.x;
+                const distanceY = p1Pos.y - p2Pos.y;
+                let distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+
+                if (distance < dotRadius * 2) {
+                    const overlap = (dotRadius * 2) - distance;
+                    const correctionX = (distanceX / distance) * (overlap / 2);
+                    const correctionY = (distanceY / distance) * (overlap / 2);
+
+                    p1Pos.x += correctionX;
+                    p1Pos.y += correctionY;
+                    p2Pos.x -= correctionX;
+                    p2Pos.y -= correctionY;
+
+                    const newDistanceX = p1Pos.x - p2Pos.x;
+                    const newDistanceY = p1Pos.y - p2Pos.y;
+                    distance = Math.sqrt(newDistanceX * newDistanceX + newDistanceY * newDistanceY);
+
+                    const normalUnitX = newDistanceX / distance;
+                    const normalUnitY = newDistanceY / distance;
+
+                    const p1NormalVelocity = dx1 * normalUnitX + dy1 * normalUnitY;
+                    const p2NormalVelocity = dx2 * normalUnitX + dy2 * normalUnitY;
+
+                    if (p1NormalVelocity > 0) {
+                        dx1 -= p1NormalVelocity * normalUnitX;
+                        dy1 -= p1NormalVelocity * normalUnitY;
+                    }
+
+                    if (p2NormalVelocity < 0) {
+                        dx2 -= p2NormalVelocity * normalUnitX;
+                        dy2 -= p2NormalVelocity * normalUnitY;
+                    }
+                }
+                
+                if ((p1Pos.x < dotRadius && dx1 < 0) || (p1Pos.x > screenWidth - dotRadius && dx1 > 0)) { dx1 = 0; }
+                if ((p1Pos.y < dotRadius && dy1 < 0) || (p1Pos.y > screenHeight - dotRadius && dy1 > 0)) { dy1 = 0; }
+                p1Pos.x += dx1;
+                p1Pos.y += dy1;
+
+                p1DotGroup.setAttribute('transform', `translate(${p1Pos.x - 60}, ${p1Pos.y - 60}) rotate(${p1Direction} 60 60)`);
+
+                if ((p2Pos.x < dotRadius && dx2 < 0) || (p2Pos.x > screenWidth - dotRadius && dx2 > 0)) { dx2 = 0; }
+                if ((p2Pos.y < dotRadius && dy2 < 0) || (p2Pos.y > screenHeight - dotRadius && dy2 > 0)) { dy2 = 0; }
+                p2Pos.x += dx2;
+                p2Pos.y += dy2;
+
+                p2DotGroup.setAttribute('transform', `translate(${p2Pos.x - 60}, ${p2Pos.y - 60}) rotate(${p2Direction} 60 60)`);
+
+                leftRedDotsY += redDotSpeed * leftRedDotDirection;
+                if (leftRedDotsY - redDotRadius <= 0) {
+                    leftRedDotDirection = 1;
+                    leftRedDotsY = redDotRadius;
+                } else if (leftRedDotsY + separation + redDotRadius >= screenHeight) {
+                    leftRedDotDirection = -1;
+                    leftRedDotsY = screenHeight - (separation + redDotRadius);
+                }
+                leftRedDots[0].setAttribute('cy', leftRedDotsY);
+                leftRedDots[1].setAttribute('cy', leftRedDotsY + separation);
+
+                rightBlueDotsY += blueDotSpeed * rightBlueDotDirection;
+                if (rightBlueDotsY - blueDotRadius <= 0) {
+                    rightBlueDotDirection = 1;
+                    rightBlueDotsY = blueDotRadius;
+                } else if (rightBlueDotsY + separation + blueDotRadius >= screenHeight) {
+                    rightBlueDotDirection = -1;
+                    rightBlueDotsY = screenHeight - (separation + blueDotRadius);
+                }
+                rightBlueDots[0].setAttribute('cy', rightBlueDotsY);
+                rightBlueDots[1].setAttribute('cy', rightBlueDotsY + separation);
+
+                bullets = bullets.filter(bullet => {
+                    const rad = bullet.direction * Math.PI / 180;
+                    bullet.x += bulletSpeed * Math.cos(rad);
+                    bullet.y += bulletSpeed * Math.sin(rad);
+
+                    const distanceTraveled = Math.sqrt(Math.pow(bullet.x - bullet.startX, 2) + Math.pow(bullet.y - bullet.startY, 2));
+
+                    if (distanceTraveled > bulletMaxDistance) {
+                        bullet.lineElement.remove();
+                        return false;
+                    }
+
+                    bullet.lineElement.setAttribute('x1', bullet.x);
+                    bullet.lineElement.setAttribute('y1', bullet.y);
+                    bullet.lineElement.setAttribute('x2', bullet.x + bullet.size * Math.cos(rad));
+                    bullet.lineElement.setAttribute('y2', bullet.y + bullet.size * Math.sin(rad));
+
+                    let hit = false;
+                    
+                    if (bullet.owner === 'p1') {
+                        const distToP2 = Math.sqrt(Math.pow(bullet.x - p2Pos.x, 2) + Math.pow(bullet.y - p2Pos.y, 2));
+                        if (distToP2 < dotRadius * 2) {
+                            playSmashSound();
+                            flashScreen('p2-view');
+                            if (ballOwner === 'p2') {
+                                // P1's bullet hits P2 while P2 has the ball, so P2 drops the ball
+                                ballOwner = null;
+                                const directionVectorX = p2Pos.x - p1Pos.x;
+                                const directionVectorY = p2Pos.y - p1Pos.y;
+                                const magnitude = Math.sqrt(directionVectorX * directionVectorX + directionVectorY * directionVectorY);
+                                ballVel.vx = (directionVectorX / magnitude) * ballSpeed;
+                                ballVel.vy = (directionVectorY / magnitude) * ballSpeed;
+                                p1CanAcquireBall = false;
+                                p2CanAcquireBall = false;
+                                setTimeout(() => { p1CanAcquireBall = true; p2CanAcquireBall = true; }, 200);
+                                stopHoldSound();
+                            }
+                            if (player2.shields > 0) { 
+                                player2.shields = Math.max(0, player2.shields - 10);
+                            } else { 
+                                player2.power = Math.max(0, player2.power - 10);
+                            }
+                            hit = true;
+                        }
+                    } else if (bullet.owner === 'p2') {
+                        const distToP1 = Math.sqrt(Math.pow(bullet.x - p1Pos.x, 2) + Math.pow(bullet.y - p1Pos.y, 2));
+                        if (distToP1 < dotRadius * 2) {
+                            playSmashSound();
+                            flashScreen('p1-view');
+                            if (ballOwner === 'p1') {
+                                // P2's bullet hits P1 while P1 has the ball, so P1 drops the ball
+                                ballOwner = null;
+                                const directionVectorX = p1Pos.x - p2Pos.x;
+                                const directionVectorY = p1Pos.y - p2Pos.y;
+                                const magnitude = Math.sqrt(directionVectorX * directionVectorX + directionVectorY * directionVectorY);
+                                ballVel.vx = (directionVectorX / magnitude) * ballSpeed;
+                                ballVel.vy = (directionVectorY / magnitude) * ballSpeed;
+                                p1CanAcquireBall = false;
+                                p2CanAcquireBall = false;
+                                setTimeout(() => { p1CanAcquireBall = true; p2CanAcquireBall = true; }, 200);
+                                stopHoldSound();
+                            }
+                            if (player1.shields > 0) { 
+                                player1.shields = Math.max(0, player1.shields - 10);
+                            } else { 
+                                player1.power = Math.max(0, player1.power - 10);
+                            }
+                            hit = true;
+                        }
+                    }
+
+                    if (hit) {
+                        bullet.lineElement.remove();
+                        return false;
+                    }
+                    return true;
+                });
+                
+                // Update the ball's orbit angle for the next frame
+                ballOrbitAngle += 0.05;
+                
+                // Update 3D goal post positions for both views
+                const centerX = svgWidth / 2;
+                const centerY = svgHeight / 2;
+                const redGoalX = svgWidth * 0.02 - centerX;
+                const blueGoalX = svgWidth * 0.98 - blueDotRadius - centerX;
+
+                // For P1 View
+                redGoalTopMeshP1.position.set(redGoalX, 0, leftRedDotsY - centerY);
+                redGoalBottomMeshP1.position.set(redGoalX, 0, leftRedDotsY + separation - centerY);
+                blueGoalTopMeshP1.position.set(blueGoalX, 0, rightBlueDotsY - centerY);
+                blueGoalBottomMeshP1.position.set(blueGoalX, 0, rightBlueDotsY + separation - centerY);
+                
+                // For P2 View
+                redGoalTopMeshP2.position.set(redGoalX, 0, leftRedDotsY - centerY);
+                redGoalBottomMeshP2.position.set(redGoalX, 0, leftRedDotsY + separation - centerY);
+                blueGoalTopMeshP2.position.set(blueGoalX, 0, rightBlueDotsY - centerY);
+                blueGoalBottomMeshP2.position.set(blueGoalX, 0, rightBlueDotsY + separation - centerY);
+
+                updatePlayerStats();
+                update3DViewP1();
+                update3DViewP2();
+                animationFrameId = requestAnimationFrame(animateDots);
+            }
+            
+            // Add power and shields regeneration
+            setInterval(() => {
+                // Regenerate power for P1
+                if (player1.power < 100) {
+                    player1.power = Math.min(100, player1.power + 1);
+                } else if (player1.shields < 100) {
+                    player1.shields = Math.min(100, player1.shields + 1);
+                }
+
+                // Regenerate power for P2
+                if (player2.power < 100) {
+                    player2.power = Math.min(100, player2.power + 1);
+                } else if (player2.shields < 100) {
+                    player2.shields = Math.min(100, player2.shields + 1);
+                }
+                
+                updatePlayerStats();
+            }, 250);
+
+            window.addEventListener('load', () => {
+                setup3DSceneP1();
+                setup3DSceneP2();
+                initializePositions();
+                animateDots();
+            });
+            window.addEventListener('resize', () => {
+                initializePositions();
+                resize3DViewP1();
+                resize3DViewP2();
+            });
+            
+        });
+    </script>
+</body>
+</html>

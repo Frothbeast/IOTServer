@@ -1,0 +1,2406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Particle Emitter</title>
+    <style>
+        /* Apply inter font family */
+        body {
+            font-family: "Inter", sans-serif;
+            margin: 0;
+            overflow: hidden; /* Hide scrollbars */
+            cursor: none; /* Hide default mouse cursor */
+            background-color: black; /* Equivalent to bg-black */
+        }
+        body.game-over-cursor {
+            cursor: default; /* Show default mouse cursor when game is over */
+        }
+        canvas {
+            display: block;
+            background-color: black;
+        }
+
+        /* Main container equivalent to relative w-screen h-screen overflow-hidden bg-black flex items-center justify-center */
+        .game-container {
+            position: relative;
+            width: 100vw; /* w-screen */
+            height: 100vh; /* h-screen */
+            overflow: hidden;
+            background-color: black;
+            display: flex;
+            align-items: center; /* items-center */
+            justify-content: center; /* justify-center */
+        }
+
+        /* Absolute positioning for canvas and HUD elements */
+        .absolute-top-left {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 0; /* z-0 */
+        }
+
+        /* Changed to fixed positioning for all HUD elements for reliable viewport positioning */
+        .hud-panel {
+            position: fixed; /* Changed from absolute */
+            background-color: rgba(31, 41, 55, 0.7); /* bg-gray-800 bg-opacity-70 */
+            padding: 0.75rem; /* p-3 */
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-lg */
+            color: white; /* text-white */
+            font-size: 1.125rem; /* text-lg */
+            font-weight: bold; /* font-bold */
+            z-index: 20; /* z-20 */
+        }
+
+        /* Controls Legend specific styles */
+        .controls-legend {
+            bottom: 0;
+            left: 0;
+            padding: 0.5rem; /* p-2 */
+            border-top-left-radius: 0.5rem; /* rounded-t-lg */
+            border-top-right-radius: 0.5rem; /* rounded-t-lg */
+            padding-left: 2rem; /* px-8 */
+            padding-right: 2rem; /* px-8 */
+            font-size: 0.875rem; /* text-sm */
+        }
+        .controls-legend h3 {
+            font-weight: bold; /* font-bold */
+            margin-bottom: 0.25rem; /* mb-1 */
+        }
+        .controls-legend ul {
+            list-style-type: disc; /* list-disc */
+            list-style-position: inside; /* list-inside */
+        }
+        .controls-legend li span {
+            font-weight: 600; /* font-semibold */
+        }
+
+        /* Speed and Score HUD specific styles */
+        .speed-score-hud {
+            top: 1rem; /* top-4 */
+            right: 1rem; /* right-4 */
+            display: flex; /* flex */
+            flex-direction: column; /* flex-col */
+            align-items: flex-end; /* items-end */
+        }
+        .speed-score-hud div:last-child {
+            margin-top: 0.25rem; /* mt-1 */
+        }
+
+        /* Volume Slider specific styles */
+        .volume-slider-container {
+            position: fixed; /* Changed from absolute */
+            top: 50%; /* top-1/2 */
+            right: 1rem; /* right-4 */
+            transform: translateY(-50%); /* transform -translate-y-1/2 */
+            background-color: rgba(31, 41, 55, 0.7); /* bg-gray-800 bg-opacity-70 */
+            padding: 0.5rem; /* p-2 */
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-lg */
+            display: flex; /* flex */
+            flex-direction: column; /* flex-col */
+            align-items: center; /* items-center */
+            z-index: 20; /* z-20 */
+        }
+        .volume-slider-container label {
+            color: white; /* text-white */
+            font-size: 0.875rem; /* text-sm */
+            margin-bottom: 0.5rem; /* mb-2 */
+        }
+        /* Style for vertical slider */
+        input[type="range"][orient="vertical"] {
+            -webkit-appearance: slider-vertical; /* For WebKit browsers */
+            writing-mode: bt-lr; /* For Firefox */
+            width: 8px; /* Adjust width as needed */
+            height: 6rem; /* h-24 */
+            padding: 0 5px; /* Add some padding */
+        }
+
+        /* Rear View Mini-Map specific styles */
+        .rear-view-container {
+            position: fixed; /* Changed from absolute */
+            top: 20px; /* Changed from 1rem */
+            left: 20px; /* Changed from 1rem */
+            background-color: rgba(31, 41, 55, 0.7); /* bg-gray-800 bg-opacity-70 */
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-lg */
+            display: flex; /* flex */
+            flex-direction: row; /* flex-row */
+            align-items: center; /* items-center */
+            border: 2px solid #9ca3af; /* border-2 border-gray-400 */
+            z-index: 20; /* z-20 */
+        }
+        #rearViewCanvas {
+            background-color: black; /* bg-black */
+            border-radius: 0.25rem; /* rounded */
+            opacity: 0.5; /* 50% transparency */
+        }
+        .border-red-500 {
+            border-color: #ef4444; /* Tailwind red-500 */
+        }
+        .border-gray-400 {
+            border-color: #9ca3af; /* Tailwind gray-400 */
+        }
+
+        /* Play Again and Pause Menu Containers */
+        .full-screen-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8); /* Dark overlay */
+            z-index: 100;
+            display: flex; /* flex */
+            flex-direction: column; /* flex-col */
+            align-items: center; /* items-center */
+            justify-content: center; /* justify-center */
+            color: white;
+            font-size: 2rem;
+            text-align: center;
+        }
+        #playAgainContainer {
+            display: none; /* Hidden by default */
+        }
+        #pauseMenuContainer {
+            display: none; /* Hidden by default */
+        }
+
+        .difficulty-button {
+            color: black;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.5rem;
+            margin: 10px;
+            border: none;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+        .difficulty-button:hover {
+            transform: translateY(-2px);
+        }
+        .difficulty-button:active {
+            transform: translateY(0);
+        }
+        .easy-button {
+            background-color: limegreen;
+            box-shadow: 0 4px 6px rgba(0, 255, 0, 0.3);
+        }
+        .easy-button:hover {
+            background-color: #00e600;
+        }
+        .hard-button {
+            background-color: yellow;
+            box-shadow: 0 4px 6px rgba(255, 255, 0, 0.3);
+        }
+        .hard-button:hover {
+            background-color: #e6e600;
+        }
+        .expert-button {
+            background-color: red;
+            box-shadow: 0 4px 6px rgba(255, 0, 0, 0.3);
+        }
+        .expert-button:hover {
+            background-color: #e60000;
+        }
+
+        .button-group {
+            display: flex; /* flex */
+            flex-direction: row; /* flex-row */
+            justify-content: center; /* justify-center */
+            margin-top: 1rem; /* mt-4 */
+        }
+
+        /* Instructions within menus */
+        .menu-instructions {
+            font-size: 1.2rem;
+            margin-top: 15px;
+            margin-bottom: 20px;
+            text-align: left;
+            max-width: 800px; /* max-w-xl was 600px, changed to 800px */
+        }
+        .menu-instructions h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .menu-instructions ul {
+            list-style: disc;
+            list-style-position: inside;
+        }
+        .menu-instructions li {
+            margin-bottom: 5px;
+        }
+        .menu-instructions p {
+            font-size: 1rem; /* text-base */
+            margin-top: 1rem; /* mt-4 */
+        }
+
+        /* Too Hot to Fire Message */
+        #tooHotMessage {
+            position: absolute;
+            bottom: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            color: yellow;
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: none; /* Hidden by default */
+            z-index: 50;
+            opacity: 0;
+            transition: opacity 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <!-- Canvas element for drawing the particles -->
+        <canvas id="particleCanvas" class="absolute-top-left"></canvas>
+
+        <!-- Controls Legend -->
+        <div class="hud-panel controls-legend">
+            <h3>Controls:</h3>
+            <ul>
+                <li><span>Mouse:</span> Fly</li>
+                <li><span>Left Click:</span> Lasers</li>
+                <li><span>Right Click:</span> Hyperdrive</li>
+                <li><span>[/] Keys / Mouse Wheel:</span> Speed</li>
+                <li><span>P:</span> Pause</li>
+            </ul>
+        </div>
+
+        <!-- Speed and Score HUD -->
+        <div class="hud-panel speed-score-hud">
+            <div>Speed: <span id="currentSpeedValue">0</span></div>
+            <div>Score: <span id="currentScoreValue">0</span></div>
+            <div>Shields: <span id="currentShieldsValue">50</span></div>
+            <div>Internal Heating: <span id="internalHeatingValue">0%</span></div>
+        </div>
+
+        <!-- Volume Slider -->
+        <div class="volume-slider-container">
+            <label for="volumeSlider">Volume</label>
+            <input type="range" id="volumeSlider" orient="vertical" min="0" max="100" value="100">
+        </div>
+
+        <!-- Rear View Mini-Map -->
+        <div class="rear-view-container" id="rearViewContainer">
+            <canvas id="rearViewCanvas" width="240" height="180"></canvas>
+        </div>
+
+        <!-- Play Again Button Container -->
+        <div id="playAgainContainer" class="full-screen-overlay">
+            <p>GAME OVER!</p>
+            <p>Final Score: <span id="finalScoreValue">0</span></p>
+            <div class="menu-instructions">
+                <h3>Mission Briefing:</h3>
+                <ul>
+                    <li>Use <span>Mouse</span> to fly and evade.</li>
+                    <li><span>Left Click</span> to fire Lasers at the red 'X'.</li>
+                    <li><span>Right Click</span> for Hyperdrive or high speed to escape shots from the rear.</li>
+                    <li><span>[/] Keys / Mouse Wheel</span> to adjust your speed. Slow down to make targeting easier.</li>
+                    <li>Hyperdrive and Lasers generate Internal Heat. Too much heat will disable them.</li>
+                    <li>Shields are critical! When <span>Shields reach 0</span>, it's Game Over.</li>
+                    <li>Look for <span>Ice Clouds</span>! Touching them will reset your internal heat.</li>
+                </ul>
+                <p>Select a difficulty to play again.</p>
+            </div>
+            <div class="button-group">
+                <button id="easyDifficultyButton" class="difficulty-button easy-button">Easy</button>
+                <button id="hardDifficultyButton" class="difficulty-button hard-button">Hard</button>
+                <button id="expertDifficultyButton" class="difficulty-button expert-button">No F***ing Way</button>
+            </div>
+        </div>
+
+        <!-- Pause Menu Container -->
+        <div id="pauseMenuContainer" class="full-screen-overlay">
+            <p>PAUSED</p>
+            <div class="menu-instructions">
+                <h3>Current Mission Status: Paused</h3>
+                <ul>
+                    <li>Use <span>Mouse</span> to fly and evade.</li>
+                    <li><span>Left Click</span> to fire Lasers at the red 'X'.</li>
+                    <li><span>Right Click</span> for Hyperdrive or high speed to escape shots from the rear.</li>
+                    <li><span>[/] Keys / Mouse Wheel</span> to adjust your speed. Slow down to make targeting easier.</li>
+                    <li>Hyperdrive and Lasers generate Internal Heat. Too much heat will disable them.</li>
+                    <li>Shields are critical! When <span>Shields reach 0</span>, it's Game Over.</li>
+                    <li>Look for <span>Ice Clouds</span>! Touching them will reset your internal heat.</li>
+                </ul>
+                <p>Press 'P' to resume.</p>
+            </div>
+            <button id="resumeButton" class="difficulty-button easy-button">Resume</button>
+        </div>
+
+        <!-- Too Hot to Fire Message -->
+        <div id="tooHotMessage">TOO HOT TO FIRE</div>
+    </div>
+
+    <script>
+        // Get the canvas element and its 2D rendering context
+        const canvas = document.getElementById('particleCanvas');
+        const context = canvas.getContext('2d');
+        const speedHudValue = document.getElementById('currentSpeedValue'); // Get the HUD element
+        const scoreHudValue = document.getElementById('currentScoreValue'); // Get the Score HUD element
+        const shieldsHudValue = document.getElementById('currentShieldsValue'); // Get the Shields HUD element
+        const internalHeatingValue = document.getElementById('internalHeatingValue'); // Get the Internal Heating HUD element
+        const volumeSlider = document.getElementById('volumeSlider'); // Get the volume slider element
+        const rearViewCanvas = document.getElementById('rearViewCanvas'); // Get the rear view canvas
+        const rearViewContext = rearViewCanvas.getContext('2d'); // Get the rear view canvas context
+        const rearViewContainer = document.getElementById('rearViewContainer'); // Get the rear view container for border color
+        const playAgainButtonContainer = document.getElementById('playAgainContainer'); // Get the play again button container
+        const finalScoreValue = document.getElementById('finalScoreValue'); // Get the final score display
+        const pauseMenuContainer = document.getElementById('pauseMenuContainer'); // Get the pause menu container
+        const resumeButton = document.getElementById('resumeButton'); // Get the resume button
+        const tooHotMessage = document.getElementById('tooHotMessage'); // Get the "Too Hot to Fire" message element
+
+        // Difficulty buttons
+        const easyDifficultyButton = document.getElementById('easyDifficultyButton');
+        const hardDifficultyButton = document.getElementById('hardDifficultyButton');
+        const expertDifficultyButton = document.getElementById('expertDifficultyButton');
+
+        // Configuration for the particles
+        const PARTICLE_COUNT = 2560; // Reduced particle count
+        const PARTICLE_MIN_VISIBLE_RADIUS = 0.2; // Made smaller
+        const PARTICLE_MAX_VISIBLE_RADIUS = 8.0; // Made smaller
+        const PARTICLE_SIZE_GROWTH_FACTOR = 1.2;
+
+        const FOCAL_DISTANCE = 500;
+
+        // Variables for particle speed control
+        // These are the *displayed* speeds that the user sees and controls
+        const DISPLAY_SPEED_MIN_VALUE = 1;
+        const DISPLAY_SPEED_MAX_VALUE = 10;
+        // These are the *internal* speed values that correspond to the displayed min/max
+        const INTERNAL_SPEED_FOR_DISPLAY_MIN = 0.070;
+        const INTERNAL_SPEED_FOR_DISPLAY_MAX = 0.150;
+
+        let displayedSpeed = DISPLAY_SPEED_MIN_VALUE; // Initial displayed speed
+        let currentParticleSpeedZ; // Actual internal speed, calculated from displayedSpeed
+
+        // Variables for controlling the vanishing point (crosshair position on screen)
+        let vanishingPointX = 0;
+        let vanishingPointY = 0;
+        let prevVanishingPointX = 0; // Previous crosshair X position for velocity calculation
+        let prevVanishingPointY = 0; // Previous crosshair Y position for velocity calculation
+
+
+        // Constants for dynamic speed based on distance to crosshair
+        const SPEED_FACTOR_AT_CROSSHAIR = 1.5; // Faster for closer particles
+        const SPEED_FACTOR_AT_EDGE = 1.0;     // Slower for further particles
+        const DISTANCE_THRESHOLD_FOR_FULL_EFFECT = 400;
+
+        const SCREEN_REPEL_BASE_FACTOR = 100.0;
+        const MAX_LATERAL_WORLD_SPEED = 5000;
+
+        // Spawn delay frames (for normal particle generation)
+        const MIN_SPAWN_DELAY_FRAMES = 0;
+        const MAX_SPAWN_DELAY_FRAMES = 300;
+
+        let isHyperdriveActive = false; // This flag now indicates if particle tracers are active
+        const HYPERDRIVE_SPEED_MULTIPLIER = 2.0; // New constant for hyperdrive speed increase
+        const HYPERDRIVE_DURATION_MS = 1000; // New constant: Hyperdrive duration in milliseconds
+        let hyperdriveTimeoutId = null; // To store the timeout ID for clearing
+
+        // Icon (Two Disks) parameters
+        const ICON_DISC_RADIUS = 5;
+        const ICON_Z_DEPTH = 50;
+
+        let particles = [];
+        let diskTracers = [];
+        const DISK_TRACER_TRAIL_LENGTH = 30;
+        const DISK_TRACER_TRAVEL_SPEED = 10;
+        const DISK_TRACER_FADE_START_DISTANCE = 100;
+        const DISK_TRACER_COOLDOWN_FRAMES = 15; // Halved cooldown frames for faster firing
+        let diskTracerCooldown = 0; // Current cooldown counter
+        const DISK_TRACER_EDGE_FADE_DISTANCE = 200; // Increased: how far past the edge tracers fade
+        let lastFiredSide = 'right'; // New: Tracks which side fired last for alternating lasers
+
+        // Mouse state variables
+        let isLeftMouseDown = false;
+
+        // Constant for "1 inch" distance for main screen tracers
+        const ONE_INCH_PIXELS = 96; // Approximately 1 inch at 96 DPI
+
+        // --- Target (Evading 'x' shape) parameters ---
+        let target = null; // The main target on the screen
+        const TARGET_SIZE = 30; // Size of the 'x' target
+        const TARGET_COLOR = 'red';
+        
+        // New constants for the tow line and circle
+        const MIN_TOW_LINE_LENGTH = 5; // Minimum length for the tow line
+        const MAX_TOW_LINE_LENGTH = 40; // Maximum length for the tow line
+        const TOW_CIRCLE_RADIUS = 3; // Radius of the leading circle
+
+        // Speed constants for the 'x' target
+        const BASE_MIN_X_EVASION_SPEED = 2.0;
+        const BASE_MAX_X_EVASION_SPEED = 4.0;
+        const X_EVASION_SPEED_SCALE_FACTOR = 20.0; // Multiplier for main speed's effect on X evasion speed
+
+        const EVASION_DISTANCE_RANGE = 400; // Distance over which speed scales (e.g., 0 to 400 pixels)
+
+
+        // New state variables for target management
+        let targetLocation = 'main'; // 'main', 'rearView', 'respawnDelay', 'normalSpawnDelay'
+        let hyperdriveRespawnDelayTimer = 0; // Timer for the 5-second delay after hyperdrive ends
+        let rearViewX = null; // New: Object for the red X in the rear view (follower)
+        const REAR_VIEW_X_FOLLOW_SPEED = 0.2; // New: How quickly rearViewX follows the center circle
+        const MIN_TARGET_SPAWN_DELAY_SECONDS = 2;
+        const MAX_TARGET_SPAWN_DELAY_SECONDS = 10;
+        let targetSpawnTimer = 0; // Timer in frames for normal respawn (when destroyed by laser)
+
+
+        // --- Game Score and Shields ---
+        let score = 0;
+        let shields = 10; // Initial shields value changed to 10
+        let heat = 0; // New: Internal heating percentage (0-100)
+        const HEAT_DECAY_PER_SECOND = 3; // 3% per second
+
+        // Difficulty-based heat values (will be set dynamically)
+        let HEAT_INCREASE_PER_SHOT = 2; // Default to Easy
+        let HYPERDRIVE_HEAT_ADDITION = 20; // Default to Easy
+
+        // Heat thresholds for inhibition
+        const HYPERDRIVE_MAX_HEAT_THRESHOLD = 80;
+        const LASER_MAX_HEAT_THRESHOLD = 97;
+
+        let isSimulationRunning = true; // Flag to control simulation state
+        let isPaused = false; // New: Flag to control pause state
+
+        // --- Web Audio API Setup ---
+        let audioContext = null;
+        let masterGainNode;
+
+        let turbineOscillator = null;
+        let turbineNoiseSource = null;
+        let turbineFilterNode = null;
+        let turbineGainNode = null;
+
+        let laserOscillator1 = null;
+        let laserOscillator2 = null;
+        let laserGainNode = null;
+
+        let explosionNoiseSource = null;
+        let explosionGainNode = null;
+
+        let rearViewShootNoiseSource = null;
+        let rearViewShootGainNode = null;
+
+        let rearViewLaserStartOscillator = null;
+        let rearViewLaserStartGainNode = null;
+
+        let rearViewHitEdgeNoiseSource = null;
+        let rearViewHitEdgeGainNode = null;
+
+        let hyperdriveWhooshNoiseSource = null;
+        let hyperdriveWhooshFilter = null;
+        let hyperdriveWhooshGainNode = null;
+
+        let coolDownNoiseSource = null; // Now a NoiseNode for hiss/sizzle
+        let coolDownGainNode = null;
+
+
+        // Rear View Particles
+        let rearViewParticles = [];
+        const REAR_VIEW_PARTICLE_COUNT = 50;
+        const REAR_VIEW_MIN_SIZE = 0.2;
+        const REAR_VIEW_MAX_SIZE = 0.6;
+        const REAR_VIEW_PARTICLE_BASE_SPEED = 25;
+
+        // New constants for rear view blue tracers
+        let rearViewBlueTracers = [];
+        const REAR_VIEW_TRACER_SPEED = 5;
+        const BASE_REAR_VIEW_TRACER_COOLDOWN_FRAMES = 30;
+        const REAR_VIEW_COOLDOWN_SPEED_FACTOR = 200;
+        let rearViewTracerCooldown = 0;
+        const REAR_VIEW_TRACER_LINE_WIDTH = 2;
+        let rearViewAsterisks = []; // New array to hold asterisk objects
+        const ASTERISK_DURATION_FRAMES = 0.25 * 60; // 0.25 seconds * 60 frames/sec
+        const ASTERISK_SIZE = 8;
+        const ASTERISK_LINE_WIDTH = 1;
+
+        // Array to hold destroyed target visuals
+        let destroyedTargetVisuals = [];
+        const DESTROYED_TARGET_DURATION_FRAMES = 0.5 * 60; // 500 ms = 0.5 seconds * 60 frames/sec
+
+
+        // Rear View Border Blink
+        let rearViewBlinkTimer = 0;
+        const REAR_VIEW_BLINK_DURATION_FRAMES = 8; // How long the border stays red
+
+        // Rear View 'X' size (new constant)
+        const REAR_VIEW_RED_X_SIZE = 20;
+
+        // New constant for particle tracer alpha
+        const PARTICLE_TRACER_ALPHA = 0.6;
+        const LASER_TRACER_ALPHA = 0.8;
+
+        // Difficulty settings
+        const DIFFICULTY_SETTINGS = {
+            'easy': {
+                laserHeat: 1,
+                hyperdriveHeat: 10
+            },
+            'hard': {
+                laserHeat: 3,
+                hyperdriveHeat: 20
+            },
+            'expert': {
+                laserHeat: 5,
+                hyperdriveHeat: 30
+            }
+        };
+
+        // --- Ice Cloud Parameters ---
+        const ICE_CLOUD_BASE_RADIUS = ONE_INCH_PIXELS / 2;
+        const ICE_CLOUD_HAZE_COUNT = 5;
+        const ICE_CLOUD_HAZE_ALPHA = 0.15;
+        const ICE_CLOUD_MAX_LIFETIME_FRAMES = 5 * 60; // 5 seconds lifespan for a cloud (300 frames)
+
+        const ICE_CLOUD_OPPORTUNITY_INTERVAL_FRAMES = 30 * 60; // Every 30 seconds
+        const ICE_CLOUD_SPAWN_CHANCE_PER_OPPORTUNITY = 0.7; // 70% chance to spawn a cloud at each opportunity
+        const MAX_ACTIVE_ICE_CLOUDS = 1; // Only one ice cloud at a time for simplicity and impact
+
+        let iceClouds = [];
+        let iceCloudOpportunityTimer = ICE_CLOUD_OPPORTUNITY_INTERVAL_FRAMES; // Timer for the next 30-second opportunity
+
+
+        // Function to create a noise buffer for NoiseNode
+        function createNoiseBuffer(context, duration) {
+            const bufferSize = context.sampleRate * duration;
+            const buffer = context.createBuffer(1, bufferSize, context.sampleRate);
+            const output = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                output[i] = Math.random() * 2 - 1; // White noise
+            }
+            return buffer;
+        }
+
+        // Function to initialize audio (called on first user interaction)
+        function initAudio() {
+            if (audioContext) {
+                console.log("Audio context already started.");
+                return; // Prevent multiple initializations
+            }
+            console.log("Attempting to start AudioContext...");
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+            // Master volume node
+            masterGainNode = audioContext.createGain();
+            masterGainNode.connect(audioContext.destination);
+            masterGainNode.gain.value = volumeSlider.value / 100; // Set initial volume
+
+            // --- Turbine Sound (Pink Noise approximation with Filter) ---
+            // Using white noise and a low-pass filter to approximate pink noise + bandpass for engine sound
+            turbineNoiseSource = audioContext.createBufferSource();
+            turbineNoiseSource.buffer = createNoiseBuffer(audioContext, 2); // Create a 2-second noise buffer
+            turbineNoiseSource.loop = true; // Loop the noise
+            
+            turbineFilterNode = audioContext.createBiquadFilter();
+            turbineFilterNode.type = "bandpass";
+            turbineFilterNode.frequency.value = 150;
+            turbineFilterNode.Q.value = 0.8;
+
+            turbineGainNode = audioContext.createGain();
+            turbineGainNode.gain.value = 0.01; // Initial volume for turbine (very low)
+
+            turbineNoiseSource.connect(turbineFilterNode);
+            turbineFilterNode.connect(turbineGainNode);
+            turbineGainNode.connect(masterGainNode);
+            turbineNoiseSource.start(); // Start the noise source
+
+
+            // --- Chirp (Laser) Sound ---
+            laserGainNode = audioContext.createGain();
+            laserGainNode.connect(masterGainNode);
+            laserGainNode.gain.value = 0; // Starts silent, controlled by trigger
+
+            // --- Explosion Sound ---
+            explosionNoiseSource = audioContext.createBufferSource();
+            explosionNoiseSource.buffer = createNoiseBuffer(audioContext, 0.5); // Short noise burst
+            explosionGainNode = audioContext.createGain();
+            explosionGainNode.connect(masterGainNode);
+            explosionGainNode.gain.value = 0; // Starts silent
+
+            // --- Rear View Shoot Sound ---
+            rearViewShootNoiseSource = audioContext.createBufferSource();
+            rearViewShootNoiseSource.buffer = createNoiseBuffer(audioContext, 0.1); // Very short noise
+            rearViewShootGainNode = audioContext.createGain();
+            rearViewShootGainNode.connect(masterGainNode);
+            rearViewShootGainNode.gain.value = 0; // Starts silent
+
+            // --- Rear View Laser Start Sound (Membrane Synth like) ---
+            rearViewLaserStartOscillator = audioContext.createOscillator();
+            rearViewLaserStartOscillator.type = 'sine';
+            rearViewLaserStartOscillator.frequency.value = 440; // A4
+            rearViewLaserStartGainNode = audioContext.createGain();
+            rearViewLaserStartOscillator.connect(rearViewLaserStartGainNode);
+            rearViewLaserStartGainNode.connect(masterGainNode);
+            rearViewLaserStartGainNode.gain.value = 0; // Starts silent
+            rearViewLaserStartOscillator.start();
+
+
+            // --- Rear View Hit Edge Sound ---
+            rearViewHitEdgeNoiseSource = audioContext.createBufferSource();
+            rearViewHitEdgeNoiseSource.buffer = createNoiseBuffer(audioContext, 0.3); // Pink noise approximation
+            rearViewHitEdgeGainNode = audioContext.createGain();
+            rearViewHitEdgeGainNode.connect(masterGainNode);
+            rearViewHitEdgeGainNode.gain.value = 0; // Starts silent
+
+            // --- Hyperdrive Whoosh Sound ---
+            hyperdriveWhooshNoiseSource = audioContext.createBufferSource();
+            hyperdriveWhooshNoiseSource.buffer = createNoiseBuffer(audioContext, HYPERDRIVE_DURATION_MS / 1000);
+            hyperdriveWhooshFilter = audioContext.createBiquadFilter();
+            hyperdriveWhooshFilter.type = "bandpass";
+            hyperdriveWhooshFilter.frequency.value = 500; // Starting frequency
+            hyperdriveWhooshFilter.Q.value = 0.5;
+            hyperdriveWhooshGainNode = audioContext.createGain();
+            hyperdriveWhooshNoiseSource.connect(hyperdriveWhooshFilter);
+            hyperdriveWhooshFilter.connect(hyperdriveWhooshGainNode);
+            hyperdriveWhooshGainNode.connect(masterGainNode);
+            hyperdriveWhooshGainNode.gain.value = 0; // Starts silent
+            hyperdriveWhooshNoiseSource.loop = true; // Loop for duration
+            hyperdriveWhooshNoiseSource.start();
+
+
+            // --- Cool Down (Hiss/Sizzle) Sound ---
+            coolDownNoiseSource = audioContext.createBufferSource();
+            coolDownNoiseSource.buffer = createNoiseBuffer(audioContext, 0.2); // Short noise burst
+            coolDownNoiseSource.loop = true; // Loop for continuous noise if needed, but we'll control with gain envelope
+            coolDownGainNode = audioContext.createGain();
+            coolDownNoiseSource.connect(coolDownGainNode);
+            coolDownGainNode.connect(masterGainNode);
+            coolDownGainNode.gain.value = 0; // Starts silent
+            coolDownNoiseSource.start(); // Start the noise source, control with gain
+
+        }
+
+        // Function to update master volume based on slider value
+        function updateMasterVolume(sliderValue) {
+            if (!masterGainNode) return;
+            masterGainNode.gain.value = sliderValue / 100;
+        }
+
+        // Add event listener for volume slider
+        volumeSlider.addEventListener('input', (event) => {
+            initAudio(); // Ensure audio context is started
+            updateMasterVolume(event.target.value);
+        });
+
+        // Helper functions (unchanged)
+        function vec3(x, y, z) { return { x, y, z }; }
+        function sub(v1, v2) { return vec3(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z); }
+        function add(v1, v2) { return vec3(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z); }
+        function mulScalar(v, s) { return vec3(v.x * s, v.y * s, v.z * s); }
+        function dot(v1, v2) { return (v1.x * v2.x + v1.y * v2.y + v1.z * v2.z); }
+        function magnitude(v) { return Math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z); }
+        function normalize(v) {
+            const mag = magnitude(v);
+            if (mag === 0) return vec3(0, 0, 0);
+            return vec3(v.x / mag, v.y / mag, v.z / mag);
+        }
+
+        /**
+         * Creates a single particle object with random initial absolute 3D coordinates and velocity.
+         * @param {boolean} isPostHyperdriveReset - True if this reset is happening after hyperdrive.
+         */
+        function createParticle(isPostHyperdriveReset = false) {
+            const width = window.innerWidth; // Use window.innerWidth for full screen
+            const height = window.innerHeight; // Use window.innerHeight for full screen
+
+            // Random Z position within a visible range. Halved the range for closer particles.
+            const initialZ = Math.random() * (FOCAL_DISTANCE * 2.5 - FOCAL_DISTANCE * 0.5) + FOCAL_DISTANCE * 0.5;
+
+            // Generate screen coordinates for the initial spawn point (randomly across the screen).
+            const screenSpawnX = Math.random() * width;
+            const screenSpawnY = Math.random() * height;
+
+            // Convert screen coordinates back to 3D world coordinates at initialZ.
+            const particleX = (screenSpawnX - width / 2) * (initialZ / FOCAL_DISTANCE);
+            const particleY = (screenSpawnY - height / 2) * (initialZ / FOCAL_DISTANCE);
+
+            return {
+                x: particleX,
+                y: particleY,
+                z: initialZ,
+                vx: 0,
+                vy: 0,
+                vz: -currentParticleSpeedZ, // Initial vz based on currentParticleSpeedZ
+                color: `rgba(255, 255, 255, ${0.5 + Math.random() * 0.5})`,
+                // Reintroduced random delay for smoother generation
+                delay: isPostHyperdriveReset ? 0 : Math.floor(Math.random() * (MAX_SPAWN_DELAY_FRAMES - MIN_SPAWN_DELAY_FRAMES + 1)) + MIN_SPAWN_DELAY_FRAMES,
+                active: true,
+                isTraced: false, // Default to false
+                tracerStartScreenX: null, // New property for tracer start point
+                tracerStartScreenY: null  // New property for tracer start point
+            };
+        }
+
+        /**
+         * Creates a single particle for the rear view mini-map.
+         * Spawns at a random edge and moves towards the specified crosshair target.
+         * @param {number} rvWidth - The width of the rear view canvas.
+         * @param {number} rvHeight - The height of the rear view canvas.
+         * @param {number} crosshairX - The X coordinate of the crosshair target in the rear view.
+         * @param {number} crosshairY - The Y coordinate of the crosshair target in the rear view.
+         * @param {number} currentMainSpeed - The current speed of the main particles (currentParticleSpeedZ).
+         */
+        function createRearViewParticle(rvWidth, rvHeight, crosshairX, crosshairY, currentMainSpeed) {
+            let startX, startY;
+            const edge = Math.floor(Math.random() * 4); // 0: top, 1: right, 2: bottom, 3: left
+
+            switch (edge) {
+                case 0: // Top edge
+                    startX = Math.random() * rvWidth;
+                    startY = 0;
+                    break;
+                case 1: // Right edge
+                    startX = rvWidth;
+                    startY = Math.random() * rvHeight;
+                    break;
+                case 2: // Bottom edge
+                    startX = Math.random() * rvWidth;
+                    startY = rvHeight;
+                    break;
+                case 3: // Left edge
+                    startX = 0;
+                    startY = Math.random() * rvHeight;
+                    break;
+            }
+
+            // Calculate a random vanishing point between the start edge and the crosshair
+            const t = Math.random(); // Scalar for interpolation (0 to 1)
+            const targetVanishingPointX = startX + t * (crosshairX - startX);
+            const targetVanishingPointY = startY + t * (crosshairY - startY);
+
+            const dirX = targetVanishingPointX - startX;
+            const dirY = targetVanishingPointY - startY;
+            const distanceToVanish = Math.sqrt(dirX * dirX + dirY * dirY);
+
+            const normalizedDirX = distanceToVanish > 0 ? dirX / distanceToVanish : 0;
+            const normalizedDirY = distanceToVanish > 0 ? dirY / distanceToVanish : 0;
+
+            // Define a base speed for rear view particles, proportional to main speed
+            const speedMagnitude = currentMainSpeed * REAR_VIEW_PARTICLE_BASE_SPEED;
+
+            return {
+                x: startX,
+                y: startY,
+                vx: normalizedDirX * speedMagnitude,
+                vy: normalizedDirY * speedMagnitude,
+                size: REAR_VIEW_MIN_SIZE + Math.random() * (REAR_VIEW_MAX_SIZE - REAR_VIEW_MIN_SIZE),
+                color: `rgba(255, 255, 255, 1.0)`, // Set alpha to 1.0 for brighter particles
+                initialStartX: startX, // Store initial position for distance check
+                initialStartY: startY,
+                targetVanishingPointX: targetVanishingPointX, // Store the specific vanishing point
+                targetVanishingPointY: targetVanishingPointY,
+                initialDistanceToVanish: distanceToVanish, // Store initial distance to target
+                baseSpeedMagnitude: speedMagnitude, // Store the base speed for dynamic adjustment
+                isTraced: false,
+                tracerStartScreenX: null, // New property for tracer start point
+                tracerStartScreenY: null  // New property for tracer start point
+            };
+        }
+
+        /**
+         * Creates a new ice cloud object with random position and initial properties.
+         * @returns {object} The new ice cloud object.
+         */
+        function createIceCloud() {
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * canvas.height;
+            const radius = ICE_CLOUD_BASE_RADIUS + (Math.random() - 0.5) * (ICE_CLOUD_BASE_RADIUS * 0.5); // Slight variation
+            return {
+                x: x,
+                y: y,
+                radius: radius,
+                lifeTimer: ICE_CLOUD_MAX_LIFETIME_FRAMES,
+                alpha: 0 // Will fade in
+            };
+        }
+
+        /**
+         * Initializes the target object's properties (position, velocity).
+         * Does not handle spawning delay.
+         */
+        function initializeTargetProperties() {
+            const spawnOffsetX = (Math.random() - 0.5) * 100;
+            const spawnOffsetY = (Math.random() - 0.5) * 100;
+
+            const initialX = vanishingPointX + spawnOffsetX;
+            const initialY = vanishingPointY + spawnOffsetY;
+
+            // Initial velocity for the X, pointing away from crosshairs
+            const initialDx = initialX - vanishingPointX;
+            const initialDy = initialY - vanishingPointY;
+            const initialDist = Math.sqrt(initialDx * initialDx + initialDy * initialDy);
+            let initialVx = 0;
+            let initialVy = 0;
+            if (initialDist > 0) {
+                // Scale initial evasion speed with current main particle speed
+                const effectiveMinXEvasionSpeed = BASE_MIN_X_EVASION_SPEED + (currentParticleSpeedZ * X_EVASION_SPEED_SCALE_FACTOR);
+                initialVx = (initialDx / initialDist) * effectiveMinXEvasionSpeed; // Start with min speed
+                initialVy = (initialDy / initialDist) * effectiveMinXEvasionSpeed;
+            } else {
+                // If spawned exactly on crosshair, give a random initial push
+                const angle = Math.random() * Math.PI * 2;
+                const effectiveMinXEvasionSpeed = BASE_MIN_X_EVASION_SPEED + (currentParticleSpeedZ * X_EVASION_SPEED_SCALE_FACTOR);
+                initialVx = Math.cos(angle) * effectiveMinXEvasionSpeed;
+                initialVy = Math.sin(angle) * effectiveMinXEvasionSpeed;
+            }
+
+            return {
+                x: initialX, // Position of the 'x'
+                y: initialY,
+                vx: initialVx, // Velocity of the 'x'
+                vy: initialVy,
+                currentSize: 0,
+                growthFrames: 0,
+                isGrowing: true,
+                targetEvasionAngle: Math.atan2(initialVy, initialVx), // Angle the X *wants* to move
+                angularDriftRate: (Math.random() - 0.5) * 0.005 // Small random change in target angle per frame
+            };
+        }
+
+        /**
+         * Helper function to generate tracer data for a given tip in the rear view.
+         * @param {object} startTip - The starting {x, y} coordinates of the tracer.
+         * @param {number} rvWidth - The width of the rear view canvas.
+         * @param {number} rvHeight - The height of the rear view canvas.
+         * @param {number} visualLength - The desired visual length of the tracer line segment.
+         * @returns {object|null} Tracer data object or null if no valid tracer.
+         */
+        const generateTracerData = (startTip, rvWidth, rvHeight, visualLength) => {
+            let targetCornerX, targetCornerY;
+
+            // Determine the target corner based on the tip's quadrant relative to the center of the rear view canvas
+            const tipIsTop = startTip.y < rvWidth / 2;
+            const tipIsLeft = startTip.x < rvWidth / 2;
+
+            if (tipIsTop && tipIsLeft) {
+                targetCornerX = 0;
+                targetCornerY = 0;
+            } else if (tipIsTop && !tipIsLeft) {
+                targetCornerX = rvWidth;
+                targetCornerY = 0;
+            } else if (!tipIsTop && tipIsLeft) {
+                targetCornerX = 0;
+                targetCornerY = rvHeight;
+            } else { // !tipIsTop && !tipIsLeft
+                targetCornerX = rvWidth;
+                targetCornerY = rvHeight;
+            }
+
+            // Calculate the vector from startTip to the target corner
+            const vecToCornerX = targetCornerX - startTip.x;
+            const vecToCornerY = targetCornerY - startTip.y;
+
+            // Calculate the halfway point
+            const midPointX = startTip.x + vecToCornerX * 0.5;
+            const midPointY = startTip.y + vecToCornerY * 0.5;
+
+            // The total distance for the tracer's tip to travel is now to this halfway point
+            const totalDistanceToTravel = Math.sqrt(
+                Math.pow(midPointX - startTip.x, 2) +
+                Math.pow(midPointY - startTip.y, 2)
+            );
+
+            if (totalDistanceToTravel > 0) {
+                return {
+                    startX: startTip.x,
+                    startY: startTip.y,
+                    dirX: vecToCornerX / Math.sqrt(vecToCornerX * vecToCornerX + vecToCornerY * vecToCornerY), // Normalized direction to the corner
+                    dirY: vecToCornerY / Math.sqrt(vecToCornerX * vecToCornerX + vecToCornerY * vecToCornerY),
+                    distanceTraveled: 0,
+                    length: visualLength, // This is the visual length of the line segment
+                    totalDistanceToTravel: totalDistanceToTravel, // This is the total path length for the *tip* of the laser
+                    alpha: 1.0
+                };
+            }
+            return null; // No valid tracer
+        };
+
+        // Function to convert displayed speed value to internal particle speed
+        function getInternalSpeedFromDisplay(displayVal) {
+            if (displayVal <= DISPLAY_SPEED_MIN_VALUE) return INTERNAL_SPEED_FOR_DISPLAY_MIN;
+            if (displayVal >= DISPLAY_SPEED_MAX_VALUE) return INTERNAL_SPEED_FOR_DISPLAY_MAX;
+            const normalizedDisplay = (displayVal - DISPLAY_SPEED_MIN_VALUE) / (DISPLAY_SPEED_MAX_VALUE - DISPLAY_SPEED_MIN_VALUE);
+            return INTERNAL_SPEED_FOR_DISPLAY_MIN + normalizedDisplay * (INTERNAL_SPEED_FOR_DISPLAY_MAX - INTERNAL_SPEED_FOR_DISPLAY_MIN);
+        }
+
+        /**
+         * Sets up canvas dimensions and initializes game state for a new game.
+         * @param {boolean} isPostHyperdriveReset - Flag for particle creation.
+         * @param {string} difficulty - The selected difficulty ('easy', 'hard', 'expert').
+         */
+        function setCanvasDimensions(isPostHyperdriveReset = false, difficulty = 'easy') {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            // Initialize vanishing point (crosshair) to the center of the canvas on load/resize
+            vanishingPointX = canvas.width / 2;
+            vanishingPointY = canvas.height / 2;
+            prevVanishingPointX = vanishingPointX; // Initialize previous positions
+            prevVanishingPointY = vanishingPointY; // Initialize previous positions
+
+            // Set initial displayed speed and calculate corresponding internal speed
+            displayedSpeed = DISPLAY_SPEED_MIN_VALUE;
+            currentParticleSpeedZ = getInternalSpeedFromDisplay(displayedSpeed);
+
+            // Set heat parameters based on difficulty
+            HEAT_INCREASE_PER_SHOT = DIFFICULTY_SETTINGS[difficulty].laserHeat;
+            HYPERDRIVE_HEAT_ADDITION = DIFFICULTY_SETTINGS[difficulty].hyperdriveHeat;
+
+            // Pass isPostHyperdriveReset to createParticle when re-initializing all particles
+            particles = Array.from({ length: PARTICLE_COUNT }).map(() => createParticle(isPostHyperdriveReset));
+
+            // Rear view particles are now spawned continuously, so no initial population here
+            rearViewParticles = []; // Clear any existing particles on resize
+
+            // Initialize or reset target position on resize
+            target = null; // Start with no target
+            targetLocation = 'normalSpawnDelay'; // Set initial state for target
+            hyperdriveRespawnDelayTimer = 0;
+            rearViewX = null; // Ensure rearViewX is reset
+            const rearViewCenterX = rearViewCanvas.width / 2;
+            const rearViewCenterY = rearViewCanvas.height / 2;
+            rearViewX = { // Initialize rearViewX for the first time
+                x: rearViewCenterX + (Math.random() - 0.5) * 50, // Spawn slightly off center
+                y: rearViewCenterY + (Math.random() - 0.5) * 50,
+                vx: 0,
+                vy: 0
+            };
+
+            const MIN_TARGET_SPAWN_DELAY_SECONDS = 2;
+            const MAX_TARGET_SPAWN_DELAY_SECONDS = 10;
+            targetSpawnTimer = Math.floor(MIN_TARGET_SPAWN_DELAY_SECONDS * 60 + Math.random() * (MAX_TARGET_SPAWN_DELAY_SECONDS - MIN_TARGET_SPAWN_DELAY_SECONDS) * 60); // Initialize with a random delay
+            score = 0; // Reset score
+            shields = 10; // Reset shields to 10
+            heat = 0; // Set initial heat to 0% as requested
+            scoreHudValue.textContent = score; // Initialize score display
+            shieldsHudValue.textContent = shields; // Initialize shields display
+            internalHeatingValue.textContent = `${Math.round(heat)}%`; // Initialize heat display
+
+            // Clear any existing destroyed target visuals
+            destroyedTargetVisuals = [];
+
+            // Clear ice clouds and reset their timer
+            iceClouds = [];
+            iceCloudOpportunityTimer = ICE_CLOUD_OPPORTUNITY_INTERVAL_FRAMES;
+
+            // Hide the play again container
+            playAgainButtonContainer.style.display = 'none';
+            // Hide the pause menu
+            pauseMenuContainer.style.display = 'none';
+            // Show the canvas
+            canvas.style.display = 'block';
+
+            // Ensure simulation is running and not paused
+            isSimulationRunning = true;
+            isPaused = false;
+            document.body.classList.remove('game-over-cursor'); // Remove game over cursor style
+
+            // Start/resume turbine noise if audio context is active
+            if (audioContext && audioContext.state === 'running') {
+                if (turbineNoiseSource && turbineNoiseSource.buffer) { // Check if source exists and has a buffer
+                    // Re-create and start if it was stopped
+                    if (!turbineNoiseSource._started) { // Custom flag to track if it's started
+                        turbineNoiseSource = audioContext.createBufferSource();
+                        turbineNoiseSource.buffer = createNoiseBuffer(audioContext, 2);
+                        turbineNoiseSource.loop = true;
+                        turbineNoiseSource.connect(turbineFilterNode);
+                        turbineFilterNode.connect(turbineGainNode);
+                        turbineGainNode.connect(masterGainNode);
+                        turbineNoiseSource.start();
+                        turbineNoiseSource._started = true;
+                    }
+                }
+            }
+            // Hide "Too Hot to Fire" message on game start/restart
+            tooHotMessage.style.display = 'none';
+            tooHotMessage.style.opacity = '0';
+        }
+
+        // Function to emit disk tracers
+        function emitDiskTracers() {
+            console.log("emitDiskTracers called."); // Log when function is called
+            // Only emit if cooldown allows and simulation is running
+            if (!isSimulationRunning || isPaused) {
+                console.log("Simulation not running or paused, cannot fire lasers.");
+                return;
+            }
+            if (diskTracerCooldown > 0) {
+                console.log("Laser cooldown active. Cooldown remaining:", diskTracerCooldown);
+                return;
+            }
+            // Inhibit if heat is too high
+            if (heat > LASER_MAX_HEAT_THRESHOLD) {
+                console.log("Laser inhibited: Heat too high.");
+                tooHotMessage.style.display = 'block';
+                tooHotMessage.style.opacity = '1';
+                setTimeout(() => {
+                    tooHotMessage.style.opacity = '0';
+                    setTimeout(() => {
+                        tooHotMessage.style.display = 'none';
+                    }, 500); // Matches CSS transition duration
+                }, 2000); // Display for 2 seconds
+                return;
+            }
+
+            console.log("Lasers fired!"); // Confirm successful firing
+
+            // Play blaster sound using Web Audio API
+            if (audioContext) {
+                const now = audioContext.currentTime;
+
+                // First laser sound
+                const osc1 = audioContext.createOscillator();
+                osc1.type = 'sine';
+                osc1.frequency.setValueAtTime(523.25, now); // C5
+                const gain1 = audioContext.createGain();
+                gain1.gain.setValueAtTime(0.2, now); // Attack volume
+                gain1.gain.linearRampToValueAtTime(0, now + 0.1); // Decay
+                osc1.connect(gain1);
+                gain1.connect(masterGainNode);
+                osc1.start(now);
+                osc1.stop(now + 0.1);
+
+                // Second laser sound (slightly offset)
+                const osc2 = audioContext.createOscillator();
+                osc2.type = 'sine';
+                osc2.frequency.setValueAtTime(783.99, now + 0.0125); // G5
+                const gain2 = audioContext.createGain();
+                gain2.gain.setValueAtTime(0.2, now + 0.0125); // Attack volume
+                gain2.gain.linearRampToValueAtTime(0, now + 0.1125); // Decay
+                osc2.connect(gain2);
+                gain2.connect(masterGainNode);
+                osc2.start(now + 0.0125);
+                osc2.stop(now + 0.1125);
+            }
+
+            // Increase heat after firing
+            heat = Math.min(100, heat + HEAT_INCREASE_PER_SHOT);
+            internalHeatingValue.textContent = `${Math.round(heat)}%`;
+
+
+            // Calculate current icon positions
+            const iconScreenX = canvas.width / 2;
+            const iconScreenY = canvas.height * (5/6); 
+            const iconZ = ICON_Z_DEPTH;
+            const iconProjectedScale = FOCAL_DISTANCE / iconZ;
+            const scaledDiscRadius = ICON_DISC_RADIUS * iconProjectedScale;
+            const discSeparation = scaledDiscRadius * 1.5; 
+            const leftDiskCenterX = -discSeparation / 2;
+            const rightDiskCenterX = discSeparation / 2;
+
+            // Determine which side to fire from
+            let fireFromLeft = false;
+            if (lastFiredSide === 'right') {
+                fireFromLeft = true;
+                lastFiredSide = 'left';
+            } else {
+                lastFiredSide = 'right';
+            }
+
+            if (fireFromLeft) {
+                // Create tracer for left disk
+                let leftDiskAbsX = iconScreenX + leftDiskCenterX;
+                let leftDiskAbsY = iconScreenY;
+                let vecToCrosshairLeftX = vanishingPointX - leftDiskAbsX;
+                let vecToCrosshairLeftY = vanishingPointY - leftDiskAbsY;
+                let magLeft = Math.sqrt(vecToCrosshairLeftX*vecToCrosshairLeftX + vecToCrosshairLeftY*vecToCrosshairLeftY);
+                
+                // Add check for zero magnitude to prevent division by zero
+                if (magLeft > 0) {
+                    diskTracers.push({
+                        startX: leftDiskAbsX,
+                        startY: leftDiskAbsY,
+                        dirX: vecToCrosshairLeftX / magLeft,
+                        dirY: vecToCrosshairLeftY / magLeft,
+                        distanceTraveled: 0,
+                        totalDistanceToCrosshair: magLeft,
+                        alpha: 1.0
+                    });
+                } else {
+                    console.warn("Skipping left disk tracer due to zero magnitude to crosshair.");
+                }
+            } else {
+                // Create tracer for right disk
+                let rightDiskAbsX = iconScreenX + rightDiskCenterX;
+                let rightDiskAbsY = iconScreenY;
+                let vecToCrosshairRightX = vanishingPointX - rightDiskAbsX;
+                let vecToCrosshairRightY = vanishingPointY - rightDiskAbsY;
+                let magRight = Math.sqrt(vecToCrosshairRightX*vecToCrosshairRightX + vecToCrosshairRightY*vecToCrosshairRightY);
+                
+                // Add check for zero magnitude to prevent division by zero
+                if (magRight > 0) {
+                    diskTracers.push({
+                        startX: rightDiskAbsX,
+                        startY: rightDiskAbsY,
+                        dirX: vecToCrosshairRightX / magRight,
+                        dirY: vecToCrosshairRightY / magRight,
+                        distanceTraveled: 0,
+                        totalDistanceToCrosshair: magRight,
+                        alpha: 1.0
+                    });
+                } else {
+                    console.warn("Skipping right disk tracer due to zero magnitude to crosshair.");
+                }
+            }
+
+            diskTracerCooldown = DISK_TRACER_COOLDOWN_FRAMES; // Reset cooldown
+        }
+
+
+        // Event listeners for mouse control and speed control
+        window.addEventListener('keydown', (event) => {
+            initAudio(); // Initialize audio context on first keydown
+            if (!isSimulationRunning) return; // Prevent input if simulation is not running
+
+            if (event.key === 'p' || event.key === 'P') {
+                togglePause();
+                return; // Consume the event so it doesn't fall through to other controls
+            }
+
+            if (isPaused) return; // If paused, only 'P' key works
+
+            switch (event.key) {
+                case ']': // Increase displayed speed
+                    displayedSpeed = Math.min(DISPLAY_SPEED_MAX_VALUE, displayedSpeed + 1);
+                    currentParticleSpeedZ = getInternalSpeedFromDisplay(displayedSpeed);
+                    break;
+                case '[': // Decrease displayed speed
+                    displayedSpeed = Math.max(DISPLAY_SPEED_MIN_VALUE, displayedSpeed - 1);
+                    currentParticleSpeedZ = getInternalSpeedFromDisplay(displayedSpeed);
+                    break;
+            }
+        });
+
+        // Mouse move to control crosshair
+        canvas.addEventListener('mousemove', (event) => {
+            if (!isSimulationRunning || isPaused) return; // Prevent input if simulation is not running or paused
+            vanishingPointX = event.clientX;
+            vanishingPointY = event.clientY;
+        });
+
+        // Mouse down for shoot (left click) and hyperdrive (right click)
+        canvas.addEventListener('mousedown', (event) => {
+            initAudio(); // Initialize audio context on first mousedown
+            if (!isSimulationRunning || isPaused) {
+                return; // Prevent input if simulation is not running or paused
+            }
+
+            if (event.button === 0) { // Left click
+                isLeftMouseDown = true;
+                emitDiskTracers(); // Emit immediately on first click
+            } else if (event.button === 2) { // Right click
+                event.preventDefault(); // Prevent context menu
+
+                // Inhibit if heat is too high
+                if (heat > HYPERDRIVE_MAX_HEAT_THRESHOLD) {
+                    tooHotMessage.style.display = 'block';
+                    tooHotMessage.style.opacity = '1';
+                    setTimeout(() => {
+                        tooHotMessage.style.opacity = '0';
+                        setTimeout(() => {
+                            tooHotMessage.style.display = 'none';
+                        }, 500); // Matches CSS transition duration
+                    }, 2000); // Display for 2 seconds
+                    return;
+                }
+
+                // Clear any existing hyperdrive timeout to prevent overlapping effects
+                if (hyperdriveTimeoutId) {
+                    clearTimeout(hyperdriveTimeoutId);
+                }
+
+                isHyperdriveActive = true; // Activate hyperdrive
+
+                // Immediately make rear view target and its tracers disappear
+                rearViewBlueTracers = []; // Clear existing rear view tracers immediately
+                rearViewX = null; // Ensure the rear view target is nullified
+
+                // Add heat for hyperdrive
+                heat = Math.min(100, heat + HYPERDRIVE_HEAT_ADDITION);
+                internalHeatingValue.textContent = `${Math.round(heat)}%`;
+
+                // Play hyperdrive whoosh sound using Web Audio API
+                if (audioContext && hyperdriveWhooshNoiseSource) {
+                    const now = audioContext.currentTime;
+                    hyperdriveWhooshGainNode.gain.cancelScheduledValues(now);
+                    hyperdriveWhooshGainNode.gain.setValueAtTime(0.5, now); // Start loud
+                    hyperdriveWhooshGainNode.gain.linearRampToValueAtTime(0, now + HYPERDRIVE_DURATION_MS / 1000); // Fade out
+
+                    hyperdriveWhooshFilter.frequency.cancelScheduledValues(now);
+                    hyperdriveWhooshFilter.frequency.setValueAtTime(500, now);
+                    hyperdriveWhooshFilter.frequency.exponentialRampToValueAtTime(8000, now + HYPERDRIVE_DURATION_MS / 1000); // Sweep up
+                }
+
+                // If the target is currently on the main screen, move it to the rear view
+                if (targetLocation === 'main') {
+                    target = null; // Make it disappear from the main screen
+                    targetLocation = 'rearView'; // Set its logical location to rearView
+                }
+
+                // Set up tracers for all *visible and active* current particles
+                particles.forEach(p => {
+                    // Calculate current screen position for main particle
+                    const sx_p = (p.x / p.z) * FOCAL_DISTANCE + canvas.width / 2;
+                    const sy_p = (p.y / p.z) * FOCAL_DISTANCE + canvas.height / 2;
+
+                    // Define visibility based on being within canvas bounds and not behind the camera
+                    const isVisible = sx_p > -PARTICLE_MAX_VISIBLE_RADIUS && sx_p < canvas.width + PARTICLE_MAX_VISIBLE_RADIUS &&
+                                      sy_p > -PARTICLE_MAX_VISIBLE_RADIUS && sy_p < canvas.height + PARTICLE_MAX_VISIBLE_RADIUS &&
+                                      p.z > 1;
+
+                    // Calculate distance to crosshair
+                    const distanceToCrosshair = Math.sqrt(
+                        Math.pow(sx_p - vanishingPointX, 2) +
+                        Math.pow(sy_p - vanishingPointY, 2)
+                    );
+
+                    // Only trace if visible, not delayed, AND outside 1 inch from crosshair
+                    if (isVisible && p.delay === 0 && distanceToCrosshair > ONE_INCH_PIXELS) {
+                        p.isTraced = true;
+                        p.tracerStartScreenX = sx_p;
+                        p.tracerStartScreenY = sy_p;
+                    } else {
+                        p.isTraced = false; // Ensure it's false if not visible, delayed, or too close
+                        p.tracerStartScreenX = null;
+                        p.tracerStartScreenY = null;
+                    }
+                });
+                rearViewParticles.forEach(p => {
+                    p.isTraced = true;
+                    p.tracerStartScreenX = p.x; // Rear view particles are already in canvas coords
+                    p.tracerStartScreenY = p.y;
+                });
+
+                // Set a timeout to deactivate hyperdrive after a duration
+                hyperdriveTimeoutId = setTimeout(() => {
+                    isHyperdriveActive = false; // Deactivate hyperdrive
+                    // Clear all tracers when hyperdrive deactivates
+                    particles.forEach(p => {
+                        p.isTraced = false;
+                        p.tracerStartScreenX = null;
+                        p.tracerStartScreenY = null;
+                    });
+                    rearViewParticles.forEach(p => {
+                        p.isTraced = false;
+                        p.tracerStartScreenX = null;
+                        p.tracerStartScreenY = null;
+                    });
+                    hyperdriveTimeoutId = null; // Clear the timeout ID
+
+                    // If target was in 'rearView' state (either it was already there, or moved there by hyperdrive activation),
+                    // transition to 'respawnDelay' and start timer.
+                    if (targetLocation === 'rearView') {
+                        targetLocation = 'respawnDelay';
+                        hyperdriveRespawnDelayTimer = 5 * 60; // 5 seconds * 60 frames/sec
+                    }
+                }, HYPERDRIVE_DURATION_MS);
+            }
+        });
+
+        // Mouse up to stop continuous firing
+        canvas.addEventListener('mouseup', (event) => {
+            if (event.button === 0) { // Left click
+                isLeftMouseDown = false;
+            }
+        });
+
+        // Add event listener for mouse wheel to control speed
+        canvas.addEventListener('wheel', (event) => {
+            initAudio(); // Ensure audio context is started
+            if (!isSimulationRunning || isPaused) return; // Prevent input if simulation is not running or paused
+
+            event.preventDefault(); // Prevent default page scrolling
+
+            // Determine scroll direction and adjust speed
+            if (event.deltaY < 0) { // Scrolling up (mouse wheel forward)
+                displayedSpeed = Math.min(DISPLAY_SPEED_MAX_VALUE, displayedSpeed + 1);
+            } else if (event.deltaY > 0) { // Scrolling down (mouse wheel backward)
+                displayedSpeed = Math.max(DISPLAY_SPEED_MIN_VALUE, displayedSpeed - 1);
+            }
+            currentParticleSpeedZ = getInternalSpeedFromDisplay(displayedSpeed);
+        });
+
+        // Add event listeners for difficulty buttons
+        easyDifficultyButton.addEventListener('click', () => {
+            playAgain('easy');
+        });
+        hardDifficultyButton.addEventListener('click', () => {
+            playAgain('hard');
+        });
+        expertDifficultyButton.addEventListener('click', () => {
+            playAgain('expert');
+        });
+
+        // Prevent context menu on right click for the entire document
+        document.addEventListener('contextmenu', (event) => {
+            event.preventDefault();
+        });
+
+        /**
+         * Toggles the pause state of the game.
+         */
+        function togglePause() {
+            isPaused = !isPaused;
+            if (isPaused) {
+                console.log("Game Paused.");
+                pauseMenuContainer.style.display = 'flex'; // Show pause menu
+                canvas.style.display = 'none'; // Hide canvas
+                if (audioContext && audioContext.state === 'running') {
+                    audioContext.suspend(); // Pause audio context
+                }
+                document.body.classList.add('game-over-cursor'); // Show default cursor
+            } else {
+                console.log("Game Resumed.");
+                pauseMenuContainer.style.display = 'none'; // Hide pause menu
+                canvas.style.display = 'block'; // Show canvas
+                if (audioContext && audioContext.state === 'suspended') {
+                    audioContext.resume(); // Resume audio context
+                }
+                document.body.classList.remove('game-over-cursor'); // Hide default cursor
+            }
+        }
+
+        /**
+         * Ends the game, stops the simulation, and displays the "Play Again" button.
+         */
+        function endGame() {
+            isSimulationRunning = false;
+            isPaused = true; // Ensure game is in a paused state when over
+            console.log("Game Over! Simulation is now paused."); // Log game over
+            // Stop all audio
+            if (audioContext && audioContext.state !== 'closed') {
+                audioContext.close().then(() => {
+                    console.log("AudioContext closed.");
+                    audioContext = null; // Reset context
+                });
+            }
+            // Hide the canvas
+            canvas.style.display = 'none';
+            // Hide the pause menu if it was open
+            pauseMenuContainer.style.display = 'none';
+            // Show the play again button container
+            playAgainButtonContainer.style.display = 'flex';
+            finalScoreValue.textContent = score; // Update final score
+            document.body.classList.add('game-over-cursor'); // Add game over cursor style
+        }
+
+        /**
+         * Resets the game state and restarts the simulation with a chosen difficulty.
+         * @param {string} difficulty - The chosen difficulty ('easy', 'hard', 'expert').
+         */
+        function playAgain(difficulty) {
+            score = 0;
+            shields = 10; // Reset shields to 10
+            heat = 0; // Reset heat on play again
+            setCanvasDimensions(false, difficulty); // Re-initialize particles and target, reset HUD with new difficulty
+            // setCanvasDimensions will also handle unpausing and audio restart
+        }
+
+
+        function animate() {
+            if (!isSimulationRunning || isPaused) { // Check both flags
+                requestAnimationFrame(animate); // Keep requesting frames even when paused to allow for restart
+                return;
+            }
+
+            if (context) {
+                context.globalAlpha = 1.0;
+                context.fillStyle = 'black';
+                context.fillRect(0, 0, canvas.width, canvas.height);
+            } else {
+                console.error('Canvas context is null! Cannot animate.');
+                requestAnimationFrame(animate);
+                return;
+            }
+
+            if (speedHudValue) {
+                speedHudValue.textContent = displayedSpeed; // Display the mapped speed
+            }
+
+            // Update heat decay
+            heat = Math.max(0, heat - (HEAT_DECAY_PER_SECOND / 60)); // Decay by 3% per second (assuming 60 FPS)
+            internalHeatingValue.textContent = `${Math.round(heat)}%`;
+
+            // Update turbine sound based on speed
+            if (audioContext && turbineFilterNode && turbineGainNode) {
+                const now = audioContext.currentTime;
+                const freqRange = 800 - 150;
+                const speedNormalized = (currentParticleSpeedZ - INTERNAL_SPEED_FOR_DISPLAY_MIN) / (INTERNAL_SPEED_FOR_DISPLAY_MAX - INTERNAL_SPEED_FOR_DISPLAY_MIN);
+                const targetFreq = 150 + (speedNormalized * freqRange);
+                turbineFilterNode.frequency.linearRampToValueAtTime(targetFreq, now + 0.1);
+
+                const volRange = 0.03 - 0.01; // From 0.01 to 0.03 for quieter jet sound
+                const targetVol = 0.01 + (speedNormalized * volRange);
+                turbineGainNode.gain.linearRampToValueAtTime(targetVol, now + 0.1);
+            }
+
+
+            // If left mouse button is down, emit tracers (respecting cooldown)
+            if (isLeftMouseDown) {
+                emitDiskTracers();
+            }
+            // Decrease cooldown
+            if (diskTracerCooldown > 0) {
+                diskTracerCooldown--;
+            }
+
+
+            // Particle update and draw logic
+            for (let i = 0; i < particles.length; i++) {
+                let particle = particles[i];
+
+                // Check for delay before moving the particle
+                if (particle.delay > 0) {
+                    particle.delay--;
+                    continue; // Skip drawing and movement logic for delayed particles
+                }
+
+                // Recalculate screen position before updating Z to get current screen position
+                const sx_particle_before_update = (particle.x / particle.z) * FOCAL_DISTANCE + canvas.width / 2;
+                const sy_particle_before_update = (particle.y / particle.z) * FOCAL_DISTANCE + canvas.height / 2;
+
+                // Determine Z speed
+                let currentParticleZSpeed = currentParticleSpeedZ; // Start with base speed
+                if (isHyperdriveActive) {
+                    currentParticleZSpeed *= HYPERDRIVE_SPEED_MULTIPLIER; // Apply hyperdrive multiplier
+                }
+
+                const distance2DToCrosshair = Math.sqrt(
+                    Math.pow(sx_particle_before_update - vanishingPointX, 2) +
+                    Math.pow(sy_particle_before_update - vanishingPointY, 2)
+                );
+                let speedMultiplier;
+                if (distance2DToCrosshair < DISTANCE_THRESHOLD_FOR_FULL_EFFECT) {
+                    // Linearly interpolate between SPEED_FACTOR_AT_CROSSHAIR and SPEED_FACTOR_AT_EDGE
+                    // As distance increases from 0 to THRESHOLD, multiplier goes from AT_CROSSHAIR to AT_EDGE
+                    speedMultiplier = SPEED_FACTOR_AT_CROSSHAIR +
+                                      (SPEED_FACTOR_AT_EDGE - SPEED_FACTOR_AT_CROSSHAIR) *
+                                      (distance2DToCrosshair / DISTANCE_THRESHOLD_FOR_FULL_EFFECT);
+                } else {
+                    speedMultiplier = SPEED_FACTOR_AT_EDGE; // Beyond threshold, use the edge speed
+                }
+                // Ensure speedMultiplier is clamped within the desired range
+                speedMultiplier = Math.max(SPEED_FACTOR_AT_EDGE, Math.min(SPEED_FACTOR_AT_CROSSHAIR, speedMultiplier));
+                
+                particle.vz = -(currentParticleZSpeed * speedMultiplier); // Apply the calculated Z speed
+
+                // Update particle's position based on its velocity
+                particle.x += particle.vx;
+                particle.y += particle.vy;
+                particle.z += particle.vz; // Move particle towards camera
+                if (particle.z <= 0) particle.z = 0.01;
+
+                // Recalculate screen position after Z update
+                const sx_particle = (particle.x / particle.z) * FOCAL_DISTANCE + canvas.width / 2;
+                const sy_particle = (particle.y / particle.z) * FOCAL_DISTANCE + canvas.height / 2;
+
+                // --- Dynamic Lateral Repulsion ---
+                // This part should use the `currentParticleZSpeed` determined above for its calculations.
+                const currentLateralRepelSpeedBase = SCREEN_REPEL_BASE_FACTOR * currentParticleZSpeed; // Use the determined Z speed
+                const distance2DToCrosshairForRepulsion = Math.sqrt(
+                    Math.pow(sx_particle - vanishingPointX, 2) +
+                    Math.pow(sy_particle - vanishingPointY, 2) 
+                );
+
+                if (distance2DToCrosshairForRepulsion > 0) {
+                    const normalizedDx_2d = (sx_particle - vanishingPointX) / distance2DToCrosshairForRepulsion;
+                    const normalizedDy_2d = (sy_particle - vanishingPointY) / distance2DToCrosshairForRepulsion; 
+                    const repelSpeedFactor = currentLateralRepelSpeedBase * (particle.z / FOCAL_DISTANCE);
+                    particle.vx = normalizedDx_2d * repelSpeedFactor;
+                    particle.vy = normalizedDy_2d * repelSpeedFactor;
+                    const currentLateralSpeed = Math.sqrt(particle.vx * particle.vx + particle.vy * particle.vy);
+                    if (currentLateralSpeed > MAX_LATERAL_WORLD_SPEED) {
+                        const scaleFactor = MAX_LATERAL_WORLD_SPEED / currentLateralSpeed;
+                        particle.vx *= scaleFactor;
+                        particle.vy *= scaleFactor;
+                    }
+                } else {
+                    const angle = Math.random() * Math.PI * 2;
+                    const initialRepelSpeed = currentLateralRepelSpeedBase * (particle.z / FOCAL_DISTANCE);
+                    particle.vx = Math.cos(angle) * initialRepelSpeed;
+                    particle.vy = Math.sin(angle) * initialRepelSpeed;
+                }
+
+                // Calculate the size of the particle
+                const rawSize = PARTICLE_SIZE_GROWTH_FACTOR * (FOCAL_DISTANCE / particle.z);
+                const sSize = Math.max(PARTICLE_MIN_VISIBLE_RADIUS, Math.min(PARTICLE_MAX_VISIBLE_RADIUS, rawSize));
+
+                // Draw the particle point (always drawn if visible and active)
+                if (sSize > 0 && particle.active) {
+                    context.beginPath();
+                    context.arc(sx_particle, sy_particle, sSize, 0, Math.PI * 2);
+                    context.fillStyle = particle.color;
+                    context.fill();
+                }
+
+                // --- Draw Tracer Line if particle is traced ---
+                if (particle.isTraced) {
+                    if (particle.tracerStartScreenX !== null && particle.tracerStartScreenY !== null) {
+                        context.beginPath();
+                        context.moveTo(particle.tracerStartScreenX, particle.tracerStartScreenY);
+                        context.lineTo(sx_particle, sy_particle);
+                        context.strokeStyle = `rgba(255, 255, 255, ${PARTICLE_TRACER_ALPHA})`; // Use new tracer alpha
+                        context.lineWidth = 2; // Thicker tracer line width
+                        context.stroke();
+                    }
+                }
+
+                // Respawn logic (always respawn if off-screen)
+                const respawnBuffer = Math.max(canvas.width, canvas.height);
+                const isOffScreen = particle.z <= 1 || sx_particle < -respawnBuffer || sx_particle > canvas.width + respawnBuffer || sy_particle < -respawnBuffer || sy_particle > canvas.height + respawnBuffer;
+
+                if (isOffScreen) {
+                    // If particle goes off-screen, also stop its tracer
+                    particle.isTraced = false;
+                    particle.tracerStartScreenX = null;
+                    particle.tracerStartScreenY = null;
+                    particles[i] = createParticle(); // Replace with new particle
+                    continue; // Continue to next particle
+                }
+            }
+
+            // --- Draw the Two Icon Disks ---
+            const iconScreenX = canvas.width / 2;
+            const iconScreenY = canvas.height * (5/6); 
+            const iconZ = ICON_Z_DEPTH;
+            const iconProjectedScale = FOCAL_DISTANCE / iconZ;
+            const scaledDiscRadius = ICON_DISC_RADIUS * iconProjectedScale;
+            const discSeparation = scaledDiscRadius * 1.5; 
+
+            const dx_iconToCrosshair = vanishingPointX - iconScreenX;
+            const maxHorizontalScreenDistance = canvas.width / 2;
+            const tiltFactor = Math.min(1, Math.abs(dx_iconToCrosshair) / (maxHorizontalScreenDistance * 0.7));
+            const tiltSeverityMultiplier = 0.5;
+            const adjustedTiltFactor = tiltFactor * tiltSeverityMultiplier;
+            const maxTiltAngle = Math.PI / 2 - 0.05;
+            const tilt_angle = (1 - adjustedTiltFactor) * maxTiltAngle; 
+            const scaledHorizontalAxis = scaledDiscRadius * Math.cos(tilt_angle);
+            const scaledVerticalAxis = scaledDiscRadius; 
+
+            // Calculate color based on heat level
+            const hue = 120 - (heat / 100) * 120; // 120 (green) to 0 (red)
+            const diskOutlineColor = `hsl(${hue}, 100%, 50%)`;
+
+            // Moved these helper function definitions inside animate for correct scope
+            const drawDiskFill = (centerX, horizontalAxis, verticalAxis) => {
+                context.save();
+                context.beginPath();
+                context.ellipse(centerX, 0, horizontalAxis, verticalAxis, 0, 0, Math.PI * 2);
+                context.fillStyle = 'black';
+                context.fill();
+                context.restore();
+            };
+
+            const drawDiskStroke = (centerX, color, horizontalAxis, verticalAxis) => {
+                context.save();
+                context.beginPath();
+                context.ellipse(centerX, 0, horizontalAxis, verticalAxis, 0, 0, Math.PI * 2);
+                context.strokeStyle = color;
+                context.lineWidth = 1;
+                context.stroke();
+                context.restore();
+            };
+
+            context.save();
+            context.translate(iconScreenX, iconScreenY);
+
+            const leftDiskCenterX = -discSeparation / 2;
+            const rightDiskCenterX = discSeparation / 2;
+
+            // Define distanceToLeftDisk and distanceToRightDisk here
+            const distanceToLeftDisk = Math.abs(vanishingPointX - (iconScreenX + leftDiskCenterX));
+            const distanceToRightDisk = Math.abs(vanishingPointX - (iconScreenX + rightDiskCenterX));
+
+            const EQUAL_DISTANCE_THRESHOLD = 0.5;
+            const lineCenterX = (leftDiskCenterX + rightDiskCenterX) / 2;
+            const lineCenterY = 0;
+            const circleRadius = scaledDiscRadius * (1/3); 
+
+            if (Math.abs(distanceToLeftDisk - distanceToRightDisk) < EQUAL_DISTANCE_THRESHOLD) {
+                drawDiskFill(leftDiskCenterX, scaledHorizontalAxis, scaledVerticalAxis); // Pass arguments
+                drawDiskFill(rightDiskCenterX, scaledHorizontalAxis, scaledVerticalAxis); // Pass arguments
+                
+                context.beginPath();
+                context.moveTo(leftDiskCenterX, 0);
+                context.lineTo(rightDiskCenterX, 0);
+                context.strokeStyle = 'lime'; // Reverted to static lime
+                context.lineWidth = 1;
+                context.stroke();
+
+                context.beginPath();
+                context.arc(lineCenterX, lineCenterY, circleRadius, 0, Math.PI * 2);
+                context.fillStyle = 'black';
+                context.fill();
+                context.strokeStyle = 'lime'; // Reverted to static lime
+                context.lineWidth = 1;
+                context.stroke();
+
+                drawDiskStroke(leftDiskCenterX, diskOutlineColor, scaledHorizontalAxis, scaledVerticalAxis); // Use dynamic color
+                drawDiskStroke(rightDiskCenterX, diskOutlineColor, scaledHorizontalAxis, scaledVerticalAxis); // Use dynamic color
+            } else {
+                let furtherDiskX, closerDiskX;
+                if (distanceToLeftDisk < distanceToRightDisk) {
+                    furtherDiskX = rightDiskCenterX;
+                    closerDiskX = leftDiskCenterX;
+                } else {
+                    furtherDiskX = leftDiskCenterX;
+                    closerDiskX = rightDiskCenterX;
+                }
+
+                drawDiskFill(furtherDiskX, scaledHorizontalAxis, scaledVerticalAxis); // Pass arguments
+                drawDiskStroke(furtherDiskX, diskOutlineColor, scaledHorizontalAxis, scaledVerticalAxis); // Use dynamic color
+
+                context.beginPath();
+                context.moveTo(leftDiskCenterX, 0);
+                context.lineTo(rightDiskCenterX, 0);
+                context.strokeStyle = 'lime'; // Reverted to static lime
+                context.lineWidth = 1;
+                context.stroke();
+                
+                context.beginPath();
+                context.arc(lineCenterX, lineCenterY, circleRadius, 0, Math.PI * 2);
+                context.fillStyle = 'black';
+                context.fill();
+                context.strokeStyle = 'lime'; // Reverted to static lime
+                context.lineWidth = 1;
+                context.stroke();
+
+                drawDiskFill(closerDiskX, scaledHorizontalAxis, scaledVerticalAxis); // Pass arguments
+                drawDiskStroke(closerDiskX, diskOutlineColor, scaledHorizontalAxis, scaledVerticalAxis); // Use dynamic color
+            }
+
+            context.restore();
+
+            // --- Draw Disk Tracers (Lasers) ---
+            diskTracers = diskTracers.filter(tracer => {
+                tracer.distanceTraveled += DISK_TRACER_TRAVEL_SPEED;
+
+                const currentX = tracer.startX + tracer.dirX * tracer.distanceTraveled;
+                const currentY = tracer.startY + tracer.dirY * tracer.distanceTraveled;
+
+                const tailX = currentX - tracer.dirX * DISK_TRACER_TRAIL_LENGTH;
+                const tailY = currentY - tracer.dirY * DISK_TRACER_TRAIL_LENGTH;
+
+                let fadeAlpha = 1.0;
+
+                // Fading based on distance to crosshair
+                const distanceToCrosshairFromCurrent = Math.sqrt(
+                    Math.pow(vanishingPointX - currentX, 2) +
+                    Math.pow(vanishingPointY - currentY, 2)
+                );
+                if (distanceToCrosshairFromCurrent < DISK_TRACER_FADE_START_DISTANCE) {
+                    fadeAlpha = Math.min(fadeAlpha, distanceToCrosshairFromCurrent / DISK_TRACER_FADE_START_DISTANCE);
+                }
+
+                // Fading based on hitting screen edge
+                let edgeFadeFactor = 1.0;
+                let hitEdge = false;
+
+                // Calculate how far past the edge the tracer is
+                let distancePastEdge = 0;
+                if (currentX < 0) { // Left edge
+                    distancePastEdge = -currentX;
+                    hitEdge = true;
+                } else if (currentX > canvas.width) { // Right edge
+                    distancePastEdge = currentX - canvas.width;
+                    hitEdge = true;
+                }
+
+                if (currentY < 0) { // Top edge
+                    distancePastEdge = Math.max(distancePastEdge, -currentY); // Take max if crossing corner
+                    hitEdge = true;
+                } else if (currentY > canvas.height) { // Bottom edge
+                    distancePastEdge = Math.max(distancePastEdge, currentY - canvas.height); // Take max if crossing corner
+                    hitEdge = true;
+                }
+
+                if (hitEdge) {
+                    // Fade from 1.0 at edge to 0.0 at DISK_TRACER_EDGE_FADE_DISTANCE past edge
+                    edgeFadeFactor = 1.0 - (distancePastEdge / DISK_TRACER_EDGE_FADE_DISTANCE);
+                    edgeFadeFactor = Math.max(0, Math.min(1, edgeFadeFactor)); // Clamp between 0 and 1
+                }
+
+                if (hitEdge) { // If it hit an edge, apply the edge fade, otherwise rely on crosshair fade
+                    tracer.alpha = Math.min(fadeAlpha, edgeFadeFactor); // Combine fade factors, prioritizing the stronger fade
+                } else {
+                    tracer.alpha = fadeAlpha; // Only use crosshair fade if no edge hit
+                }
+
+                // Check for collision with target
+                if (target && targetLocation === 'main') { // Only check collision if target is on main screen
+                    const dx = currentX - target.x; // Check against followerX
+                    const dy = currentY - target.y; // Check against followerY
+                    const distanceToTarget = Math.sqrt(dx * dx + dy * dy);
+
+                    // Collision detected if tracer is within target's radius (plus half of tracer line width)
+                    if (distanceToTarget < target.currentSize / 2 + context.lineWidth / 2) { // Use target.currentSize for collision
+                        // Play explosion sound using Web Audio API
+                        if (audioContext && explosionNoiseSource) {
+                            const now = audioContext.currentTime;
+                            // Recreate source to play again
+                            const source = audioContext.createBufferSource();
+                            source.buffer = createNoiseBuffer(audioContext, 0.2); // Short noise burst
+                            const gainNode = audioContext.createGain();
+                            source.connect(gainNode);
+                            gainNode.connect(masterGainNode);
+                            gainNode.gain.setValueAtTime(0.5, now); // Attack volume
+                            gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.2); // Decay quickly
+                            source.start(now);
+                            source.stop(now + 0.2);
+                        }
+                        score++; // Increment score
+                        scoreHudValue.textContent = score; // Update HUD
+                        
+                        // Create a destroyed target visual
+                        destroyedTargetVisuals.push({
+                            x: target.x,
+                            y: target.y,
+                            size: target.currentSize,
+                            alpha: 1.0,
+                            timer: DESTROYED_TARGET_DURATION_FRAMES
+                        });
+
+                        target = null; // Make target disappear from main screen
+                        targetLocation = 'normalSpawnDelay'; // Set to normal spawn delay state
+                        targetSpawnTimer = Math.floor(MIN_TARGET_SPAWN_DELAY_SECONDS * 60 + Math.random() * (MAX_TARGET_SPAWN_DELAY_SECONDS - MIN_TARGET_SPAWN_DELAY_SECONDS) * 60);
+                        return false; // Remove this tracer (it hit the target)
+                    }
+                }
+
+
+                if (tracer.alpha <= 0 || tracer.distanceTraveled > tracer.totalDistanceToCrosshair + DISK_TRACER_TRAIL_LENGTH) {
+                    return false; 
+                }
+
+                context.beginPath();
+                context.moveTo(tailX, tailY);
+                context.lineTo(currentX, currentY);
+                context.strokeStyle = `rgba(0, 255, 255, ${tracer.alpha})`;
+                context.lineWidth = 2;
+                context.stroke();
+
+                return true;
+            });
+
+            // Draw the crosshair at its current independent position on the 2D canvas.
+            const crosshairSize = 10;
+            context.strokeStyle = 'lime';
+            context.lineWidth = 1;
+
+            context.beginPath();
+            context.moveTo(vanishingPointX - crosshairSize, vanishingPointY);
+            context.lineTo(vanishingPointX + crosshairSize, vanishingPointY);
+            context.stroke();
+
+            context.beginPath();
+            context.moveTo(vanishingPointX, vanishingPointY - crosshairSize);
+            context.lineTo(vanishingPointX, vanishingPointY + crosshairSize);
+            context.stroke();
+
+            // --- Update Target State ---
+            if (targetLocation === 'main') {
+                // If target is null here, re-initialize defensively to prevent errors
+                if (!target) {
+                    target = initializeTargetProperties();
+                    // If target is still null after initialization attempt (shouldn't happen with current logic, but defensive)
+                    if (!target) {
+                        console.error("Target failed to initialize in 'main' state.");
+                        targetLocation = 'normalSpawnDelay'; // Fallback to respawn state
+                    }
+                }
+
+                // Only proceed with target update and drawing if target is not null
+                if (target) {
+                    // Handle target growth animation
+                    if (target.isGrowing) {
+                        target.growthFrames++;
+                        target.currentSize = TARGET_SIZE * (target.growthFrames / 60); // Grow over 60 frames (1.0 second)
+                        if (target.currentSize >= TARGET_SIZE) {
+                            target.currentSize = TARGET_SIZE;
+                            target.isGrowing = false;
+                        }
+                    }
+
+                    // Evasion Logic for the 'X' (follower)
+                    const dx_x_crosshair = target.x - vanishingPointX; 
+                    const dy_x_crosshair = target.y - vanishingPointY;
+                    const distanceToCrosshair = Math.sqrt(dx_x_crosshair * dx_x_crosshair + dy_x_crosshair * dy_x_crosshair);
+
+                    // Desired direction is directly away from crosshair
+                    let desiredEvasionAngle;
+                    if (distanceToCrosshair > 0) {
+                        desiredEvasionAngle = Math.atan2(dy_x_crosshair, dx_x_crosshair);
+                    } else {
+                        // If at crosshair, maintain current direction or pick random
+                        desiredEvasionAngle = target.targetEvasionAngle; // Keep current drift
+                    }
+
+                    // Add random angular drift to the desired evasion angle
+                    const ANGULAR_DRIFT_CHANGE_RATE = 0.0001; // Small random change in drift rate
+                    const MAX_ANGULAR_DRIFT_RATE = 0.005; // Max drift rate
+                    target.angularDriftRate += (Math.random() - 0.5) * ANGULAR_DRIFT_CHANGE_RATE;
+                    target.angularDriftRate = Math.max(-MAX_ANGULAR_DRIFT_RATE, Math.min(MAX_ANGULAR_DRIFT_RATE, target.angularDriftRate));
+
+                    target.targetEvasionAngle += target.angularDriftRate;
+                    // Normalize angle to keep it within 0 to 2*PI
+                    target.targetEvasionAngle = target.targetEvasionAngle % (Math.PI * 2);
+                    if (target.targetEvasionAngle < 0) target.targetEvasionAngle += Math.PI * 2;
+
+
+                    // Smoothly adjust current velocity towards the desired evasion direction
+                    const SMOOTHING_FACTOR = 0.05; // How quickly the X turns towards the desired direction
+                    const currentVelocityAngle = Math.atan2(target.vy, target.vx);
+
+                    // Calculate the shortest angular distance
+                    let angleDiff = desiredEvasionAngle - currentVelocityAngle;
+                    if (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
+                    if (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
+
+                    // Apply smoothing
+                    const newAngle = currentVelocityAngle + angleDiff * SMOOTHING_FACTOR;
+
+                    // Update X's velocity based on new angle and a target speed
+                    const currentSpeed = Math.sqrt(target.vx * target.vx + target.vy * target.vy);
+                    
+                    // Calculate target speed based on distance to crosshair and main speed
+                    const effectiveMinXEvasionSpeed = BASE_MIN_X_EVASION_SPEED + (currentParticleSpeedZ * X_EVASION_SPEED_SCALE_FACTOR);
+                    const effectiveMaxXEvasionSpeed = BASE_MAX_X_EVASION_SPEED + (currentParticleSpeedZ * X_EVASION_SPEED_SCALE_FACTOR);
+                    const distanceNormalizedForSpeed = Math.min(1, Math.max(0, distanceToCrosshair / EVASION_DISTANCE_RANGE)); 
+                    const targetSpeed = effectiveMinXEvasionSpeed + (effectiveMaxXEvasionSpeed - effectiveMinXEvasionSpeed) * distanceNormalizedForSpeed;
+
+                    const actualSpeed = currentSpeed + (targetSpeed - currentSpeed) * 0.1; // Smooth speed adjustment
+
+                    target.vx = Math.cos(newAngle) * actualSpeed;
+                    target.vy = Math.sin(newAngle) * actualSpeed;
+
+                    // Update X's position
+                    target.x += target.vx;
+                    target.y += target.vy;
+
+                    // Check if target (X) hits the edge of the main screen
+                    const targetBuffer = target.currentSize / 2;
+                    const isOffScreen = target.x < -targetBuffer || target.x > canvas.width + targetBuffer ||
+                                        target.y < -targetBuffer || target.y > canvas.height + targetBuffer;
+
+                    if (isOffScreen) {
+                        target = null;
+                        targetLocation = 'rearView';
+                    }
+
+                    // Only draw if target is still valid AFTER all updates
+                    if (target) {
+                        // Draw the target 'x'
+                        context.strokeStyle = TARGET_COLOR;
+                        context.lineWidth = 3;
+                        context.beginPath();
+                        context.moveTo(target.x - target.currentSize / 2, target.y - target.currentSize / 2);
+                        context.lineTo(target.x + target.currentSize / 2, target.y + target.currentSize / 2);
+                        context.stroke();
+                        context.beginPath();
+                        context.moveTo(target.x + target.currentSize / 2, target.y - target.currentSize / 2);
+                        context.lineTo(target.x - target.currentSize / 2, target.y + target.currentSize / 2);
+                        context.stroke();
+
+                        // --- Draw the tow line and small red circle ---
+                        // Calculate current speed of the X
+                        const xSpeed = Math.sqrt(target.vx * target.vx + target.vy * target.vy);
+                        // Map speed to line length
+                        // Normalize speed (assuming reasonable min/max speeds for X)
+                        // Use effectiveMinXEvasionSpeed and effectiveMaxXEvasionSpeed for normalization range
+                        const currentTowLineLength = MIN_TOW_LINE_LENGTH + (MAX_TOW_LINE_LENGTH - MIN_TOW_LINE_LENGTH) * distanceNormalizedForSpeed; 
+
+                        // Calculate circle position (leader) based on X's position and velocity
+                        let normalizedVx = 0;
+                        let normalizedVy = 0;
+                        if (xSpeed > 0) {
+                            normalizedVx = target.vx / xSpeed;
+                            normalizedVy = target.vy / xSpeed;
+                        } else {
+                            // If X is not moving, point line in current targetEvasionAngle
+                            normalizedVx = Math.cos(target.targetEvasionAngle);
+                            normalizedVy = Math.sin(target.targetEvasionAngle);
+                        }
+
+                        const circleX = target.x + normalizedVx * currentTowLineLength;
+                        const circleY = target.y + normalizedVy * currentTowLineLength;
+
+                        // Draw the tow line from X to circle
+                        context.strokeStyle = 'red';
+                        context.lineWidth = 1;
+                        context.beginPath();
+                        context.moveTo(target.x, target.y);
+                        context.lineTo(circleX, circleY);
+                        context.stroke();
+
+                        // Draw the small red circle at the leader's position (not filled)
+                        context.strokeStyle = 'red';
+                        context.beginPath();
+                        context.arc(circleX, circleY, TOW_CIRCLE_RADIUS, 0, Math.PI * 2);
+                        context.stroke(); // Changed to stroke
+                    }
+                }
+            } else if (targetLocation === 'rearView') {
+                target = null; // Ensure target is null on main screen
+                // No timer here, just waiting for hyperdrive to end
+            } else if (targetLocation === 'respawnDelay') {
+                target = null; // Ensure target is null on main screen during countdown
+                hyperdriveRespawnDelayTimer--;
+                if (hyperdriveRespawnDelayTimer <= 0) {
+                    target = initializeTargetProperties(); // Respawn on main screen
+                    targetLocation = 'main'; // Transition back to main
+                }
+            } else if (targetLocation === 'normalSpawnDelay') {
+                target = null; // Ensure target is null
+                targetSpawnTimer--;
+                if (targetSpawnTimer <= 0) {
+                    target = initializeTargetProperties(); // Normal respawn
+                    targetLocation = 'main'; // Set to main
+                }
+            }
+
+            // --- Draw Destroyed Target Visuals ---
+            destroyedTargetVisuals = destroyedTargetVisuals.filter(visual => {
+                visual.timer--;
+                visual.alpha = visual.timer / DESTROYED_TARGET_DURATION_FRAMES; // Fade out
+
+                if (visual.timer <= 0) {
+                    return false; // Remove visual when timer expires
+                }
+
+                // Draw the 'x'
+                context.strokeStyle = `rgba(255, 255, 0, ${visual.alpha})`; // Yellow fading 'x'
+                context.lineWidth = 3;
+                context.beginPath();
+                context.moveTo(visual.x - visual.size / 2, visual.y - visual.size / 2);
+                context.lineTo(visual.x + visual.size / 2, visual.y + visual.size / 2);
+                context.stroke();
+                context.beginPath();
+                context.moveTo(visual.x + visual.size / 2, visual.y - visual.size / 2);
+                context.lineTo(visual.x - visual.size / 2, visual.y + visual.size / 2);
+                context.stroke();
+
+                return true;
+            });
+
+
+            // --- Draw Rear View Red 'X' and Blue Tracers ---
+            if (rearViewContext) {
+                rearViewContext.clearRect(0, 0, rearViewCanvas.width, rearViewCanvas.height); // Clear rear view canvas
+                rearViewContext.fillStyle = 'black';
+                rearViewContext.fillRect(0, 0, rearViewCanvas.width, rearViewCanvas.height);
+
+                // Update rear view border color
+                if (rearViewBlinkTimer > 0) {
+                    rearViewBlinkTimer--;
+                    rearViewContainer.classList.remove('border-gray-400'); // Remove light grey
+                    rearViewContainer.classList.add('border-red-500');
+                } else {
+                    rearViewContainer.classList.remove('border-red-500'); // Remove red
+                    rearViewContainer.classList.add('border-gray-400'); // Revert to light grey
+                }
+
+                // Calculate the target position for the red circle in the rear view
+                const mainCenterX = canvas.width / 2;
+                const mainCenterY = canvas.height / 2;
+                const rearViewCenterX = rearViewCanvas.width / 2;
+                const rearViewCenterY = rearViewCanvas.height / 2;
+
+                // Calculate the offset of the main crosshair from the center of the main canvas
+                const offsetX = vanishingPointX - mainCenterX;
+                const offsetY = vanishingPointY - mainCenterY;
+
+                // Calculate the target position for the red circle in the rear view
+                // Inverse by half relative to the screen size
+                const targetRearViewCircleX = rearViewCenterX - (offsetX / canvas.width) * (rearViewCanvas.width / 2);
+                const targetRearViewCircleY = rearViewCenterY - (offsetY / canvas.height) * (rearViewCanvas.height / 2);
+
+                const rearViewCircleRadius = 5; // Small fixed radius for the central circle
+
+                // Initialize rearViewX only if it doesn't exist, targetLocation is 'rearView', AND hyperdrive is NOT active
+                if (targetLocation === 'rearView' && rearViewX === null && !isHyperdriveActive) {
+                    rearViewX = {
+                        x: targetRearViewCircleX + (Math.random() - 0.5) * 50, // Spawn slightly off target
+                        y: targetRearViewCircleY + (Math.random() - 0.5) * 50,
+                        vx: 0,
+                        vy: 0
+                    };
+                } else if (targetLocation !== 'rearView') { // If not in rearView mode, ensure rearViewX is null
+                    rearViewX = null;
+                }
+
+                // Only draw the rear view 'x' and its line/circle if targetLocation is 'rearView' AND rearViewX is not null
+                if (targetLocation === 'rearView' && rearViewX) {
+                    // Draw the fixed red circle at the target position
+                    rearViewContext.strokeStyle = 'red';
+                    rearViewContext.lineWidth = 1;
+                    rearViewContext.beginPath();
+                    rearViewContext.arc(targetRearViewCircleX, targetRearViewCircleY, rearViewCircleRadius, 0, Math.PI * 2);
+                    rearViewContext.stroke();
+
+                    // Update rearViewX's position to follow this targetRearViewCircle
+                    // Reverted to follow direction
+                    rearViewX.vx = (targetRearViewCircleX - rearViewX.x) * REAR_VIEW_X_FOLLOW_SPEED;
+                    rearViewX.vy = (targetRearViewCircleY - rearViewX.y) * REAR_VIEW_X_FOLLOW_SPEED;
+                    rearViewX.x += rearViewX.vx;
+                    rearViewX.y += rearViewX.vy;
+
+                    // Draw the line connecting rearViewX to the targetRearViewCircle
+                    rearViewContext.strokeStyle = 'red';
+                    rearViewContext.lineWidth = 1;
+                    rearViewContext.beginPath();
+                    rearViewContext.moveTo(rearViewX.x, rearViewX.y);
+                    rearViewContext.lineTo(targetRearViewCircleX, targetRearViewCircleY);
+                    rearViewContext.stroke();
+
+                    // Draw the red 'x' at rearViewX's current position
+                    const rearViewRedX_Size = REAR_VIEW_RED_X_SIZE;
+                    rearViewContext.strokeStyle = 'red';
+                    rearViewContext.lineWidth = 1;
+                    rearViewContext.beginPath();
+                    rearViewContext.moveTo(rearViewX.x - rearViewRedX_Size / 2, rearViewX.y - rearViewRedX_Size / 2);
+                    rearViewContext.lineTo(rearViewX.x + rearViewRedX_Size / 2, rearViewX.y + rearViewRedX_Size / 2);
+                    rearViewContext.stroke();
+                    rearViewContext.beginPath();
+                    rearViewContext.moveTo(rearViewX.x + rearViewRedX_Size / 2, rearViewX.y - rearViewRedX_Size / 2);
+                    rearViewContext.lineTo(rearViewX.x - rearViewRedX_Size / 2, rearViewX.y + rearViewRedX_Size / 2);
+                    rearViewContext.stroke();
+
+                    // Calculate the tow line length for the rear view red line
+                    const dx_rv_tow = rearViewX.x - targetRearViewCircleX;
+                    const dy_rv_tow = rearViewX.y - targetRearViewCircleY;
+                    const rearViewRedTowLineLength = Math.sqrt(dx_rv_tow * dx_rv_tow + dy_rv_tow * dy_rv_tow);
+
+                    const currentRearViewBlueTracerLength = rearViewRedTowLineLength / 2;
+
+                    // Calculate dynamic cooldown for rear view tracers based on currentParticleSpeedZ
+                    const currentRearViewTracerCooldown = BASE_REAR_VIEW_TRACER_COOLDOWN_FRAMES + (currentParticleSpeedZ * REAR_VIEW_COOLDOWN_SPEED_FACTOR);
+
+                    // Emit blue lines from the red circle's position
+                    // Only emit if hyperdrive is NOT active
+                    if (rearViewTracerCooldown <= 0 && !isHyperdriveActive) {
+                        const tracer = generateTracerData({ x: targetRearViewCircleX, y: targetRearViewCircleY }, rearViewCanvas.width, rearViewCanvas.height, currentRearViewBlueTracerLength);
+
+                        if (tracer) rearViewBlueTracers.push(tracer);
+
+                        rearViewTracerCooldown = currentRearViewTracerCooldown; // Use dynamic cooldown
+                        rearViewBlinkTimer = REAR_VIEW_BLINK_DURATION_FRAMES;
+
+                        // Play rear view laser start sound using Web Audio API
+                        if (audioContext && rearViewLaserStartOscillator) {
+                            const now = audioContext.currentTime;
+                            // Recreate oscillator to play again
+                            const osc = audioContext.createOscillator();
+                            osc.type = 'sine';
+                            osc.frequency.setValueAtTime(261.63, now); // C4
+                            const gain = audioContext.createGain();
+                            osc.connect(gain);
+                            gain.connect(masterGainNode);
+                            gain.gain.setValueAtTime(0.3, now);
+                            gain.gain.linearRampToValueAtTime(0, now + 0.1);
+                            osc.start(now);
+                            osc.stop(now + 0.1);
+                        }
+                    }
+                    if (rearViewTracerCooldown > 0) {
+                        rearViewTracerCooldown--;
+                    }
+                } else {
+                    // If not in rearView mode or if hyperdrive is active, clear all blue tracers
+                    rearViewBlueTracers = [];
+                    // rearViewX is already set to null by the 'else if' block above or by hyperdrive activation
+                }
+
+
+                // Update and draw blue tracers
+                rearViewBlueTracers = rearViewBlueTracers.filter(tracer => {
+                    tracer.distanceTraveled += REAR_VIEW_TRACER_SPEED;
+
+                    // The tip of the line is at startX, startY + dir * distanceTraveled
+                    const tipX = tracer.startX + tracer.dirX * tracer.distanceTraveled;
+                    const tipY = tracer.startY + tracer.dirY * tracer.distanceTraveled;
+
+                    // The tail of the line is at tipX - dir * length
+                    const tailX = tipX - tracer.dirX * tracer.length;
+                    const tailY = tipY - tracer.dirY * tracer.length;
+
+                    // Check if tracer has reached or passed its target (halfway point)
+                    const hasReachedTarget = tracer.distanceTraveled >= tracer.totalDistanceToTravel;
+
+                    if (hasReachedTarget) {
+                        shields--; // Decrement shields
+                        shieldsHudValue.textContent = shields; // Update HUD
+                        if (shields <= 0) {
+                            endGame(); // End the game if shields are 0 or less
+                        }
+                        // Play sound for laser touching edge (now for asterisk appearance)
+                        if (audioContext && rearViewHitEdgeNoiseSource) {
+                            const now = audioContext.currentTime;
+                            // Recreate source to play again
+                            const source = audioContext.createBufferSource();
+                            source.buffer = createNoiseBuffer(audioContext, 0.3); // Pink noise approximation
+                            const gainNode = audioContext.createGain();
+                            source.connect(gainNode);
+                            gainNode.connect(masterGainNode);
+                            gainNode.gain.setValueAtTime(0.5, now);
+                            gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+                            source.start(now);
+                            source.stop(now + 0.3);
+                        }
+
+                        // Create the asterisk at the tip's final position
+                        rearViewAsterisks.push({
+                            x: tipX,
+                            y: tipY,
+                            alpha: 1.0,
+                            timer: ASTERISK_DURATION_FRAMES
+                        });
+
+                        return false; // Remove tracer as it has reached its destination
+                    }
+
+                    // Fade out as it approaches the halfway point
+                    let fadeAlpha = 1.0;
+                    // Start fading when it's 70% of the way to the halfway point
+                    if (tracer.distanceTraveled > tracer.totalDistanceToTravel * 0.7) {
+                        fadeAlpha = 1.0 - ((tracer.distanceTraveled - tracer.totalDistanceToTravel * 0.7) / (tracer.totalDistanceToTravel * 0.3)); // Fade over the last 30%
+                        fadeAlpha = Math.max(0, Math.min(1, fadeAlpha));
+                    }
+                    tracer.alpha = fadeAlpha;
+
+                    if (tracer.alpha <= 0) {
+                        return false; // Remove tracer if it's too faint
+                    }
+
+                    // Draw the white part of the tracer
+                    rearViewContext.beginPath();
+                    rearViewContext.moveTo(tailX, tailY);
+                    rearViewContext.lineTo(tipX, tipY); // Draw to the tip
+                    rearViewContext.strokeStyle = `rgba(255, 255, 255, ${tracer.alpha})`; // White color
+                    rearViewContext.lineWidth = REAR_VIEW_TRACER_LINE_WIDTH; // Apply new thickness
+                    rearViewContext.stroke();
+
+                    // Draw the yellow tip
+                    const TIP_RADIUS = REAR_VIEW_TRACER_LINE_WIDTH * 0.75; // Smaller than line width
+                    rearViewContext.beginPath();
+                    rearViewContext.arc(tipX, tipY, TIP_RADIUS, 0, Math.PI * 2);
+                    rearViewContext.fillStyle = `rgba(255, 255, 0, ${tracer.alpha})`; // Yellow color
+                    rearViewContext.fill();
+
+
+                    return true;
+                });
+
+                // Update and draw asterisks
+                rearViewAsterisks = rearViewAsterisks.filter(asterisk => {
+                    asterisk.timer--;
+                    asterisk.alpha = asterisk.timer / ASTERISK_DURATION_FRAMES; // Fade out linearly
+
+                    if (asterisk.timer <= 0) {
+                        return false; // Remove asterisk when timer expires
+                    }
+
+                    // Draw the asterisk
+                    rearViewContext.strokeStyle = `rgba(255, 255, 0, ${asterisk.alpha})`; // Yellow fading asterisk
+                    rearViewContext.lineWidth = ASTERISK_LINE_WIDTH;
+                    const halfSize = ASTERISK_SIZE / 2;
+
+                    rearViewContext.beginPath();
+                    // Horizontal line
+                    rearViewContext.moveTo(asterisk.x - halfSize, asterisk.y);
+                    rearViewContext.lineTo(asterisk.x + halfSize, asterisk.y);
+                    // Vertical line
+                    rearViewContext.moveTo(asterisk.x, asterisk.y - halfSize);
+                    rearViewContext.lineTo(asterisk.x, asterisk.y + halfSize);
+                    // Diagonal 1
+                    rearViewContext.moveTo(asterisk.x - halfSize * 0.7, asterisk.y - halfSize * 0.7);
+                    rearViewContext.lineTo(asterisk.x + halfSize * 0.7, asterisk.y + halfSize * 0.7);
+                    // Diagonal 2
+                    rearViewContext.moveTo(asterisk.x + halfSize * 0.7, asterisk.y - halfSize * 0.7);
+                    rearViewContext.lineTo(asterisk.x - halfSize * 0.7, asterisk.y + halfSize * 0.7);
+                    rearViewContext.stroke();
+
+                    return true;
+                });
+
+
+                // Update and draw rear view particles
+                rearViewParticles = rearViewParticles.filter(p => {
+                    // Calculate current distance from its initial spawn point
+                    const currentDistanceTraveled = Math.sqrt(
+                        Math.pow(p.x - p.initialStartX, 2) +
+                        Math.pow(p.y - p.initialStartY, 2)
+                    );
+
+                    // Determine effective speed for rear view particles
+                    let effectiveRVSpeed = p.baseSpeedMagnitude;
+                    if (isHyperdriveActive) {
+                        effectiveRVSpeed *= HYPERDRIVE_SPEED_MULTIPLIER; // Double speed if hyperdrive is active
+                    }
+
+                    // Re-calculate vx and vy based on the effective speed
+                    const dirX = p.targetVanishingPointX - p.initialStartX;
+                    const dirY = p.targetVanishingPointY - p.initialStartY;
+                    const distanceToVanish = Math.sqrt(dirX * dirX + dirY * dirY);
+                    const normalizedDirX = distanceToVanish > 0 ? dirX / distanceToVanish : 0;
+                    const normalizedDirY = distanceToVanish > 0 ? dirY / distanceToVanish : 0;
+                    p.vx = normalizedDirX * effectiveRVSpeed;
+                    p.vy = normalizedDirY * effectiveRVSpeed;
+
+                    // Update position
+                    p.x += p.vx;
+                    p.y += p.vy;
+
+                    // Check if particle has reached or passed its target vanishing point
+                    const hasReachedTarget = currentDistanceTraveled >= p.initialDistanceToVanish && p.initialDistanceToVanish > 0;
+
+                    // Linear fade out based on how close it is to the vanishing point
+                    let currentAlpha = 1.0;
+                    if (p.initialDistanceToVanish > 0) {
+                        const remainingDistanceRatio = (p.initialDistanceToVanish - currentDistanceTraveled) / p.initialDistanceToVanish;
+                        currentAlpha = Math.max(0, Math.min(1, remainingDistanceRatio * 2)); // Fade out over last half of journey
+                    }
+
+                    // --- Draw Tracer Line if particle is traced ---
+                    if (p.isTraced) {
+                        if (p.tracerStartScreenX !== null && p.tracerStartScreenY !== null) {
+                            rearViewContext.beginPath();
+                            rearViewContext.moveTo(p.tracerStartScreenX, p.tracerStartScreenY);
+                            rearViewContext.lineTo(p.x, p.y);
+                            rearViewContext.strokeStyle = `rgba(255, 255, 255, ${PARTICLE_TRACER_ALPHA})`; // Use new tracer alpha
+                            rearViewContext.lineWidth = 1; // Thinner line for mini-map
+                            rearViewContext.stroke();
+                        }
+                    }
+
+                    // Remove if it has reached its target or becomes too faint
+                    if (hasReachedTarget || currentAlpha < 0.05) {
+                        // If particle reaches target or fades, also stop its tracer
+                        p.isTraced = false;
+                        p.tracerStartScreenX = null;
+                        p.tracerStartScreenY = null;
+                        return false; // Filter out this particle
+                    }
+
+                    // Draw the particle (always drawn if visible and active)
+                    if (currentAlpha > 0.05) {
+                        rearViewContext.beginPath();
+                        rearViewContext.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                        rearViewContext.fillStyle = `rgba(255, 255, 255, ${currentAlpha})`;
+                        rearViewContext.fill();
+                    }
+
+                    return true; // Keep this particle
+                });
+
+                // Ensure a constant number of particles by adding new ones if needed
+                while (rearViewParticles.length < REAR_VIEW_PARTICLE_COUNT) {
+                    const rvWidth = rearViewCanvas.width;
+                    const rvHeight = rearViewCanvas.height;
+                    const mainCenterX = canvas.width / 2;
+                    const mainCenterY = canvas.height / 2;
+                    const rearViewCenterX = rvWidth / 2;
+                    const rearViewCenterY = rvHeight / 2;
+                    const offsetX = vanishingPointX - mainCenterX;
+                    const offsetY = vanishingPointY - mainCenterY;
+                    const scaleFactorX = rvWidth / canvas.width;
+                    const scaleFactorY = rvHeight / canvas.height;
+                    const currentRearViewCrosshairX = rearViewCenterX - (offsetX * scaleFactorX);
+                    const currentRearViewCrosshairY = rearViewCenterY - (offsetY * scaleFactorY);
+                    rearViewParticles.push(createRearViewParticle(rvWidth, rvHeight, currentRearViewCrosshairX, currentRearViewCrosshairY, currentParticleSpeedZ));
+                }
+            }
+
+            // --- Ice Cloud Spawning Logic ---
+            iceCloudOpportunityTimer--;
+            if (iceCloudOpportunityTimer <= 0) {
+                if (iceClouds.length < MAX_ACTIVE_ICE_CLOUDS && Math.random() < ICE_CLOUD_SPAWN_CHANCE_PER_OPPORTUNITY) {
+                    iceClouds.push(createIceCloud());
+                    console.log("Ice cloud spawned due to opportunity.");
+                } else if (iceClouds.length >= MAX_ACTIVE_ICE_CLOUDS) {
+                    console.log("Skipping ice cloud spawn: Max active clouds reached.");
+                } else {
+                    console.log("Skipping ice cloud spawn: Chance failed.");
+                }
+                iceCloudOpportunityTimer = ICE_CLOUD_OPPORTUNITY_INTERVAL_FRAMES; // Reset timer for next opportunity
+            }
+
+            // --- Update and Draw Ice Clouds ---
+            iceClouds = iceClouds.filter(cloud => {
+                // Fade in
+                if (cloud.alpha < ICE_CLOUD_HAZE_ALPHA) {
+                    cloud.alpha = Math.min(ICE_CLOUD_HAZE_ALPHA, cloud.alpha + 0.01); // Fade in slowly
+                }
+
+                // Check for collision with crosshairs
+                const distanceToCrosshair = Math.sqrt(
+                    Math.pow(cloud.x - vanishingPointX, 2) +
+                    Math.pow(cloud.y - vanishingPointY, 2)
+                );
+
+                if (distanceToCrosshair < cloud.radius) {
+                    // Collision detected!
+                    heat = 0; // Reduce heat to 0
+                    internalHeatingValue.textContent = `${Math.round(heat)}%`; // Update HUD
+                    if (audioContext && coolDownNoiseSource) {
+                        const now = audioContext.currentTime;
+                        coolDownGainNode.gain.cancelScheduledValues(now);
+                        coolDownGainNode.gain.setValueAtTime(0.5, now); // Attack volume for hiss/sizzle
+                        coolDownGainNode.gain.linearRampToValueAtTime(0.001, now + 0.2); // Decay quickly
+                    }
+                    console.log("Ice cloud hit! Heat reset.");
+                    return false; // Remove this cloud
+                }
+
+                // Update lifetime and fade out
+                cloud.lifeTimer--;
+                if (cloud.lifeTimer <= ICE_CLOUD_MAX_LIFETIME_FRAMES / 4) { // Start fading out in last quarter of life
+                    cloud.alpha = Math.max(0, cloud.alpha - 0.005); // Fade out slowly
+                }
+
+                if (cloud.lifeTimer <= 0 || cloud.alpha <= 0) {
+                    console.log("Ice cloud faded/expired.");
+                    return false; // Remove cloud if its life is over or it's fully faded
+                }
+
+                // Draw the hazy ice cloud
+                context.globalAlpha = cloud.alpha; // Apply overall cloud transparency
+                context.fillStyle = 'rgba(200, 200, 200, 1.0)'; // Light grey base color for haze
+
+                // Draw multiple overlapping circles for hazy effect
+                for (let i = 0; i < ICE_CLOUD_HAZE_COUNT; i++) {
+                    const offsetX = (Math.random() - 0.5) * cloud.radius * 0.6; // Smaller offsets
+                    const offsetY = (Math.random() - 0.5) * cloud.radius * 0.6;
+                    const smallRadius = cloud.radius * (0.4 + Math.random() * 0.3); // Varying small circles, slightly larger
+
+                    context.beginPath();
+                    context.arc(cloud.x + offsetX, cloud.y + offsetY, smallRadius, 0, Math.PI * 2);
+                    context.fill();
+                }
+                context.globalAlpha = 1.0; // Reset global alpha after drawing clouds
+
+                return true; // Keep cloud if it's still active
+            });
+
+
+            // Update previous crosshair positions for next frame's velocity calculation
+            prevVanishingPointX = vanishingPointX;
+            prevVanishingPointY = vanishingPointY;
+
+            requestAnimationFrame(animate);
+        }
+
+        window.onload = function () {
+            // Start the game in the "Game Over" menu
+            endGame();
+            // Start animation loop, but it will be effectively paused until a difficulty is selected
+            animate();
+        };
+
+        window.addEventListener('resize', setCanvasDimensions);
+    </script>
+</body>
+</html>
