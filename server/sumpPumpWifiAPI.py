@@ -8,6 +8,8 @@ from datetime import datetime
 
 load_dotenv()  # Load variables from .env
 
+BIND_HOST = os.getenv('BIND_HOST', '0.0.0.0') #
+PORT = int(os.getenv('COLLECTOR_PORT'))
 db_config = {
     'host': os.getenv('DB_HOST'),
     'user': os.getenv('DB_USER'),
