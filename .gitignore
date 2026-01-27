@@ -5,3 +5,6 @@
 venv/
 .venv/
 ENV/
+
+#Ignore PIC config info
+/PIC/config.h
