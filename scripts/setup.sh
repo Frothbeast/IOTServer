@@ -33,7 +33,7 @@ sudo apt install -y python3-venv
 cd server
 python3 -m venv venv
 source venv/bin/activate
-pip install -r requirements.txt
+pip install -r ../server/requirements.txt
 cd ..
 
 # 4. Setup Node/React
