@@ -15,12 +15,9 @@ cd ..
 # Setup Node/React
 sudo apt install -y npm
 sudo npm install -g pm2
-cd client
 npm run build
-cd ../server
+cd server
 pm2 start venv/bin/python --name "iot-collector" -- pythonDataCollector.py
-pm2 start venv/bin/python --name "iot-api" -- sumpPumpWifiAPI.py
-
 pm2 startup | tail -n 1 | bash
 pm2 save
 cd ..

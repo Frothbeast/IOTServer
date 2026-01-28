@@ -19,12 +19,8 @@ TARGET_DIR="/opt/IOTServer"
  ##        addresses: [8.8.8.8, 1.1.1.1]
  ## log in with laptop from local LAN
  ## from a local LAN computer, go to users/frothbeast/.ssh/known_hosts/  get rid of all lines(keys) with this IP address
-##
-## once you SSH in:
-# sudo nano bootstrap.sh
-# copy and paste the text of this file into that file cntl s cntl x
-# sudo chmod +x bootstrap.sh
-# ./bootstrap.sh
+
+# Install Git
 sudo apt update
 sudo apt upgrade -y
 sudo apt install -y git
@@ -38,10 +34,4 @@ else
     echo "Directory $TARGET_DIR already exists. Skipping clone."
 fi
 #Execute the main setup script
-cd "$TARGET_DIR" && chmod +x scripts/setup.sh
-echo "Add .ENV files to server and client folders using .env.example"
-echo " then run ./scripts/setup.sh from $TARGET_DIR to continue the setup"
-cd "$TARGET_DIR"
-
-
-
+cd "$TARGET_DIR" && chmod +x scripts/setup.sh && ./scripts/setup.sh

@@ -1,5 +1,5 @@
 // [2026-01-27] Always include all the code I write in the first place, and comment out my code that you change and insert your new correction.
-import "./assets/css/App.css";
+import "./App.css";
 import { useState, useEffect } from 'react';
 
 function App() {
