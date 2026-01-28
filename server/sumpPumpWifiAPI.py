@@ -6,10 +6,10 @@ import mysql.connector
 import json
 from datetime import datetime
 
-load_dotenv()  # Load variables from .env
+load_dotenv('/opt/IOTServer/server/.env', override=True)
 
 BIND_HOST = os.getenv('BIND_HOST', '0.0.0.0') #
-PORT = int(os.getenv('COLLECTOR_PORT'))
+PORT = int(os.getenv('API_PORT',5000))
 db_config = {
     'host': os.getenv('DB_HOST'),
     'user': os.getenv('DB_USER'),
@@ -60,3 +60,4 @@ def handle_data():
 if __name__ == '__main__':
     api_host = os.getenv('API_HOST', '0.0.0.0')
     api_port = int(os.getenv('API_PORT', 5000))
+    app.run(host=api_host, port=api_port)
