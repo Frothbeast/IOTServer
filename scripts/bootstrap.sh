@@ -19,8 +19,12 @@ TARGET_DIR="/opt/IOTServer"
  ##        addresses: [8.8.8.8, 1.1.1.1]
  ## log in with laptop from local LAN
  ## from a local LAN computer, go to users/frothbeast/.ssh/known_hosts/  get rid of all lines(keys) with this IP address
-
-# Install Git
+##
+## once you SSH in:
+# sudo nano bootstrap.sh
+# copy and paste the text of this file into that file cntl s cntl x
+# sudo chmod +x bootstrap.sh
+# ./bootstrap.sh
 sudo apt update
 sudo apt upgrade -y
 sudo apt install -y git
