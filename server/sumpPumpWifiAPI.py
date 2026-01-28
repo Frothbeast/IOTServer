@@ -1,23 +1,28 @@
-# [2026-01-27] Always include all the code I write in the first place, and comment out my code that you change and insert your new correction.
+#
+# This file is the API handling web requests and errors
+#
+
 from flask import Flask, request, jsonify, send_from_directory
 import mysql.connector
 import json
 from datetime import datetime
 import os
+from dotenv import load_dotenv
 
+load_dotenv()
 # app = Flask(__name__)
 app = Flask(__name__, static_folder='../client/build', static_url_path='/')
 
 db_config = {
-    # Your database config remains here
+    'host': os.getenv('DB_HOST'),
+    'user': os.getenv('DB_USER'),
+    'password': os.getenv('DB_PASS'),
+    'database': os.getenv('DB_NAME')
 }
-
 
 @app.route('/')
 def serve():
-    # New route to serve the React frontend
     return send_from_directory(app.static_folder, 'index.html')
-
 
 @app.route('/api/data', methods=['GET', 'POST'])
 def handle_data():
@@ -25,7 +30,7 @@ def handle_data():
         try:
             data = request.get_json()
             data['datetime'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            print(f"Received Data with Timestamp: {data}")
+            print(f"Received Data and added Timestamp inside JSON")
 
             conn = mysql.connector.connect(**db_config)
             cursor = conn.cursor()
@@ -35,7 +40,6 @@ def handle_data():
             cursor.close()
             conn.close()
 
-            # return {jsonify({"status": "success"}), 200}
             return jsonify({"status": "success"}), 200
         except Exception as e:
             print(f"Error: {e}")

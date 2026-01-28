@@ -1,3 +1,6 @@
+#
+# This file captures IOT data from the network and puts it in the database
+#
 import os
 from dotenv import load_dotenv
 import socket
@@ -15,8 +18,6 @@ db_config = {
     'password': os.getenv('DB_PASS'),
     'database': os.getenv('DB_NAME')
 }
-
-
 def start_collector():
     # Regular TCP socket without any SSL wrapping
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -38,7 +39,6 @@ def start_collector():
                 if data:
                     decoded_data = data.decode('ascii').strip()
                     print(f"Received {decoded_data}")
-                    # query = "INSERT INTO frothbeast.sumpData (payload) VALUES (%s)"
                     query = f"INSERT INTO {db_config['database']}.sumpData (payload) VALUES (%s)"
                     cursor.execute(query, (decoded_data,))
                     conn_db.commit()
