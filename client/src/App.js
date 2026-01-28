@@ -1,3 +1,4 @@
+// [2026-01-27] Always include all the code I write in the first place, and comment out my code that you change and insert your new correction.
 import "./assets/css/App.css";
 import { useState, useEffect } from 'react';
 
@@ -18,8 +19,9 @@ function App() {
             setTotalTime(Math.round((Date.now() - startTime) / 1000));
         }, 1000);
 
-        // Fetching the last 10 records
-        fetch('/api/sump-data?limit=10')
+        // Fetching the last 20 records
+        // fetch('/api/sump-data?limit=10')
+        fetch('/api/data')
             .then(res => res.json())
             .then(data => {
                 setSumpRecords(data);
@@ -33,14 +35,17 @@ function App() {
     // Placeholder Logic: Creates 10 rows of 'n/a'
     const renderTableRows = () => {
         const rows = isLoading || sumpRecords.length === 0 
-            ? Array.from({ length: 10 }).map((_, i) => ({ timeON: 'n/a', timeOff: 'n/a', hoursOn: 'n/a' }))
+            ? Array.from({ length: 10 }).map((_, i) => ({ payload: { timeON: 'n/a', timeOff: 'n/a', hoursOn: 'n/a' } }))
             : sumpRecords;
 
         return rows.map((row, index) => (
             <tr key={index}>
-                <td>{row.timeON}</td>
+                {/* <td>{row.timeON}</td>
                 <td>{row.timeOff}</td>
-                <td>{row.hoursOn}</td>
+                <td>{row.hoursOn}</td> */}
+                <td>{row.payload?.timeON || 'n/a'}</td>
+                <td>{row.payload?.timeOff || 'n/a'}</td>
+                <td>{row.payload?.hoursOn || 'n/a'}</td>
             </tr>
         ));
     };
@@ -48,6 +53,13 @@ function App() {
     return (
         <div className="App">
             <h1>FrothServer</h1>
+            
+            {/* Navigation Links to Games */}
+            <nav style={{ marginBottom: '20px' }}>
+                <a href="/pages/pvp.html" style={{ color: '#00d1b2', marginRight: '20px' }}>Play PVP</a>
+                <a href="/pages/starfield.html" style={{ color: '#00d1b2' }}>Play Starfield</a>
+            </nav>
+
             <h1>Server webpage time since restart {totalTime}s</h1>
             <h2>Session Time Since last reset {counter}s</h2>
             <h2>Number of clicks of reset {clickCounter}</h2>
@@ -55,7 +67,7 @@ function App() {
             <button onClick={() => { setCounter(0); setClickCounter(prev => prev + 1); }}>reset timer</button>
 
             <div className="table-container" style={{ marginTop: '30px' }}>
-                <h3>Last 10 Sump Pump Records</h3>
+                <h3>Last 20 Sump Pump Records</h3>
                 <table className="sump-table">
                     <thead>
                         <tr>
