@@ -40,7 +40,8 @@ fi
 #Execute the main setup script
 cd "$TARGET_DIR" && chmod +x scripts/setup.sh
 echo "Add .ENV files to server and client folders using .env.example"
-echo " then run <./scripts/setup.sh> to continue the setup"
-pause
+echo " then run ./scripts/setup.sh from $TARGET_DIR to continue the setup"
+cd "$TARGET_DIR"
+
 
 
