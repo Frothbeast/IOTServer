@@ -1,6 +1,6 @@
 
 # 2. Run the database setup script
-chmod +x scripts/setup_db.sh
+sudo chmod +x scripts/setup_db.sh
 ./scripts/setup_db.sh
 
 # 3. Setup Python Environment
@@ -10,7 +10,7 @@ cd server
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
-cd ..
+cd ../client/
 
 # Setup Node/React
 sudo apt install -y npm
