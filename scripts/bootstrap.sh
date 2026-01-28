@@ -38,4 +38,9 @@ else
     echo "Directory $TARGET_DIR already exists. Skipping clone."
 fi
 #Execute the main setup script
-cd "$TARGET_DIR" && chmod +x scripts/setup.sh && ./scripts/setup.sh
+cd "$TARGET_DIR" && chmod +x scripts/setup.sh
+echo "Add .ENV files to server and client folders using .env.example"
+echo " then run <./scripts/setup.sh> to continue the setup"
+pause
+
+
