@@ -19,9 +19,9 @@ sudo apt update
 sudo apt upgrade
 
 # 1. Create directory and get project files
-sudo mkdir -p /opt/frothbeast/
-sudo chown -R $USER:$USER /opt/frothbeast
-cd /opt/frothbeast/
+sudo mkdir -p /opt/
+sudo chown -R $USER:$USER /opt/
+cd /opt/
 
 # 2. Run the database setup script
 chmod +x scripts/setup_db.sh
