@@ -30,7 +30,7 @@ function App() {
             .catch(() => setIsLoading(false));
 
         return () => clearInterval(interval);
-    }, []);
+    }, [startTime]);
 
     // Placeholder Logic: Creates 10 rows of 'n/a'
     const renderTableRows = () => {

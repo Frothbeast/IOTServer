@@ -11,10 +11,10 @@ sudo systemctl restart mysql
 sudo systemctl enable mysql
 
 # 1. Load variables from .env FIRST
-if [ -f server/.env ]; then
-    export $(grep -v '^#' server/.env | xargs)
+if [ -f ../server/.env ]; then
+    export $(grep -v '^#' ../server/.env | xargs)
 else
-    echo ".env file not found in /server directory. Please create one from server/.env.example"
+    echo ".env file not found in ../server directory. Please create one from ../server/.env.example"
     exit 1
 fi
 
@@ -25,4 +25,4 @@ sudo mysql -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost';"
 sudo mysql -e "FLUSH PRIVILEGES;"
 
 # 3. Run the static schema file to create tables LAST
-sudo mysql $DB_NAME < database/schema.sql
+sudo mysql $DB_NAME < ../database/schema.sql

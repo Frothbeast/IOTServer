@@ -7,7 +7,14 @@ GIT_EMAIL="frothbeast@gmail.com"
 GIT_REPO_URL="https://github.com/Frothbeast/IOTServer.git"
 TARGET_DIR="/opt/IOTServer"
 
-## use USB stick to install ubuntu DO NOT USE GIT SSH KEY UNLESS YOU LIKE FAILING
+## If using WSL 
+## wsl --install Ubuntu
+## sudo apt update && sudo apt install openssh-server -y
+## just ip addr to find the IP address
+## go to users/frothbeast/.ssh/known_hosts/  get rid of all lines(keys) with this IP address
+## skip next comment section
+
+## If not using WSL: use USB stick to install ubuntu DO NOT USE GIT SSH KEY UNLESS YOU LIKE FAILING
 ## find IP of machine I used static ip <wired_IP_address> you can change this in the first file in /etc/netplan
 ## network:
 ##  version: 2
@@ -24,6 +31,12 @@ TARGET_DIR="/opt/IOTServer"
 ## log in with laptop from local LAN
 ## from a local LAN computer, go to users/frothbeast/.ssh/known_hosts/  get rid of all lines(keys) with this IP address
 
+# now cd /home/frothbeast/
+# copy the contents of this file into sudo nano bootstrap.sh
+# cntrl s cntrl x
+# sudo chmod +x bootstrap.sh
+# sudo ./bootstrap.sh
+
 #update Linux
 sudo apt update
 sudo apt upgrade -y
@@ -39,8 +52,14 @@ else
     echo "Directory $TARGET_DIR already exists. Skipping clone."
 fi
 
-#Tell self to execute the main setup script after creating .env files
-echo "create .env files in server and client using .env.example"
-echo "then go to $TARGET_DIR and run ./scripts/setup.sh"
+sudo chown -R frothbeast:frothbeast /opt/IOTServer
 
-cd "$TARGET_DIR" && chmod +x scripts/setup.sh 
+#Tell self to execute the main setup script after creating .env files
+echo
+echo
+echo "----------------------------------------------------------"
+echo "create .env files in server and client using .env.example"
+echo "then go to $TARGET_DIR/scripts/ and run .setup.sh"
+
+cd "$TARGET_DIR" && sudo chmod +x scripts/setup.sh && sudo chmod +x scripts/setup_db.sh
+

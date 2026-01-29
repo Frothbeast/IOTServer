@@ -2,11 +2,17 @@
 # This file captures IOT data from the network and puts it in the database
 #
 import os
+import sys
 from dotenv import load_dotenv
 import socket
 import mysql.connector
+import time
 
 # Load environment variables
+cwd = os.getcwd()
+print(f"INFO: Current Working Directory: {cwd}", file=sys.stderr)
+sys.stderr.flush()
+
 load_dotenv()
 
 BIND_HOST = os.getenv('BIND_HOST', '0.0.0.0')
@@ -31,14 +37,18 @@ def start_collector():
 
     while True:
         try:
-            conn_db = mysql.connector.connect(**db_config)
-            cursor = conn_db.cursor()
+            
             conn, addr = server_socket.accept()
             with conn:
                 data = conn.recv(1024)
                 if data:
                     decoded_data = data.decode('ascii').strip()
                     print(f"Received {decoded_data}")
+
+                    # Establish DB connection only when data is received
+                    conn_db = mysql.connector.connect(**db_config)
+                    cursor = conn_db.cursor()
+
                     query = f"INSERT INTO {db_config['database']}.sumpData (payload) VALUES (%s)"
                     cursor.execute(query, (decoded_data,))
                     conn_db.commit()
@@ -50,7 +60,7 @@ def start_collector():
 
         except Exception as e:
             print(f"Error: {e}")
-
+            time.sleep(2) #give cpu a break if looping
 
 if __name__ == "__main__":
     start_collector()
