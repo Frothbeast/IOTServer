@@ -46,7 +46,6 @@ $PM2_BIN start venv/bin/python --name "iot-api" -- sumpPumpWifiAPI.py
 # Start the Frontend server using the 'serve' package
 # /usr/local/bin/pm2 delete "iot-frontend" || true
 $PM2_BIN delete "iot-frontend" || true
-$PM2_BIN start serve --name "iot-frontend" -- -s /opt/IOTServer/client/build -l 3000
-
+/usr/local/bin/pm2 start "npx serve -s /opt/IOTServer/client/build -l 3000" --name "iot-frontend"
 $PM2_BIN save
 cd ..
