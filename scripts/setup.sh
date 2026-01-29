@@ -41,7 +41,7 @@ $PM2_BIN start venv/bin/python --name "iot-collector" -- pythonDataCollector.py
 # $PM2_BIN delete "iot-api" || true
 # $PM2_BIN start venv/bin/python --name "iot-api" -- app.py
 $PM2_BIN delete "iot-api" || true
-$PM2_BIN start venv/bin/python --name "iot-api" -- app.py
+$PM2_BIN start venv/bin/python --name "iot-api" -- sumpPumpWifiAPI.py
 
 # Start the Frontend server using the 'serve' package
 # /usr/local/bin/pm2 delete "iot-frontend" || true
