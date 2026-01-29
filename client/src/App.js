@@ -17,17 +17,16 @@ function App() {
         const interval = setInterval(() => {
             setCounter((prevCounter) => prevCounter + 1);
             setTotalTime(Math.round((Date.now() - startTime) / 1000));
+
+            fetch('http://localhost:5000/api/data')
+                .then(res => res.json())
+                .then(data => {
+                    setSumpRecords(data);
+                    setIsLoading(false);
+                })
+                .catch(() => setIsLoading(false));
         }, 1000);
 
-        // Fetching the last 20 records
-        // fetch('/api/sump-data?limit=10')
-        fetch('/api/data')
-            .then(res => res.json())
-            .then(data => {
-                setSumpRecords(data);
-                setIsLoading(false);
-            })
-            .catch(() => setIsLoading(false));
 
         return () => clearInterval(interval);
     }, [startTime]);

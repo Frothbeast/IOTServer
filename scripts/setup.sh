@@ -29,6 +29,10 @@ PM2_BIN="/usr/local/bin/pm2"
 npm install
 npm run build
 
+# copy all files from /client/public/pages
+mkdir -p /opt/IOTServer/client/build/pages
+cp -r /opt/IOTServer/client/public/pages/. /opt/IOTServer/client/build/pages/
+
 # Firewall
 sudo ufw allow 3000/tcp
 sudo ufw allow 5000/tcp
