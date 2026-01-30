@@ -1,5 +1,3 @@
-# [2026-01-29] Always include all the code I write in the first place, and comment out my code that you change and insert your new correction.
-
 #
 # This file is the API handling web requests and errors
 #
@@ -12,15 +10,10 @@ import os
 from dotenv import load_dotenv
 from flask_cors import CORS
 
-# app = Flask(__name__)
-# # Enable CORS for all routes so port 3000 can talk to port 5000
-# CORS(app)
 
 load_dotenv()
-# app = Flask(__name__)
 app = Flask(__name__, static_folder='../client/build', static_url_path='/')
 
-# Added CORS initialization to ensure the policy applies to the static-folder-enabled app instance
 CORS(app)
 
 db_config = {
@@ -31,8 +24,12 @@ db_config = {
 }
 
 
-@app.route('/')
-def serve():
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve(path):
+    import os
+    if not os.path.exists(os.path.join(app.static_folder, 'index.html')):
+        return f"Error: index.html not found in {app.static_folder}", 404
     return send_from_directory(app.static_folder, 'index.html')
 
 
@@ -41,8 +38,6 @@ def handle_data():
     if request.method == 'POST':
         try:
             data = request.get_json()
-            # The PIC sends 'on', 'off', 'hrs'. The React Emulator sends 'on', 'off', 'hrs'.
-            # The database stores the whole object in the 'payload' column.
             data['datetime'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             print(f"Received Data and added Timestamp inside JSON")
 
@@ -67,18 +62,9 @@ def handle_data():
         cursor.close()
         conn.close()
 
-        # Parse the JSON string in 'payload' back into an object for the frontend
-        # row['payload'] contains keys like 'on', 'off', 'hrs' which the React table maps to 'timeON', 'timeOff', 'hoursOn'
         for row in rows:
             if isinstance(row['payload'], str):
                 row['payload'] = json.loads(row['payload'])
-
-            # Correction to map emulator/PIC keys ('on', 'off', 'hrs') to keys expected by renderTableRows ('timeON', 'timeOff', 'hoursOn')
-            # if 'on' in row['payload']: row['payload']['timeON'] = row['payload'].pop('on')
-            # if 'off' in row['payload']: row['payload']['timeOff'] = row['payload'].pop('off')
-            # if 'hrs' in row['payload']: row['payload']['hoursOn'] = row['payload'].pop('hrs')
-
-            # Safer mapping to ensure keys match your App.js renderTableRows logic
             if 'on' in row['payload']: row['payload']['timeON'] = row['payload'].get('on')
             if 'off' in row['payload']: row['payload']['timeOff'] = row['payload'].get('off')
             if 'hrs' in row['payload']: row['payload']['hoursOn'] = row['payload'].get('hrs')
@@ -89,13 +75,12 @@ def handle_data():
         return jsonify({"error": str(e)}), 500
 
 
-# Catch-all route for React Router (if used)
 @app.errorhandler(404)
 def not_found(e):
+    import os
+    if not os.path.exists(os.path.join(app.static_folder, 'index.html')):
+        return "Fallback failed: index.html missing", 404
     return send_from_directory(app.static_folder, 'index.html')
 
-
 if __name__ == '__main__':
-    # app.run(host='0.0.0.0', port=5000)
-    # Enable debug mode to see specific error messages in terminal logs if the database connection fails
     app.run(host='0.0.0.0', port=5000, debug=True)
