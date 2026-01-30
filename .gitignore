@@ -8,3 +8,6 @@ ENV/
 
 #Ignore PIC config info
 /PIC/config.h
+client/build/
+client/node_modules/
+client/package-lock.json
