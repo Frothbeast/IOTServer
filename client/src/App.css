@@ -1,3 +1,35 @@
+/* App.css is for main page only, the basic layout of the page
+Font family declarations.
+CSS resets (margin: 0, padding: 0).
+Global BEM variables (like --primary-color).
+The main layout grid that holds the components together.
+
+:root { ... }: All your shared BEM variables (colors, spacing, fonts).
+CSS Resets: Basic rules for body or * (e.g., box-sizing: border-box, margin: 0).
+Global Fonts: @import or font-family declarations for the whole app. 
+.App can be the main layout of the page if it is just a 'wrapper class'
+
+*/
+:root {
+  /* Colors */
+  --primary-color: #3498db;
+  --secondary-color: #2ecc71;
+  --dark-gray: #333333;
+  --light-gray: #f4f4f4;
+
+  /* Typography */
+  --font-main: 'Inter', sans-serif;
+  --font-size-base: 16px;
+
+  /* Spacing */
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 32px;
+
+  /* BEM-specific Helpers */
+  --border-radius: 4px;
+}
+
 .App {
   text-align: center;
   background-color: #282c34;

@@ -1,0 +1,46 @@
+/* Block: The main container or table itself */
+.sump-table {
+  width: 100%;
+  border-collapse: collapse; /* Neater border control */
+  margin: var(--space-md) 0;
+  background-color: #2a2a2a; /* Slightly lighter than the page bg */
+  color: var(--text-light);
+}
+
+/* Element: Header area */
+.sump-table__head {
+  background-color: var(--primary-brand);
+  color: #000;
+}
+
+/* Element: Header cells */
+.sump-table__header-cell {
+  padding: 12px;
+  text-align: left;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+}
+
+/* Element: Standard data cells */
+.sump-table__cell {
+  padding: 12px;
+  border-bottom: 1px solid #444;
+  font-family: monospace; /* Good for raw data */
+}
+
+/* Element: Rows (for hover effects or zebra striping) */
+.sump-table__row:nth-child(even) {
+  background-color: #333; /* Zebra striping for readability */
+}
+
+.sump-table__row:hover {
+  background-color: #444; /* Interactive feel */
+}
+
+/* Element: Message (Loading/No Data) */
+.sump-table__message {
+  padding: var(--space-lg);
+  color: var(--text-muted);
+  font-style: italic;
+}
