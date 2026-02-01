@@ -1,19 +1,71 @@
+/* App.css is for main page only, the basic layout of the page
+Font family declarations.
+CSS resets (margin: 0, padding: 0).
+Global BEM variables (like --primary-color).
+The main layout grid that holds the components together.
+
+:root { ... }: All your shared BEM variables (colors, spacing, fonts).
+CSS Resets: Basic rules for body or * (e.g., box-sizing: border-box, margin: 0).
+Global Fonts: @import or font-family declarations for the whole app. 
+.App can be the main layout of the page if it is just a 'wrapper class'
+
+*/
+:root {
+  /* Colors */
+  --menu-colour: DarkSlateGrey;
+  --menu-background: Khaki;
+  --primary-color: #DarkSlateGrey;
+  --secondary-color: #2ecc71;
+  --dark-gray: #333333;
+  --light-gray: #f4f4f4;
+  --table-header-background: #E0D67C;
+  --table-header-colour: DarkSlateGrey;
+  /* Typography */
+  --font-main: 'Inter', sans-serif;
+  --font-size-base: 16px;
+
+  /* Spacing */
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 32px;
+
+  /* BEM-specific Helpers */
+  --border-radius: 4px;
+}
+
 .App {
   text-align: center;
-  background-color: #282c34;
+  background-color: Khaki;
   min-height: 100vh;
-  color: white;
+  color: DarkSlateGrey;
   padding: 20px;
 }
 
 .sump-table {
   margin-left: auto;
   margin-right: auto;
-  border-collapse: collapse;
+  border-collapse: separate;
   width: 80%;
 }
 
 .sump-table th, .sump-table td {
-  border: 1px solid #00d1b2;
+  border-radius: var(--border-radius);
+  border: 1px solid #E0D67C;
   padding: 10px;
 }
+/*
+@media (prefers-color-scheme: dark) {
+  :root {
+    --menu-colour: #004800;
+    --menu-background: #DarkSlateGrey;
+    --primary-color: #003000;
+    --secondary-color: #008000;
+    --dark-gray: #333333;
+    --light-gray: #f4f4f4;
+  }
+  .App {
+    background-color: DarkSlateGrey;
+    color: Khaki;
+  }
+}
+*/
