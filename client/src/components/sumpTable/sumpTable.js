@@ -10,12 +10,19 @@ export default function useSumpData(startTime) {
 
     useEffect(() => {
         const interval = setInterval(() => {
-            fetch('/api/sump-status')
+            fetch('/api/data') // Correction: Match the route in sumpPumpWifiAPI.py
                 .then(res => res.json())
                 .then(data => {
+                    /*
                     // This check prevents the "Cannot destructure" error
                     if (data && data.records) {
                         setSumpRecords(data.records);
+                    }
+                    */
+
+                    // Correction: Python backend returns an array directly
+                    if (Array.isArray(data)) {
+                        setSumpRecords(data);
                     }
                     setIsLoading(false);
                 })
@@ -23,6 +30,11 @@ export default function useSumpData(startTime) {
                     console.error(err);
                     setIsLoading(false);
                 });
+
+            setCounter((prev) => prev + 1);
+            if (startTime) {
+                setTotalTime(Math.round((Date.now() - startTime) / 1000));
+            }
         }, 1000);
 
         return () => clearInterval(interval);

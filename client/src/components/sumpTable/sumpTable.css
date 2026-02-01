@@ -1,16 +1,17 @@
+
 /* Block: The main container or table itself */
 .sump-table {
   width: 100%;
-  border-collapse: collapse; /* Neater border control */
+  border-collapse: separate; /* Neater border control */
   margin: var(--space-md) 0;
-  background-color: #2a2a2a; /* Slightly lighter than the page bg */
-  color: var(--text-light);
+  background-color: var(--menu-background);
+  color: var(--menu-colour);
 }
 
 /* Element: Header area */
 .sump-table__head {
-  background-color: var(--primary-brand);
-  color: #000;
+  background-color: var(--table-header-background);
+  color: var(--table-header-colour);
 }
 
 /* Element: Header cells */
@@ -31,16 +32,17 @@
 
 /* Element: Rows (for hover effects or zebra striping) */
 .sump-table__row:nth-child(even) {
-  background-color: #333; /* Zebra striping for readability */
+  background-color: LemonChiffon; /* Zebra striping for readability */
 }
 
 .sump-table__row:hover {
   background-color: #444; /* Interactive feel */
 }
 
-/* Element: Message (Loading/No Data) */
+/* Element: Message (Loadi0ng/No Data) */
 .sump-table__message {
   padding: var(--space-lg);
-  color: var(--text-muted);
+  color: var(--menu-colour);
   font-style: italic;
 }
+

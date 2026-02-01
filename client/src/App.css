@@ -12,11 +12,14 @@ Global Fonts: @import or font-family declarations for the whole app.
 */
 :root {
   /* Colors */
-  --primary-color: #3498db;
+  --menu-colour: DarkSlateGrey;
+  --menu-background: Khaki;
+  --primary-color: #DarkSlateGrey;
   --secondary-color: #2ecc71;
   --dark-gray: #333333;
   --light-gray: #f4f4f4;
-
+  --table-header-background: #E0D67C;
+  --table-header-colour: DarkSlateGrey;
   /* Typography */
   --font-main: 'Inter', sans-serif;
   --font-size-base: 16px;
@@ -32,20 +35,37 @@ Global Fonts: @import or font-family declarations for the whole app.
 
 .App {
   text-align: center;
-  background-color: #282c34;
+  background-color: Khaki;
   min-height: 100vh;
-  color: white;
+  color: DarkSlateGrey;
   padding: 20px;
 }
 
 .sump-table {
   margin-left: auto;
   margin-right: auto;
-  border-collapse: collapse;
+  border-collapse: separate;
   width: 80%;
 }
 
 .sump-table th, .sump-table td {
-  border: 1px solid #00d1b2;
+  border-radius: var(--border-radius);
+  border: 1px solid #E0D67C;
   padding: 10px;
 }
+/*
+@media (prefers-color-scheme: dark) {
+  :root {
+    --menu-colour: #004800;
+    --menu-background: #DarkSlateGrey;
+    --primary-color: #003000;
+    --secondary-color: #008000;
+    --dark-gray: #333333;
+    --light-gray: #f4f4f4;
+  }
+  .App {
+    background-color: DarkSlateGrey;
+    color: Khaki;
+  }
+}
+*/
