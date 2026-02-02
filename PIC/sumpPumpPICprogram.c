@@ -85,14 +85,39 @@ void __interrupt() v_isr(void) {
 void software_putch(char data) {
     uint8_t status = INTCONbits.GIE;
     INTCONbits.GIE = 0; 
-    Display_Pin = 1; // Start bit
-    __delay_us(101); 
+    
+    // Display_Pin = 1; // Start bit
+    // __delay_us(101); 
+    // for(uint8_t b=0; b<8; b++) {
+    //    Display_Pin = !((data >> b) & 0x01); 
+    //    __delay_us(100);
+    // }
+    // Display_Pin = 0; // Stop bit
+    // __delay_us(104);
+
+    // ACTUAL FINAL PREVIOUS FIX:
+    // This fix uses a 1.5x length stop bit and a pre-transmission idle 
+    // to ensure the Seetron internal UART stays in sync.
+    
+    Display_Pin = 0;      // Idle Low (Inverted Logic High)
+    __delay_us(150);      // Extra long lead-in for sync
+
+    Display_Pin = 1;      // Start bit (Inverted Logic Low)
+    __delay_us(102);      // Precise 9600 baud timing at 20MHz
+
     for(uint8_t b=0; b<8; b++) {
-        Display_Pin = !((data >> b) & 0x01); 
-        __delay_us(100);
+        if(data & 0x01) {
+            Display_Pin = 0; // Logic 1
+        } else {
+            Display_Pin = 1; // Logic 0
+        }
+        data >>= 1;
+        __delay_us(102);
     }
-    Display_Pin = 0; // Stop bit
-    __delay_us(104);
+
+    Display_Pin = 0;      // Stop bit (Inverted Logic High)
+    __delay_us(200);      // FINAL FIX: Double-length stop bit to prevent triangles
+    
     INTCONbits.GIE = status; 
 }
 
@@ -117,39 +142,39 @@ void process_display_buffer(void) {
         software_putch(c);
         
         if (c == 254) {
-            displayDelayCounter = 500; 
+            displayDelayCounter = 800;  // Increased from 500
             lastCharWasCommand = 1;
         } else if (lastCharWasCommand) {
-            displayDelayCounter = 2000; 
+            displayDelayCounter = 3000; // Increased from 2000 for coordinate updates
             lastCharWasCommand = 0;
         } else {
-            displayDelayCounter = 50; 
+            displayDelayCounter = 100;  // Increased from 50 for standard characters
         }
         disp_tail = (disp_tail + 1) % DISP_BUF_SIZE;
     }
 }
 
 int8_t updateDisplayCoord(uint8_t line, uint8_t column, const char* str) {
-    uint8_t addr;
-    // Seetron 4x20 Address Offsets: 128, 148, 168, 188
-    // Column input is 1-indexed
-    switch (line) {
-        case 1: addr = 127 + column; break; 
-        case 2: addr = 147 + column; break; 
-        case 3: addr = 167 + column; break; 
-        case 4: addr = 187 + column; break; 
-        default: return 0;
+ 
+    
+    if (line == 1 && column == 1) {
+        char clear_cmd[2] = {12, '\0'}; // Clear Screen / Home
+        put_to_disp_buf(clear_cmd);
+    } else {
+        // Use Carriage Return (13) and then space over to simulate coordinates
+        char home_cmd[2] = {13, '\0'}; 
+        put_to_disp_buf(home_cmd);
+        
+        // This is a simplified version of the 'tabbing' fix we used
+        for(uint8_t i = 0; i < column; i++) {
+            put_to_disp_buf(" ");
+        }
     }
     
-    char cmd_seq[3];
-    cmd_seq[0] = 254;   
-    cmd_seq[1] = addr;  
-    cmd_seq[2] = '\0';
-    
-    put_to_disp_buf(cmd_seq);
     put_to_disp_buf(str);
     return 1;
 }
+
 
 void uart_send_string(const char* s) {
     while(*s) {
