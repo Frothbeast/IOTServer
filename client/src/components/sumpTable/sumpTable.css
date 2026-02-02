@@ -1,4 +1,3 @@
-
 /* Block: The main container or table itself */
 .sump-table {
   width: 100%;
@@ -6,6 +5,10 @@
   margin: var(--space-md) 0;
   background-color: var(--menu-background);
   color: var(--menu-colour);
+}
+
+.sump-table th, .sump-table td {
+  border-radius: var(--border-radius);
 }
 
 /* Element: Header area */
@@ -42,7 +45,6 @@
 /* Element: Message (Loadi0ng/No Data) */
 .sump-table__message {
   padding: var(--space-lg);
-  color: var(--menu-colour);
   font-style: italic;
 }
 
