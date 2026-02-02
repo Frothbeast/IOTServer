@@ -20,9 +20,9 @@ const SumpTable = ({ sumpRecords = [] }) => {
                         <td className="sump-table__cell">{record.id}</td>
                         <td className="sump-table__cell">{record.payload?.Hadc ?? "N/a"}</td>
                         <td className="sump-table__cell">{record.payload?.Ladc ?? "N/a"}</td>
-                        <td className="sump-table__cell">{record.payload?.OnTime ?? "N/a"}</td>
-                        <td className="sump-table__cell">{record.payload?.OffTime ?? "N/a"}</td>
-                        <td className="sump-table__cell">{record.payload?.HoursON ?? "N/a"}</td>
+                        <td className="sump-table__cell">{record.payload?.timeOn ?? "N/a"}</td>
+                        <td className="sump-table__cell">{record.payload?.timeOff ?? "N/a"}</td>
+                        <td className="sump-table__cell">{record.payload?.hoursOn ?? "N/a"}</td>
                     </tr>
                 ))}
             </tbody>

@@ -6,12 +6,14 @@
 #include <string.h>
 #include "config.h"
 
+// Direct register mapping for XC8 v3.10 compatibility
 #ifndef CMCON
 #define CMCON  (*(volatile __near unsigned char*)0xFB4)
 #endif
 #define CVRCON (*(volatile __near unsigned char*)0xFB5)
 #define PIR2_REG (*(volatile __near unsigned char*)0xFA1)
 
+// Configuration for 18LF2580
 #pragma config OSC = HS         
 #pragma config WDT = ON         
 #pragma config WDTPS = 4096     
@@ -20,18 +22,23 @@
 
 #define _XTAL_FREQ 20000000
 
+// Hardware Mapping
 #define SSR_out            LATA5           
 #define TRIS_SSR           TRISA5          
 #define Display_Pin        LATBbits.LATB4  
 #define TRIS_Display       TRISB4          
 #define SENSOR_PWR         LATA3
 
+// Circular Buffer for Display
 #define DISP_BUF_SIZE 255
 volatile char disp_buffer[DISP_BUF_SIZE];
 volatile uint8_t disp_head = 0;
 volatile uint8_t disp_tail = 0;
 
+// Timing variables for Seetron serial backpack
 uint16_t displayDelayCounter = 0; 
+
+// Application Variables
 uint8_t wasOn = 0, wasOff = 0, triggerSecondCount = 0;
 uint8_t highLevelStatus, lowLevelStatus, timeToDisplay = 0;
 uint32_t secondsSincePowerup = 0;
@@ -40,18 +47,23 @@ uint16_t lastOnTime = 0, lastOffTime = 0;
 uint8_t pumpState = 0; 
 uint8_t initialSendDone = 0;
 
+// Raw and Filtered ADC values
 uint16_t low_val = 0, high_val = 0;
 uint16_t low_filtered = 1000, high_filtered = 1000;
+
+// Data capture for JSON
 uint32_t lowSum = 0, highSum = 0;
 uint16_t sampleCount = 0;
 uint16_t lastLatod = 0, lastHatod = 0;
 
+// ESP State Machine
 typedef enum { ESP_IDLE, ESP_START_CONNECT, ESP_WAIT_AT, ESP_WAIT_CONNECT, ESP_START_SEND_CMD, ESP_WAIT_PROMPT, ESP_SEND_DATA, ESP_WAIT_SEND_OK } esp_state_t;
 esp_state_t currentEspState = ESP_IDLE;
 uint16_t espTimer = 0;
 volatile char rx_buf[64];
 volatile uint8_t rx_idx = 0;
 
+// Function Prototypes
 void put_to_disp_buf(const char* str);
 void process_display_buffer(void);
 int8_t updateDisplayCoord(uint8_t line, uint8_t column, const char* str);
@@ -170,7 +182,6 @@ void process_esp_state_machine(void) {
         case ESP_WAIT_AT:
             if(strstr((const char*)rx_buf, "OK")) {
                 rx_idx = 0; rx_buf[0] = '\0';
-                // [Correction: Utilizing SERVER_IP and SERVER_PORT from config.h]
                 sprintf(cmd_str, "AT+CIPSTART=\"TCP\",\"%s\",%s\r\n", SERVER_IP, SERVER_PORT);
                 uart_send_string(cmd_str);
                 espTimer = 10; currentEspState = ESP_WAIT_CONNECT;
@@ -191,7 +202,7 @@ void process_esp_state_machine(void) {
             }
             break;
         case ESP_START_SEND_CMD:
-            // [Correction: Used literal keys Hadc, Ladc, hoursOn, timeOn, timeOff]
+            // The lastOnTime and lastOffTime variables are now used to send stable cycle data
             sprintf(data_str, "{\"Hadc\":%u,\"Ladc\":%u,\"hoursOn\":%u,\"timeOn\":%u,\"timeOff\":%u}\r\n", 
                     lastHatod, lastLatod, hoursSincePowerup, lastOnTime, lastOffTime);
             sprintf(cmd_str, "AT+CIPSEND=%d\r\n", (int)strlen(data_str));
@@ -265,6 +276,7 @@ void main(void) {
                     lastLatod = (uint16_t)(lowSum / sampleCount);
                     lastHatod = (uint16_t)(highSum / sampleCount);
                 }
+                // Transition trigger for ESP comms
                 if (currentEspState == ESP_IDLE) currentEspState = ESP_START_CONNECT; 
             }
             pumpState = 0; 
@@ -279,10 +291,20 @@ void main(void) {
             if (pumpState == 1) {
                 lowSum += low_val; highSum += high_val; sampleCount++;
                 currentOnTime++; wasOn = 1;
-                if (wasOff) { lastOffTime = currentOffTime; currentOffTime = 0; wasOff = 0; }
+                if (wasOff) { 
+                    // Store stable duration before resetting current counter
+                    lastOffTime = currentOffTime; 
+                    currentOffTime = 0; 
+                    wasOff = 0; 
+                }
             } else {
                 currentOffTime++; wasOff = 1;
-                if (wasOn) { lastOnTime = currentOnTime; currentOnTime = 0; wasOn = 0; }
+                if (wasOn) { 
+                    // Store stable duration before resetting current counter
+                    lastOnTime = currentOnTime; 
+                    currentOnTime = 0; 
+                    wasOn = 0; 
+                }
             }
             if (secondsSincePowerup % 3600 == 0) hoursSincePowerup++;
         }
