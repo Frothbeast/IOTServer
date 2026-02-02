@@ -10,8 +10,8 @@
 
 /* Element: Header area */
 .sump-table__head {
-  background-color: var(--table-header-background);
-  color: var(--table-header-colour);
+  background-color: oklch(from var(--menu-background) calc(l + 0.2) c h);
+  color: oklch(from var(--menu-colour) calc(l + 0.2) c h);
 }
 
 /* Element: Header cells */
@@ -32,7 +32,7 @@
 
 /* Element: Rows (for hover effects or zebra striping) */
 .sump-table__row:nth-child(even) {
-  background-color: LemonChiffon; /* Zebra striping for readability */
+  background-color: oklch(from var(--menu-background) calc(l + 0.2) c h); /* Zebra striping for readability */
 }
 
 .sump-table__row:hover {

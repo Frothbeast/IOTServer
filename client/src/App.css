@@ -12,14 +12,11 @@ Global Fonts: @import or font-family declarations for the whole app.
 */
 :root {
   /* Colors */
-  --menu-colour: DarkSlateGrey;
-  --menu-background: Khaki;
-  --primary-color: #DarkSlateGrey;
-  --secondary-color: #2ecc71;
-  --dark-gray: #333333;
-  --light-gray: #f4f4f4;
-  --table-header-background: #E0D67C;
-  --table-header-colour: DarkSlateGrey;
+  --main-background: oklch(96% 0.005 250);
+  --main-colour: oklch(35% 0.02 250);
+
+  --menu-colour: var(--main-colour);
+  --menu-background: var(--main-background);
   /* Typography */
   --font-main: 'Inter', sans-serif;
   --font-size-base: 16px;
@@ -33,11 +30,18 @@ Global Fonts: @import or font-family declarations for the whole app.
   --border-radius: 4px;
 }
 
+@media (prefers-color-scheme: dark) {
+ :root{
+    --menu-colour: var(--main-background);
+    --menu-background: var(--main-colour);
+  }
+}
+
 .App {
   text-align: center;
-  background-color: Khaki;
+  background-color: var(--menu-background);
   min-height: 100vh;
-  color: DarkSlateGrey;
+  color: var(--menu-colour);
   padding: 20px;
 }
 
@@ -50,22 +54,7 @@ Global Fonts: @import or font-family declarations for the whole app.
 
 .sump-table th, .sump-table td {
   border-radius: var(--border-radius);
-  border: 1px solid #E0D67C;
+  border: 1px solid var(--menu-colour);
   padding: 10px;
 }
-/*
-@media (prefers-color-scheme: dark) {
-  :root {
-    --menu-colour: #004800;
-    --menu-background: #DarkSlateGrey;
-    --primary-color: #003000;
-    --secondary-color: #008000;
-    --dark-gray: #333333;
-    --light-gray: #f4f4f4;
-  }
-  .App {
-    background-color: DarkSlateGrey;
-    color: Khaki;
-  }
-}
-*/
+
