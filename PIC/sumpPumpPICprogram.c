@@ -44,7 +44,7 @@ uint8_t wasOn = 0, wasOff = 0, triggerSecondCount = 0;
 uint8_t highLevelStatus, lowLevelStatus, timeToDisplay = 0;
 uint32_t secondsSincePowerup = 0;
 uint16_t hoursSincePowerup = 0, currentOnTime = 0, currentOffTime = 0, secondsCounter = 0, duty = 50;
-uint16_t lastOnTime = 0, lastOffTime = 0;
+uint16_t lastOnTime = 0, lastOffTime = 0, espFails;
 uint8_t pumpState = 0; 
 uint8_t initialSendDone = 0;
 
@@ -190,6 +190,7 @@ void process_esp_state_machine(void) {
                 snprintf(error_display, 20, "AT-E:%s", (rx_idx > 0) ? (char*)rx_buf : "TO");
                 updateDisplayCoord(4, 1, error_display);
                 currentEspState = ESP_IDLE;error_msg = "er3";
+                espFails++;
             }
             break;
         case ESP_WAIT_CONNECT:
@@ -200,6 +201,7 @@ void process_esp_state_machine(void) {
                 snprintf(error_display, 20, "C-E:%s", (rx_idx > 0) ? (char*)rx_buf : "TO");
                 updateDisplayCoord(4, 1, error_display);
                 currentEspState = ESP_IDLE; error_msg = "er5";
+                espFails++;
             }
             break;
         case ESP_START_SEND_CMD:
@@ -219,6 +221,7 @@ void process_esp_state_machine(void) {
                 snprintf(error_display, 20, "P-E:%s", (rx_idx > 0) ? (char*)rx_buf : "TO");
                 updateDisplayCoord(4, 1, error_display);
                 currentEspState = ESP_IDLE;error_msg = "er8";
+                espFails++;
             }
             break;
         case ESP_SEND_DATA:
@@ -236,6 +239,7 @@ void process_esp_state_machine(void) {
                 snprintf(error_display, 20, "S-E:%s", (rx_idx > 0) ? (char*)rx_buf : "TO");
                 updateDisplayCoord(4, 1, error_display);
                 currentEspState = ESP_IDLE;error_msg = "er0";
+                espFails++;
             }
             break;
     }
@@ -289,6 +293,7 @@ void main(void) {
             if (secondsSincePowerup == 1 && !initialSendDone) {
                 if (currentEspState == ESP_IDLE) currentEspState = ESP_START_CONNECT;
                 initialSendDone = 1;
+                espFails=0;
             }
             if (pumpState == 1) {
                 lowSum += low_val; highSum += high_val; sampleCount++;
@@ -315,7 +320,7 @@ void main(void) {
             char line1[21], line2[21], line3[21];
             sprintf(line1, "L:%04u H:%04u %s %02d", low_val, high_val, (pumpState) ? "ON " : "OFF", duty);
             sprintf(line2, "On:%04u Off:%04u %s", (pumpState) ? currentOnTime : lastOnTime, (pumpState) ? lastOffTime : currentOffTime,error_msg);
-            sprintf(line3, "Total Hrs: %05u", hoursSincePowerup);
+            sprintf(line3, "Hrs: %05u espX:%04u", hoursSincePowerup, espFails);
             
             updateDisplayCoord(1, 1, line1);
             updateDisplayCoord(2, 1, line2);
