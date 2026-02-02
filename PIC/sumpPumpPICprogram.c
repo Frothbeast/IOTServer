@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+#include "config.h"
 
 #ifndef CMCON
 #define CMCON  (*(volatile __near unsigned char*)0xFB4)
@@ -90,7 +91,6 @@ uint16_t read_adc(uint8_t channel) {
 }
 
 void software_putch(char data) {
-    // [Correction: Re-enabling GIE disable ONLY during the byte-send to protect display timing]
     uint8_t status = INTCONbits.GIE;
     INTCONbits.GIE = 0; 
     Display_Pin = 1; 
@@ -123,7 +123,6 @@ void put_to_disp_buf(const char* str) {
 void process_display_buffer(void) {
     if (displayDelayCounter > 0) { displayDelayCounter--; return; }
     
-    // [Correction: Explicit block - if ESP is busy, DO NOT touch the display pin]
     if(disp_head != disp_tail && currentEspState == ESP_IDLE) {
         char c = disp_buffer[disp_tail];
         software_putch(c);
@@ -156,14 +155,13 @@ void uart_send_string(const char* s) {
 }
 
 void process_esp_state_machine(void) {
-    char data_str[128], cmd_str[32];
+    char data_str[160], cmd_str[64];
     char error_display[21];
     if (pumpState == 1) { currentEspState = ESP_IDLE; return; }
 
     switch(currentEspState) {
         case ESP_IDLE: break;
         case ESP_START_CONNECT:
-            // updateDisplayCoord(4, 1, "ESP: Comms Active   "); // Only fills buffer
             RCSTAbits.CREN = 0; RCSTAbits.CREN = 1;
             rx_idx = 0; rx_buf[0] = '\0';
             uart_send_string("ATE0\r\n");
@@ -172,7 +170,9 @@ void process_esp_state_machine(void) {
         case ESP_WAIT_AT:
             if(strstr((const char*)rx_buf, "OK")) {
                 rx_idx = 0; rx_buf[0] = '\0';
-                uart_send_string("AT+CIPSTART=\"TCP\",\"192.168.50.26\",1883\r\n");
+                // [Correction: Utilizing SERVER_IP and SERVER_PORT from config.h]
+                sprintf(cmd_str, "AT+CIPSTART=\"TCP\",\"%s\",%s\r\n", SERVER_IP, SERVER_PORT);
+                uart_send_string(cmd_str);
                 espTimer = 10; currentEspState = ESP_WAIT_CONNECT;
             } else if (espTimer == 0) {
                 snprintf(error_display, 20, "AT-E:%s", (rx_idx > 0) ? (char*)rx_buf : "TO");
@@ -191,8 +191,9 @@ void process_esp_state_machine(void) {
             }
             break;
         case ESP_START_SEND_CMD:
-            sprintf(data_str, "{\"on\":%u,\"off\":%u,\"hrs\":%u,\"L\":%u,\"H\":%u}\r\n", 
-                    lastOnTime, lastOffTime, hoursSincePowerup, lastLatod, lastHatod);
+            // [Correction: Used literal keys Hadc, Ladc, hoursOn, timeOn, timeOff]
+            sprintf(data_str, "{\"Hadc\":%u,\"Ladc\":%u,\"hoursOn\":%u,\"timeOn\":%u,\"timeOff\":%u}\r\n", 
+                    lastHatod, lastLatod, hoursSincePowerup, lastOnTime, lastOffTime);
             sprintf(cmd_str, "AT+CIPSEND=%d\r\n", (int)strlen(data_str));
             rx_idx = 0; rx_buf[0] = '\0';
             uart_send_string(cmd_str);
@@ -209,8 +210,8 @@ void process_esp_state_machine(void) {
             }
             break;
         case ESP_SEND_DATA:
-            sprintf(data_str, "{\"on\":%u,\"off\":%u,\"hrs\":%u,\"L\":%u,\"H\":%u}\r\n", 
-                    lastOnTime, lastOffTime, hoursSincePowerup, lastLatod, lastHatod);
+            sprintf(data_str, "{\"Hadc\":%u,\"Ladc\":%u,\"hoursOn\":%u,\"timeOn\":%u,\"timeOff\":%u}\r\n", 
+                    lastHatod, lastLatod, hoursSincePowerup, lastOnTime, lastOffTime);
             rx_idx = 0; rx_buf[0] = '\0';
             uart_send_string(data_str);
             espTimer = 3; currentEspState = ESP_WAIT_SEND_OK;
@@ -242,8 +243,6 @@ void main(void) {
 
     while (1) {
         CLRWDT(); 
-        
-        // [Correction: Display is updated ONLY when ESP state machine is IDLE]
         process_display_buffer(); 
 
         low_val = read_adc(0);
@@ -300,7 +299,6 @@ void main(void) {
             if (pumpState == 1) updateDisplayCoord(4, 1, "Pumping Cycle...    ");
             timeToDisplay = 0;
         }
-        
         process_esp_state_machine();
     }
 }
