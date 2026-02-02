@@ -12,7 +12,8 @@ const SumpTable = ({ sumpRecords = [] }) => {
                     <th className="sump-table__header-cell">On Time</th>
                     <th className="sump-table__header-cell">Off Time</th>
                     <th className="sump-table__header-cell">Hours ON</th>
-                </tr>
+		    <th className="sump-table__header-cell">Duty Cycle</th> 
+               </tr>
             </thead>
             <tbody>
                 {Array.isArray(sumpRecords) && sumpRecords.map((record) => (
@@ -23,6 +24,7 @@ const SumpTable = ({ sumpRecords = [] }) => {
                         <td className="sump-table__cell">{record.payload?.timeOn ?? "N/a"}</td>
                         <td className="sump-table__cell">{record.payload?.timeOff ?? "N/a"}</td>
                         <td className="sump-table__cell">{record.payload?.hoursOn ?? "N/a"}</td>
+			<td className="sump-table__cell">{record.payload?.duty ?? "N/a"}</td>
                     </tr>
                 ))}
             </tbody>

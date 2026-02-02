@@ -40,6 +40,7 @@ def handle_data():
             data = request.get_json()
             print(f"RAW PIC DATA: {request.get_json()}", flush=True)
             data['datetime'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            data['duty'] = str(round(100 * int(data["timeOn"])/(int(data["timeOn"]) + int(data["timeOff"]))))
             print(f"Received Data and added Timestamp inside JSON")
 
             conn = mysql.connector.connect(**db_config)
