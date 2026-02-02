@@ -39,11 +39,12 @@ volatile uint8_t disp_tail = 0;
 uint16_t displayDelayCounter = 0; 
 
 // Application Variables
+volatile char error_msg[3] = " OK"
 uint8_t wasOn = 0, wasOff = 0, triggerSecondCount = 0;
 uint8_t highLevelStatus, lowLevelStatus, timeToDisplay = 0;
 uint32_t secondsSincePowerup = 0;
-uint16_t hoursSincePowerup = 0, currentOnTime = 0, currentOffTime = 0, secondsCounter = 0;
-uint16_t lastOnTime = 0, lastOffTime = 0;
+uint16_t hoursSincePowerup = 0, currentOnTime = 0, currentOffTime = 0, secondsCounter = 0, duty = 50;
+uint16_t lastOnTime = 0, lastOffTime = 0, espFails;
 uint8_t pumpState = 0; 
 uint8_t initialSendDone = 0;
 
@@ -177,28 +178,30 @@ void process_esp_state_machine(void) {
             RCSTAbits.CREN = 0; RCSTAbits.CREN = 1;
             rx_idx = 0; rx_buf[0] = '\0';
             uart_send_string("ATE0\r\n");
-            espTimer = 3; currentEspState = ESP_WAIT_AT;
+            espTimer = 3; currentEspState = ESP_WAIT_AT; error_msg = "er1";
             break;
         case ESP_WAIT_AT:
             if(strstr((const char*)rx_buf, "OK")) {
                 rx_idx = 0; rx_buf[0] = '\0';
                 sprintf(cmd_str, "AT+CIPSTART=\"TCP\",\"%s\",%s\r\n", SERVER_IP, SERVER_PORT);
                 uart_send_string(cmd_str);
-                espTimer = 10; currentEspState = ESP_WAIT_CONNECT;
+                espTimer = 10; currentEspState = ESP_WAIT_CONNECT;error_msg = "er2";
             } else if (espTimer == 0) {
                 snprintf(error_display, 20, "AT-E:%s", (rx_idx > 0) ? (char*)rx_buf : "TO");
                 updateDisplayCoord(4, 1, error_display);
-                currentEspState = ESP_IDLE;
+                currentEspState = ESP_IDLE;error_msg = "er3";
+                espFails++;
             }
             break;
         case ESP_WAIT_CONNECT:
             if(strstr((const char*)rx_buf, "OK") || strstr((const char*)rx_buf, "ALREADY CONNECTED")) {
                 rx_idx = 0; rx_buf[0] = '\0';
-                currentEspState = ESP_START_SEND_CMD;
+                currentEspState = ESP_START_SEND_CMD;error_msg = "er4";
             } else if (espTimer == 0) { 
                 snprintf(error_display, 20, "C-E:%s", (rx_idx > 0) ? (char*)rx_buf : "TO");
                 updateDisplayCoord(4, 1, error_display);
-                currentEspState = ESP_IDLE; 
+                currentEspState = ESP_IDLE; error_msg = "er5";
+                espFails++;
             }
             break;
         case ESP_START_SEND_CMD:
@@ -208,16 +211,17 @@ void process_esp_state_machine(void) {
             sprintf(cmd_str, "AT+CIPSEND=%d\r\n", (int)strlen(data_str));
             rx_idx = 0; rx_buf[0] = '\0';
             uart_send_string(cmd_str);
-            espTimer = 2; currentEspState = ESP_WAIT_PROMPT;
+            espTimer = 2; currentEspState = ESP_WAIT_PROMPT;error_msg = "er6";
             break;
         case ESP_WAIT_PROMPT:
             if(strstr((const char*)rx_buf, ">")) {
                 rx_idx = 0; rx_buf[0] = '\0';
-                currentEspState = ESP_SEND_DATA;
+                currentEspState = ESP_SEND_DATA;error_msg = "er7";
             } else if (espTimer == 0) {
                 snprintf(error_display, 20, "P-E:%s", (rx_idx > 0) ? (char*)rx_buf : "TO");
                 updateDisplayCoord(4, 1, error_display);
-                currentEspState = ESP_IDLE;
+                currentEspState = ESP_IDLE;error_msg = "er8";
+                espFails++;
             }
             break;
         case ESP_SEND_DATA:
@@ -225,16 +229,17 @@ void process_esp_state_machine(void) {
                     lastHatod, lastLatod, hoursSincePowerup, lastOnTime, lastOffTime);
             rx_idx = 0; rx_buf[0] = '\0';
             uart_send_string(data_str);
-            espTimer = 3; currentEspState = ESP_WAIT_SEND_OK;
+            espTimer = 3; currentEspState = ESP_WAIT_SEND_OK;error_msg = "er9";
             break;
         case ESP_WAIT_SEND_OK:
             if(strstr((const char*)rx_buf, "SEND OK")) {
                 updateDisplayCoord(4, 1, "ESP: Data Sent OK   ");
-                currentEspState = ESP_IDLE;
+                currentEspState = ESP_IDLE;error_msg = " OK";
             } else if (espTimer == 0) {
                 snprintf(error_display, 20, "S-E:%s", (rx_idx > 0) ? (char*)rx_buf : "TO");
                 updateDisplayCoord(4, 1, error_display);
-                currentEspState = ESP_IDLE;
+                currentEspState = ESP_IDLE;error_msg = "er0";
+                espFails++;
             }
             break;
     }
@@ -269,7 +274,7 @@ void main(void) {
             if (pumpState == 0) { lowSum = 0; highSum = 0; sampleCount = 0; }
             pumpState = 1; 
         }
-        else if (!lowLevelStatus) { 
+        else if (!lowLevelStatus && !highLevelStatus) { 
             SSR_out = 0; 
             if (pumpState == 1) { 
                 if (sampleCount > 0) {
@@ -278,6 +283,7 @@ void main(void) {
                 }
                 // Transition trigger for ESP comms
                 if (currentEspState == ESP_IDLE) currentEspState = ESP_START_CONNECT; 
+                duty = 100*lastOnTime/lastOffTime;
             }
             pumpState = 0; 
         }
@@ -287,6 +293,7 @@ void main(void) {
             if (secondsSincePowerup == 1 && !initialSendDone) {
                 if (currentEspState == ESP_IDLE) currentEspState = ESP_START_CONNECT;
                 initialSendDone = 1;
+                espFails=0;
             }
             if (pumpState == 1) {
                 lowSum += low_val; highSum += high_val; sampleCount++;
@@ -311,9 +318,9 @@ void main(void) {
 
         if (timeToDisplay) {
             char line1[21], line2[21], line3[21];
-            sprintf(line1, "L:%04u H:%04u %s", low_val, high_val, (pumpState) ? "P-ON " : "P-OFF");
-            sprintf(line2, "On:%04u Off:%04u", (pumpState) ? currentOnTime : lastOnTime, (pumpState) ? lastOffTime : currentOffTime);
-            sprintf(line3, "Total Hrs: %05u", hoursSincePowerup);
+            sprintf(line1, "L:%04u H:%04u %s %02d", low_val, high_val, (pumpState) ? "ON " : "OFF", duty);
+            sprintf(line2, "On:%04u Off:%04u %s", (pumpState) ? currentOnTime : lastOnTime, (pumpState) ? lastOffTime : currentOffTime,error_msg);
+            sprintf(line3, "Hrs: %05u espX:%04u", hoursSincePowerup, espFails);
             
             updateDisplayCoord(1, 1, line1);
             updateDisplayCoord(2, 1, line2);

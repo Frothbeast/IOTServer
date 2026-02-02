@@ -45,16 +45,5 @@ Global Fonts: @import or font-family declarations for the whole app.
   padding: 20px;
 }
 
-.sump-table {
-  margin-left: auto;
-  margin-right: auto;
-  border-collapse: separate;
-  width: 80%;
-}
 
-.sump-table th, .sump-table td {
-  border-radius: var(--border-radius);
-  border: 1px solid var(--menu-colour);
-  padding: 10px;
-}
 
