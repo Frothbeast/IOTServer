@@ -5,14 +5,12 @@
 #include <stdint.h>
 #include <string.h>
 
-// Direct register mapping for XC8 v3.10 compatibility
 #ifndef CMCON
 #define CMCON  (*(volatile __near unsigned char*)0xFB4)
 #endif
 #define CVRCON (*(volatile __near unsigned char*)0xFB5)
 #define PIR2_REG (*(volatile __near unsigned char*)0xFA1)
 
-// Configuration for 18LF2580
 #pragma config OSC = HS         
 #pragma config WDT = ON         
 #pragma config WDTPS = 4096     
@@ -21,51 +19,38 @@
 
 #define _XTAL_FREQ 20000000
 
-// Hardware Mapping
 #define SSR_out            LATA5           
 #define TRIS_SSR           TRISA5          
 #define Display_Pin        LATBbits.LATB4  
 #define TRIS_Display       TRISB4          
 #define SENSOR_PWR         LATA3
 
-// Circular Buffer for Display
 #define DISP_BUF_SIZE 255
 volatile char disp_buffer[DISP_BUF_SIZE];
 volatile uint8_t disp_head = 0;
 volatile uint8_t disp_tail = 0;
 
-// Timing variables for Seetron serial backpack
 uint16_t displayDelayCounter = 0; 
-
-// Application Variables
 uint8_t wasOn = 0, wasOff = 0, triggerSecondCount = 0;
 uint8_t highLevelStatus, lowLevelStatus, timeToDisplay = 0;
 uint32_t secondsSincePowerup = 0;
 uint16_t hoursSincePowerup = 0, currentOnTime = 0, currentOffTime = 0, secondsCounter = 0;
 uint16_t lastOnTime = 0, lastOffTime = 0;
 uint8_t pumpState = 0; 
-
-// [2026-02-02] New variable to track initial transmission
-/* uint8_t initialSendDone = 0; */
 uint8_t initialSendDone = 0;
 
-// Raw and Filtered ADC values
 uint16_t low_val = 0, high_val = 0;
 uint16_t low_filtered = 1000, high_filtered = 1000;
-
-// Data capture for JSON
 uint32_t lowSum = 0, highSum = 0;
 uint16_t sampleCount = 0;
 uint16_t lastLatod = 0, lastHatod = 0;
 
-// ESP State Machine
 typedef enum { ESP_IDLE, ESP_START_CONNECT, ESP_WAIT_AT, ESP_WAIT_CONNECT, ESP_START_SEND_CMD, ESP_WAIT_PROMPT, ESP_SEND_DATA, ESP_WAIT_SEND_OK } esp_state_t;
 esp_state_t currentEspState = ESP_IDLE;
 uint16_t espTimer = 0;
 volatile char rx_buf[64];
 volatile uint8_t rx_idx = 0;
 
-// Function Prototypes
 void put_to_disp_buf(const char* str);
 void process_display_buffer(void);
 int8_t updateDisplayCoord(uint8_t line, uint8_t column, const char* str);
@@ -105,6 +90,7 @@ uint16_t read_adc(uint8_t channel) {
 }
 
 void software_putch(char data) {
+    // [Correction: Re-enabling GIE disable ONLY during the byte-send to protect display timing]
     uint8_t status = INTCONbits.GIE;
     INTCONbits.GIE = 0; 
     Display_Pin = 1; 
@@ -136,7 +122,9 @@ void put_to_disp_buf(const char* str) {
 
 void process_display_buffer(void) {
     if (displayDelayCounter > 0) { displayDelayCounter--; return; }
-    if(disp_head != disp_tail) {
+    
+    // [Correction: Explicit block - if ESP is busy, DO NOT touch the display pin]
+    if(disp_head != disp_tail && currentEspState == ESP_IDLE) {
         char c = disp_buffer[disp_tail];
         software_putch(c);
         if (c < 32) displayDelayCounter = 500; 
@@ -175,7 +163,8 @@ void process_esp_state_machine(void) {
     switch(currentEspState) {
         case ESP_IDLE: break;
         case ESP_START_CONNECT:
-            updateDisplayCoord(4, 1, "ESP: Init Sync...   ");
+            // updateDisplayCoord(4, 1, "ESP: Comms Active   "); // Only fills buffer
+            RCSTAbits.CREN = 0; RCSTAbits.CREN = 1;
             rx_idx = 0; rx_buf[0] = '\0';
             uart_send_string("ATE0\r\n");
             espTimer = 3; currentEspState = ESP_WAIT_AT;
@@ -183,11 +172,10 @@ void process_esp_state_machine(void) {
         case ESP_WAIT_AT:
             if(strstr((const char*)rx_buf, "OK")) {
                 rx_idx = 0; rx_buf[0] = '\0';
-                updateDisplayCoord(4, 1, "ESP: Connecting...  ");
                 uart_send_string("AT+CIPSTART=\"TCP\",\"192.168.50.26\",1883\r\n");
                 espTimer = 10; currentEspState = ESP_WAIT_CONNECT;
             } else if (espTimer == 0) {
-                snprintf(error_display, 20, "AT-Err:%s", (rx_idx > 0) ? (char*)rx_buf : "Timeout");
+                snprintf(error_display, 20, "AT-E:%s", (rx_idx > 0) ? (char*)rx_buf : "TO");
                 updateDisplayCoord(4, 1, error_display);
                 currentEspState = ESP_IDLE;
             }
@@ -197,7 +185,7 @@ void process_esp_state_machine(void) {
                 rx_idx = 0; rx_buf[0] = '\0';
                 currentEspState = ESP_START_SEND_CMD;
             } else if (espTimer == 0) { 
-                snprintf(error_display, 20, "C-Err:%s", (rx_idx > 0) ? (char*)rx_buf : "Timeout");
+                snprintf(error_display, 20, "C-E:%s", (rx_idx > 0) ? (char*)rx_buf : "TO");
                 updateDisplayCoord(4, 1, error_display);
                 currentEspState = ESP_IDLE; 
             }
@@ -215,7 +203,7 @@ void process_esp_state_machine(void) {
                 rx_idx = 0; rx_buf[0] = '\0';
                 currentEspState = ESP_SEND_DATA;
             } else if (espTimer == 0) {
-                snprintf(error_display, 20, "P-Err:%s", (rx_idx > 0) ? (char*)rx_buf : "Timeout");
+                snprintf(error_display, 20, "P-E:%s", (rx_idx > 0) ? (char*)rx_buf : "TO");
                 updateDisplayCoord(4, 1, error_display);
                 currentEspState = ESP_IDLE;
             }
@@ -232,7 +220,7 @@ void process_esp_state_machine(void) {
                 updateDisplayCoord(4, 1, "ESP: Data Sent OK   ");
                 currentEspState = ESP_IDLE;
             } else if (espTimer == 0) {
-                snprintf(error_display, 20, "S-Err:%s", (rx_idx > 0) ? (char*)rx_buf : "Timeout");
+                snprintf(error_display, 20, "S-E:%s", (rx_idx > 0) ? (char*)rx_buf : "TO");
                 updateDisplayCoord(4, 1, error_display);
                 currentEspState = ESP_IDLE;
             }
@@ -254,6 +242,8 @@ void main(void) {
 
     while (1) {
         CLRWDT(); 
+        
+        // [Correction: Display is updated ONLY when ESP state machine is IDLE]
         process_display_buffer(); 
 
         low_val = read_adc(0);
@@ -283,17 +273,10 @@ void main(void) {
 
         if (triggerSecondCount) {
             triggerSecondCount = 0; timeToDisplay = 1; secondsSincePowerup++;
-
-            // [2026-02-02] Initial send check: Trigger 1 second after power up
-            /* if (secondsSincePowerup == 1 && !initialSendDone) {
-                if (currentEspState == ESP_IDLE) currentEspState = ESP_START_CONNECT;
-                initialSendDone = 1;
-            } */
             if (secondsSincePowerup == 1 && !initialSendDone) {
                 if (currentEspState == ESP_IDLE) currentEspState = ESP_START_CONNECT;
                 initialSendDone = 1;
             }
-
             if (pumpState == 1) {
                 lowSum += low_val; highSum += high_val; sampleCount++;
                 currentOnTime++; wasOn = 1;
@@ -317,6 +300,7 @@ void main(void) {
             if (pumpState == 1) updateDisplayCoord(4, 1, "Pumping Cycle...    ");
             timeToDisplay = 0;
         }
+        
         process_esp_state_machine();
     }
 }
