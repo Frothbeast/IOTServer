@@ -7,7 +7,7 @@ export function useServerData() {
     const [sumpRecords, setSumpRecords] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
-    const startTime = Date.now();
+    const [startTime] = useState(() => Date.now());
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -17,11 +17,13 @@ export function useServerData() {
             fetch('/api/data')
                 .then(res => res.json())
                 .then(data => {
-                    setSumpRecords(data);
+                    if (Array.isArray(data)) {
+                        setSumpRecords(data);
+                    }
                     setIsLoading(false);
                 })
                 .catch(err => {
-                    console.error(err);
+                    console.error("Fetch error:", err);
                     setIsLoading(false);
                 });
         }, 1000);
