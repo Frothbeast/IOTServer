@@ -38,6 +38,7 @@ def handle_data():
     if request.method == 'POST':
         try:
             data = request.get_json()
+            print(f"RAW PIC DATA: {request.get_json()}", flush=True)
             data['datetime'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             print(f"Received Data and added Timestamp inside JSON")
 
@@ -65,10 +66,6 @@ def handle_data():
         for row in rows:
             if isinstance(row['payload'], str):
                 row['payload'] = json.loads(row['payload'])
-            if 'on' in row['payload']: row['payload']['timeON'] = row['payload'].get('on')
-            if 'off' in row['payload']: row['payload']['timeOff'] = row['payload'].get('off')
-            if 'hrs' in row['payload']: row['payload']['hoursOn'] = row['payload'].get('hrs')
-
         return jsonify(rows)
     except Exception as e:
         # print(f"Error: {e}")

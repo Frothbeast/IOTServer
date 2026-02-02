@@ -1,49 +1,33 @@
-import { useState, useEffect } from 'react';
+import React from 'react';
 import './sumpTable.css';
 
-export default function useSumpData(startTime) {
-    const [counter, setCounter] = useState(0);
-    const [totalTime, setTotalTime] = useState(0);
-    const [clickCounter, setClickCounter] = useState(0);
-    const [sumpRecords, setSumpRecords] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
+const SumpTable = ({ sumpRecords = [] }) => {
+    return (
+        <table className="sump-table">
+            <thead className="sump-table__head">
+                <tr className="sump-table__row">
+                    <th className="sump-table__header-cell">ID</th>
+                    <th className="sump-table__header-cell">High ADC</th>
+                    <th className="sump-table__header-cell">Low ADC</th>
+                    <th className="sump-table__header-cell">On Time</th>
+                    <th className="sump-table__header-cell">Off Time</th>
+                    <th className="sump-table__header-cell">Hours ON</th>
+                </tr>
+            </thead>
+            <tbody>
+                {Array.isArray(sumpRecords) && sumpRecords.map((record) => (
+                    <tr key={record.id} className="sump-table__row">
+                        <td className="sump-table__cell">{record.id}</td>
+                        <td className="sump-table__cell">{record.payload?.Hadc ?? "N/a"}</td>
+                        <td className="sump-table__cell">{record.payload?.Ladc ?? "N/a"}</td>
+                        <td className="sump-table__cell">{record.payload?.timeOn ?? "N/a"}</td>
+                        <td className="sump-table__cell">{record.payload?.timeOff ?? "N/a"}</td>
+                        <td className="sump-table__cell">{record.payload?.hoursOn ?? "N/a"}</td>
+                    </tr>
+                ))}
+            </tbody>
+        </table>
+    );
+};
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            fetch('/api/data') // Correction: Match the route in sumpPumpWifiAPI.py
-                .then(res => res.json())
-                .then(data => {
-                    /*
-                    // This check prevents the "Cannot destructure" error
-                    if (data && data.records) {
-                        setSumpRecords(data.records);
-                    }
-                    */
-
-                    // Correction: Python backend returns an array directly
-                    if (Array.isArray(data)) {
-                        setSumpRecords(data);
-                    }
-                    setIsLoading(false);
-                })
-                .catch(err => {
-                    console.error(err);
-                    setIsLoading(false);
-                });
-
-            setCounter((prev) => prev + 1);
-            if (startTime) {
-                setTotalTime(Math.round((Date.now() - startTime) / 1000));
-            }
-        }, 1000);
-
-        return () => clearInterval(interval);
-    }, [startTime]);
-
-    const resetTimer = () => {
-        setCounter(0);
-        setClickCounter(prev => prev + 1);
-    };
-
-    return { counter, totalTime, clickCounter, sumpRecords, isLoading, resetTimer };
-}
+export default SumpTable;
