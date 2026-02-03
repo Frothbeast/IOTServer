@@ -15,7 +15,7 @@
 
 // Configuration for 18LF2580
 #pragma config OSC = HS         
-#pragma config WDT = ON         
+#pragma config WDT = OFF        
 #pragma config WDTPS = 4096     
 #pragma config BOREN = OFF      
 #pragma config LVP = OFF        
@@ -119,8 +119,8 @@ void software_putch(char data) {
 }
 
 void clear_display(void) {
-    char cmd[2] = {12, '\0'};
-    put_to_disp_buf(cmd);
+    software_putch(12);
+    __delay_ms(100);
 }
 
 void put_to_disp_buf(const char* str) {
@@ -139,8 +139,8 @@ void process_display_buffer(void) {
     if(disp_head != disp_tail && currentEspState == ESP_IDLE) {
         char c = disp_buffer[disp_tail];
         software_putch(c);
-        if (c < 32) displayDelayCounter = 500; 
-        else displayDelayCounter = 5; 
+        if (c < 32) displayDelayCounter = 100; 
+        else displayDelayCounter = 2; 
         disp_tail = (disp_tail + 1) % DISP_BUF_SIZE;
     }
 }
@@ -205,7 +205,6 @@ void process_esp_state_machine(void) {
             }
             break;
         case ESP_START_SEND_CMD:
-            // The lastOnTime and lastOffTime variables are now used to send stable cycle data
             sprintf(data_str, "{\"Hadc\":%u,\"Ladc\":%u,\"hoursOn\":%u,\"timeOn\":%u,\"timeOff\":%u}\r\n", 
                     lastHatod, lastLatod, hoursSincePowerup, lastOnTime, lastOffTime);
             sprintf(cmd_str, "AT+CIPSEND=%d\r\n", (int)strlen(data_str));
@@ -246,19 +245,43 @@ void process_esp_state_machine(void) {
 }
 
 void main(void) {
+    INTCON = 0x00;
+    PIE1 = 0x00;
+    RCSTA = 0x00;
+    
     ADCON1 = 0x0D; ADCON2 = 0x92; TRISA = 0x07; TRISA3 = 0; TRIS_SSR = 0; 
     Display_Pin = 0; TRIS_Display = 0; CVRCON = 0x00; CMCON = 0x07;  
     TRISC6 = 0; TRISC7 = 1; 
-    SPBRG = 10; TXSTA = 0x24; RCSTA = 0x90; // 115200 baud
-    
+
     T0CON = 0xC0;       
-    __delay_ms(1000); 
-    clear_display();
+
+    __delay_ms(100);
+    software_putch(12);
+    __delay_ms(100);
+    software_putch(14);
+    
+    updateDisplayCoord(1, 1, "Sump Wifi Control");
+    updateDisplayCoord(2, 2, "Dan Jubenville");
+    updateDisplayCoord(3, 3, "January 2026");
+    
+    while(disp_head != disp_tail) {
+        process_display_buffer();
+    }
+
+    SPBRG = 10; 
+    TXSTA = 0x24; 
+    RCSTA = 0x90; 
+    
+    volatile char dummy;
+    dummy = RCREG;               
+    dummy = RCREG;
+    RCSTAbits.CREN = 0;          
+    RCSTAbits.CREN = 1;          
+
     PIE1bits.RCIE = 1; INTCONbits.TMR0IE = 1; INTCONbits.PEIE = 1; INTCONbits.GIE = 1;    
     SENSOR_PWR = 1;
 
     while (1) {
-        CLRWDT(); 
         process_display_buffer(); 
 
         low_val = read_adc(0);
@@ -281,7 +304,6 @@ void main(void) {
                     lastLatod = (uint16_t)(lowSum / sampleCount);
                     lastHatod = (uint16_t)(highSum / sampleCount);
                 }
-                // Transition trigger for ESP comms
                 if (currentEspState == ESP_IDLE) currentEspState = ESP_START_CONNECT; 
                 duty = 100*lastOnTime/lastOffTime;
             }
@@ -290,7 +312,7 @@ void main(void) {
 
         if (triggerSecondCount) {
             triggerSecondCount = 0; timeToDisplay = 1; secondsSincePowerup++;
-            if (secondsSincePowerup == 1 && !initialSendDone) {
+            if (secondsSincePowerup == 10 && !initialSendDone) {
                 if (currentEspState == ESP_IDLE) currentEspState = ESP_START_CONNECT;
                 initialSendDone = 1;
                 espFails=0;
@@ -299,7 +321,6 @@ void main(void) {
                 lowSum += low_val; highSum += high_val; sampleCount++;
                 currentOnTime++; wasOn = 1;
                 if (wasOff) { 
-                    // Store stable duration before resetting current counter
                     lastOffTime = currentOffTime; 
                     currentOffTime = 0; 
                     wasOff = 0; 
@@ -307,7 +328,6 @@ void main(void) {
             } else {
                 currentOffTime++; wasOff = 1;
                 if (wasOn) { 
-                    // Store stable duration before resetting current counter
                     lastOnTime = currentOnTime; 
                     currentOnTime = 0; 
                     wasOn = 0; 
