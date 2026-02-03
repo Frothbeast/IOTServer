@@ -39,7 +39,7 @@ volatile uint8_t disp_tail = 0;
 uint16_t displayDelayCounter = 0; 
 
 // Application Variables
-volatile char error_msg[3] = " OK"
+volatile char error_msg[3] = " OK";
 uint8_t wasOn = 0, wasOff = 0, triggerSecondCount = 0;
 uint8_t highLevelStatus, lowLevelStatus, timeToDisplay = 0;
 uint32_t secondsSincePowerup = 0;
@@ -178,29 +178,29 @@ void process_esp_state_machine(void) {
             RCSTAbits.CREN = 0; RCSTAbits.CREN = 1;
             rx_idx = 0; rx_buf[0] = '\0';
             uart_send_string("ATE0\r\n");
-            espTimer = 3; currentEspState = ESP_WAIT_AT; error_msg = "er1";
+            espTimer = 3; currentEspState = ESP_WAIT_AT; strcpy((char*)error_msg, "er1");
             break;
         case ESP_WAIT_AT:
             if(strstr((const char*)rx_buf, "OK")) {
                 rx_idx = 0; rx_buf[0] = '\0';
                 sprintf(cmd_str, "AT+CIPSTART=\"TCP\",\"%s\",%s\r\n", SERVER_IP, SERVER_PORT);
                 uart_send_string(cmd_str);
-                espTimer = 10; currentEspState = ESP_WAIT_CONNECT;error_msg = "er2";
+                espTimer = 10; currentEspState = ESP_WAIT_CONNECT;strcpy((char*)error_msg, "er2");
             } else if (espTimer == 0) {
                 snprintf(error_display, 20, "AT-E:%s", (rx_idx > 0) ? (char*)rx_buf : "TO");
                 updateDisplayCoord(4, 1, error_display);
-                currentEspState = ESP_IDLE;error_msg = "er3";
+                currentEspState = ESP_IDLE;strcpy((char*)error_msg, "er3");
                 espFails++;
             }
             break;
         case ESP_WAIT_CONNECT:
             if(strstr((const char*)rx_buf, "OK") || strstr((const char*)rx_buf, "ALREADY CONNECTED")) {
                 rx_idx = 0; rx_buf[0] = '\0';
-                currentEspState = ESP_START_SEND_CMD;error_msg = "er4";
+                currentEspState = ESP_START_SEND_CMD;strcpy((char*)error_msg, "er4");
             } else if (espTimer == 0) { 
                 snprintf(error_display, 20, "C-E:%s", (rx_idx > 0) ? (char*)rx_buf : "TO");
                 updateDisplayCoord(4, 1, error_display);
-                currentEspState = ESP_IDLE; error_msg = "er5";
+                currentEspState = ESP_IDLE;strcpy((char*)error_msg, "er5");
                 espFails++;
             }
             break;
@@ -211,16 +211,16 @@ void process_esp_state_machine(void) {
             sprintf(cmd_str, "AT+CIPSEND=%d\r\n", (int)strlen(data_str));
             rx_idx = 0; rx_buf[0] = '\0';
             uart_send_string(cmd_str);
-            espTimer = 2; currentEspState = ESP_WAIT_PROMPT;error_msg = "er6";
+            espTimer = 2; currentEspState = ESP_WAIT_PROMPT;strcpy((char*)error_msg, "er6");
             break;
         case ESP_WAIT_PROMPT:
             if(strstr((const char*)rx_buf, ">")) {
                 rx_idx = 0; rx_buf[0] = '\0';
-                currentEspState = ESP_SEND_DATA;error_msg = "er7";
+                currentEspState = ESP_SEND_DATA;strcpy((char*)error_msg, "er7");
             } else if (espTimer == 0) {
                 snprintf(error_display, 20, "P-E:%s", (rx_idx > 0) ? (char*)rx_buf : "TO");
                 updateDisplayCoord(4, 1, error_display);
-                currentEspState = ESP_IDLE;error_msg = "er8";
+                currentEspState = ESP_IDLE;strcpy((char*)error_msg, "er8");
                 espFails++;
             }
             break;
@@ -229,16 +229,16 @@ void process_esp_state_machine(void) {
                     lastHatod, lastLatod, hoursSincePowerup, lastOnTime, lastOffTime);
             rx_idx = 0; rx_buf[0] = '\0';
             uart_send_string(data_str);
-            espTimer = 3; currentEspState = ESP_WAIT_SEND_OK;error_msg = "er9";
+            espTimer = 3; currentEspState = ESP_WAIT_SEND_OK;strcpy((char*)error_msg, "er9");
             break;
         case ESP_WAIT_SEND_OK:
             if(strstr((const char*)rx_buf, "SEND OK")) {
                 updateDisplayCoord(4, 1, "ESP: Data Sent OK   ");
-                currentEspState = ESP_IDLE;error_msg = " OK";
+                currentEspState = ESP_IDLE;strcpy((char*)error_msg, " OK");
             } else if (espTimer == 0) {
                 snprintf(error_display, 20, "S-E:%s", (rx_idx > 0) ? (char*)rx_buf : "TO");
                 updateDisplayCoord(4, 1, error_display);
-                currentEspState = ESP_IDLE;error_msg = "er0";
+                currentEspState = ESP_IDLE;strcpy((char*)error_msg, "er0S");
                 espFails++;
             }
             break;
