@@ -7,6 +7,8 @@ from dotenv import load_dotenv
 import socket
 import mysql.connector
 import time
+import json
+from datetime import datetime
 
 # Load environment variables
 cwd = os.getcwd()
@@ -34,10 +36,8 @@ def start_collector():
     server_socket.listen(5)
 
     print(f"Monitoring port {PORT} for incoming raw ASCII data...")
-
     while True:
         try:
-            
             conn, addr = server_socket.accept()
             with conn:
                 data = conn.recv(1024)
@@ -45,22 +45,32 @@ def start_collector():
                     decoded_data = data.decode('ascii').strip()
                     print(f"Received {decoded_data}")
 
-                    # Establish DB connection only when data is received
+                    # 1. Parse the incoming JSON string into a dictionary
+                    payload_dict = json.loads(decoded_data)
+
+                    # 2. Add the current timestamp
+                    payload_dict['datetime'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+                    # 3. Calculate duty cycle (with +1 safety to prevent division by zero)
+                    t_on = int(payload_dict.get("timeOn", 0))
+                    t_off = int(payload_dict.get("timeOff", 0))
+                    payload_dict['duty'] = str(round(100 * t_on / (t_on + t_off + 1)))
+
+                    # 4. Establish DB connection
                     conn_db = mysql.connector.connect(**db_config)
                     cursor = conn_db.cursor()
 
+                    # 5. Insert the MODIFIED dictionary as a JSON string
                     query = f"INSERT INTO {db_config['database']}.sumpData (payload) VALUES (%s)"
-                    cursor.execute(query, (decoded_data,))
+                    cursor.execute(query, (json.dumps(payload_dict),))
                     conn_db.commit()
-                    print(f"Inserted into {db_config['database']}.sumpData")
-                    print(f"Received from {addr}: {decoded_data}")
-
-            cursor.close()
-            conn_db.close()
+                    print(f"Inserted into {db_config['database']}.sumpData with timestamp and duty")
+                    cursor.close()
+                    conn_db.close()
 
         except Exception as e:
             print(f"Error: {e}")
-            time.sleep(2) #give cpu a break if looping
+            time.sleep(2)
 
 if __name__ == "__main__":
     start_collector()

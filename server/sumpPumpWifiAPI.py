@@ -38,13 +38,10 @@ def handle_data():
     if request.method == 'POST':
         try:
             data = request.get_json()
-	    freshDict = dict(data)
-            freshDict['datetime'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            freshDict['duty'] = str(round(100 * int(freshDict["timeOn"])/(int(freshDict["timeOn"]) + 1 + int(freshDict["timeOff"]))))
             conn = mysql.connector.connect(**db_config)
             cursor = conn.cursor()
             query = "INSERT INTO sumpData (payload) VALUES (%s)"
-            cursor.execute(query, (json.dumps(freshDict),))
+            cursor.execute(query, (json.dumps(data),))
             conn.commit()
             cursor.close()
             conn.close()
@@ -67,7 +64,7 @@ def handle_data():
                 row['payload'] = json.loads(row['payload'])
         return jsonify(rows)
     except Exception as e:
-        # print(f"Error: {e}")
+        print(f"Error: {e}")
         return jsonify({"error": str(e)}), 500
 
 
