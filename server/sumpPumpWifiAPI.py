@@ -38,15 +38,13 @@ def handle_data():
     if request.method == 'POST':
         try:
             data = request.get_json()
-            print(f"RAW PIC DATA: {request.get_json()}", flush=True)
-            data['datetime'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            data['duty'] = str(round(100 * int(data["timeOn"])/(int(data["timeOn"]) + int(data["timeOff"]))))
-            print(f"Received Data and added Timestamp inside JSON")
-
+	    freshDict = dict(data)
+            freshDict['datetime'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            freshDict['duty'] = str(round(100 * int(freshDict["timeOn"])/(int(freshDict["timeOn"]) + 1 + int(freshDict["timeOff"]))))
             conn = mysql.connector.connect(**db_config)
             cursor = conn.cursor()
             query = "INSERT INTO sumpData (payload) VALUES (%s)"
-            cursor.execute(query, (json.dumps(data),))
+            cursor.execute(query, (json.dumps(freshDict),))
             conn.commit()
             cursor.close()
             conn.close()
