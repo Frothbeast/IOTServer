@@ -1,7 +1,13 @@
 /* Block: The main container or table itself */
+.sumpTableContainer {
+  container-type: inline-size;
+  width: 100%;
+}
+
 .sump-table {
   width: 100%;
-  border-collapse: separate; /* Neater border control */
+  border-collapse: colapse; 
+  table-layout: fixed;
   margin: var(--space-md) 0;
   background-color: var(--menu-background);
   color: var(--menu-colour);
@@ -28,9 +34,13 @@
 
 /* Element: Standard data cells */
 .sump-table__cell {
-  padding: 12px;
+  padding: 8px;
   border-bottom: 1px solid #444;
+  text-align: center;
   font-family: monospace; /* Good for raw data */
+  overflow:hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap; 
 }
 
 /* Element: Rows (for hover effects or zebra striping) */
@@ -46,5 +56,13 @@
 .sump-table__message {
   padding: var(--space-lg);
   font-style: italic;
+}
+
+@container (max-width: 500px) {
+
+ .sump-table th, .sump-table__header-cell {
+    font-size: 4px; /* Shrink text when the component gets tight */
+    padding: 2px;
+  }
 }
 
