@@ -1,55 +1,57 @@
 .sumpTableContainer {
+  display: inline-block;
   container-name: sumpContainer;
   container-type: inline-size;
-  width: 100%;
+  width: fit-content;
   overflow: hidden;
-  min-width: 0;}
-
+  max-width: 100%;
+  min-width: 400px;
+  outline: 5px solid red !important;
+}
 .sumpTable {
-  width: 100%;
+  width: min-content;
+  min-width: 100%;
   border-collapse: collapse; 
-  table-layout: fixed;
-  margin: var(--space-md) 0;
+  table-layout: auto;
   background-color: var(--menu-background);
   color: var(--menu-colour);
+  outline: 5px solid blue !important;
 }
-
 .sumpTableHeaderRow { 
   border-radius: var(--border-radius);
 }
-
 .sumpTableHeaderCell {
   border-radius: var(--border-radius);
-  padding: 12px;
-  text-align: left;
+  padding: 1px;
+  text-align: center;
   text-transform: uppercase;
-  font-size: 14px;
-  letter-spacing: 1px;
-  text-overflow: ellipsis;
+  font-size: clamp(10px, 1cqi, 16px);
+  letter-spacing: 0.1cqi;
   background-color: oklch(from var(--menu-background) clamp(0, l + 0.2, 1) c h);
   color: oklch(from var(--menu-colour) clamp(0, l + 0.2, 1) c h);
 }
-
 .sumpTableCell {
-  padding: 8px;
+  padding: 1px;
   border-bottom: 1px solid #444;
   text-align: center;
   font-family: monospace;
-  overflow:hidden;
-  text-overflow: ellipsis;
-  white-space: normal; 
+  text-overflow: clip;
+  white-space: normal;
+  font-size: clamp(10px, 0.8cqi, 16px);
 }
 .sumpTableCell, .sumpTableHeaderCell {
-  word-break: break-all;
+  width: 10ch;
+  white-space: normal; 
+  word-break: normal;
+  word-wrap: normal;
+  overflow-wrap: anywhere;
 }
-
 .sumpTableRow:nth-child(even) {
   background-color: oklch(from var(--menu-background) clamp(0, l + 0.2, 1) c h); 
 }
-
-@container sumpContainer (width < 900px) {
-  .sumpTableHeaderCell {
-    color:green;
+@media (width < 900px) {
+  .sumpTableHeaderCell, .sumpTableCell {
+    font-size: 8px;     
   }
 }
 

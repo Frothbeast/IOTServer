@@ -14,10 +14,6 @@ function App() {
         <div className="App">
             <h1>Sump Pump Monitor</h1>
             <p>Counter: {counter}</p>
-            <p>Total Time: {totalTime}</p>
-            <p>Click Count: {clickCounter}</p>
-            <button onClick={resetTimer}>Reset</button>
-            
             <SumpTable sumpRecords={sumpRecords} />
         </div>
     );
