@@ -289,8 +289,8 @@ void main(void) {
         low_filtered = (uint16_t)((low_val >> 3) + (low_filtered - (low_filtered >> 3)));
         high_filtered = (uint16_t)((high_val >> 3) + (high_filtered - (high_filtered >> 3)));
 
-        lowLevelStatus = (low_filtered < 700) ? 1 : 0;
-        highLevelStatus = (high_filtered < 700) ? 1 : 0;
+        lowLevelStatus = (low_filtered < 900) ? 1 : 0;
+        highLevelStatus = (high_filtered < 900) ? 1 : 0;
         
         if (highLevelStatus) { 
             SSR_out = 1; 
