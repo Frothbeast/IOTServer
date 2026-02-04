@@ -1,68 +1,55 @@
-/* Block: The main container or table itself */
 .sumpTableContainer {
+  container-name: sumpContainer;
   container-type: inline-size;
   width: 100%;
-}
+  overflow: hidden;
+  min-width: 0;}
 
-.sump-table {
+.sumpTable {
   width: 100%;
-  border-collapse: colapse; 
+  border-collapse: collapse; 
   table-layout: fixed;
   margin: var(--space-md) 0;
   background-color: var(--menu-background);
   color: var(--menu-colour);
 }
 
-.sump-table th, .sump-table td {
+.sumpTableHeaderRow { 
   border-radius: var(--border-radius);
 }
 
-/* Element: Header area */
-.sump-table__head {
+.sumpTableHeaderCell {
+  border-radius: var(--border-radius);
+  padding: 12px;
+  text-align: left;
+  text-transform: uppercase;
+  font-size: 14px;
+  letter-spacing: 1px;
+  text-overflow: ellipsis;
   background-color: oklch(from var(--menu-background) clamp(0, l + 0.2, 1) c h);
   color: oklch(from var(--menu-colour) clamp(0, l + 0.2, 1) c h);
 }
 
-/* Element: Header cells */
-.sump-table__header-cell {
-  padding: 12px;
-  text-align: left;
-  text-transform: uppercase;
-  font-size: 0.85rem;
-  letter-spacing: 1px;
-}
-
-/* Element: Standard data cells */
-.sump-table__cell {
+.sumpTableCell {
   padding: 8px;
   border-bottom: 1px solid #444;
   text-align: center;
-  font-family: monospace; /* Good for raw data */
+  font-family: monospace;
   overflow:hidden;
   text-overflow: ellipsis;
-  white-space: nowrap; 
+  white-space: normal; 
+}
+.sumpTableCell, .sumpTableHeaderCell {
+  word-break: break-all;
 }
 
-/* Element: Rows (for hover effects or zebra striping) */
-.sump-table__row:nth-child(even) {
-  background-color: oklch(from var(--menu-background) clamp(0, l + 0.2, 1) c h); /* Zebra striping for readability */
+.sumpTableRow:nth-child(even) {
+  background-color: oklch(from var(--menu-background) clamp(0, l + 0.2, 1) c h); 
 }
 
-.sump-table__row:hover {
-  background-color: #444; /* Interactive feel */
-}
-
-/* Element: Message (Loadi0ng/No Data) */
-.sump-table__message {
-  padding: var(--space-lg);
-  font-style: italic;
-}
-
-@container (max-width: 500px) {
-
- .sump-table th, .sump-table__header-cell {
-    font-size: 4px; /* Shrink text when the component gets tight */
-    padding: 2px;
+@container sumpContainer (width < 900px) {
+  .sumpTableHeaderCell {
+    color:green;
   }
 }
 

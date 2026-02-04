@@ -4,28 +4,28 @@ import './sumpTable.css';
 const SumpTable = ({ sumpRecords = [] }) => {
     return (
 	<div classname="sumpTableContainer">
-            <table className="sump-table">
-                <thead className="sump-table__head">
-                    <tr className="sump-table__row">
-                        <th className="sump-table__header-cell">DATE/TIME</th>
-                        <th className="sump-table__header-cell">High ADC</th>
-                        <th className="sump-table__header-cell">Low ADC</th>
-                        <th className="sump-table__header-cell">On Time</th>
-                        <th className="sump-table__header-cell">Off Time</th>
-                        <th className="sump-table__header-cell">Hours ON</th>
-    		        <th className="sump-table__header-cell">Duty Cycle</th> 
+            <table className="sumpTable">
+                <thead className="sumpTableHeader">
+                    <tr className="sumpTableHeaderRow">
+                        <th className="sumpTableHeaderCell">DATE/ TIME</th>
+                        <th className="sumpTableHeaderCell">High ADC</th>
+                        <th className="sumpTableHeaderCell">Low ADC</th>
+                        <th className="sumpTableHeaderCell">On Time</th>
+                        <th className="sumpTableHeaderCell">Off Time</th>
+                        <th className="sumpTableHeaderCell">Hours ON</th>
+    		        <th className="sumpTableHeaderCell">Duty Cycle</th> 
                     </tr>
                 </thead>
                 <tbody>
                     {Array.isArray(sumpRecords) && sumpRecords.map((record) => (
-                        <tr key={record.id} className="sump-table__row">
-                            <td className="sump-table__cell">{record.payload?.datetime ?? "N/a"}</td>
-                            <td className="sump-table__cell">{record.payload?.Hadc ?? "N/a"}</td>
-                            <td className="sump-table__cell">{record.payload?.Ladc ?? "N/a"}</td>
-                            <td className="sump-table__cell">{record.payload?.timeOn ?? "N/a"}</td>
-                            <td className="sump-table__cell">{record.payload?.timeOff ?? "N/a"}</td>
-                            <td className="sump-table__cell">{record.payload?.hoursOn ?? "N/a"}</td>
-			    <td className="sump-table__cell">{record.payload?.duty ?? "N/a"}</td>
+                        <tr key={record.id} className="sumpTableRow">
+                            <td className="sumpTableCell">{record.payload?.datetime ?? "N/a"}</td>
+                            <td className="sumpTableCell">{record.payload?.Hadc ?? "N/a"}</td>
+			    <td className="sumpTableCell">{record.payload?.Ladc ?? "N/a"}</td>
+                            <td className="sumpTableCell">{record.payload?.timeOn ?? "N/a"}</td>
+                            <td className="sumpTableCell">{record.payload?.timeOff ?? "N/a"}</td>
+                            <td className="sumpTableCell">{record.payload?.hoursOn ?? "N/a"}</td>
+			    <td className="sumpTableCell">{record.payload?.duty ?? "N/a"}</td>
                         </tr>
                     ))}
                 </tbody>
