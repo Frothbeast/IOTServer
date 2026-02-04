@@ -22,12 +22,12 @@ Global Fonts: @import or font-family declarations for the whole app.
   --font-size-base: 16px;
 
   /* Spacing */
-  --spacing-sm: 8px;
-  --spacing-md: 16px;
-  --spacing-lg: 32px;
+  --spacing-sm: 2px;
+  --spacing-md: 4px;
+  --spacing-lg: 8px;
 
   /* BEM-specific Helpers */
-  --border-radius: 4px;
+  --border-radius: 1px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -42,7 +42,7 @@ Global Fonts: @import or font-family declarations for the whole app.
   background-color: var(--menu-background);
   min-height: 100vh;
   color: var(--menu-colour);
-  padding: 20px;
+  padding: 5px;
   overflow: scroll;
 }
 

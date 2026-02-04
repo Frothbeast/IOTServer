@@ -6,7 +6,6 @@
   overflow: hidden;
   max-width: 100%;
   min-width: 400px;
-  outline: 5px solid red !important;
 }
 .sumpTable {
   width: min-content;
@@ -15,7 +14,6 @@
   table-layout: auto;
   background-color: var(--menu-background);
   color: var(--menu-colour);
-  outline: 5px solid blue !important;
 }
 .sumpTableHeaderRow { 
   border-radius: var(--border-radius);
@@ -25,8 +23,8 @@
   padding: 1px;
   text-align: center;
   text-transform: uppercase;
-  font-size: clamp(10px, 1cqi, 16px);
-  letter-spacing: 0.1cqi;
+  font-size: clamp(4px, 2.5cqi, 36px);
+  letter-spacing: 1px;
   background-color: oklch(from var(--menu-background) clamp(0, l + 0.2, 1) c h);
   color: oklch(from var(--menu-colour) clamp(0, l + 0.2, 1) c h);
 }
@@ -37,7 +35,7 @@
   font-family: monospace;
   text-overflow: clip;
   white-space: normal;
-  font-size: clamp(10px, 0.8cqi, 16px);
+  font-size: clamp(4px, 2.5cqi, 36px);
 }
 .sumpTableCell, .sumpTableHeaderCell {
   width: 10ch;
@@ -48,10 +46,5 @@
 }
 .sumpTableRow:nth-child(even) {
   background-color: oklch(from var(--menu-background) clamp(0, l + 0.2, 1) c h); 
-}
-@media (width < 900px) {
-  .sumpTableHeaderCell, .sumpTableCell {
-    font-size: 8px;     
-  }
 }
 
