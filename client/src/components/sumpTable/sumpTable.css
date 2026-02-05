@@ -23,7 +23,7 @@
   padding: 1px;
   text-align: center;
   text-transform: uppercase;
-  font-size: clamp(4px, 2.5cqi, 36px);
+  font-size: clamp(4px, 2.5cqi, 28px);
   letter-spacing: 1px;
   background-color: oklch(from var(--menu-background) clamp(0, l + 0.2, 1) c h);
   color: oklch(from var(--menu-colour) clamp(0, l + 0.2, 1) c h);
@@ -35,7 +35,7 @@
   font-family: monospace;
   text-overflow: clip;
   white-space: normal;
-  font-size: clamp(4px, 2.5cqi, 36px);
+  font-size: clamp(4px, 2.5cqi, 28px);
 }
 .sumpTableCell, .sumpTableHeaderCell {
   width: 10ch;
@@ -47,4 +47,5 @@
 .sumpTableRow:nth-child(even) {
   background-color: oklch(from var(--menu-background) clamp(0, l + 0.2, 1) c h); 
 }
+
 

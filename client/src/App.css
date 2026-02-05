@@ -44,6 +44,10 @@ Global Fonts: @import or font-family declarations for the whole app.
   color: var(--menu-colour);
   padding: 5px;
   overflow: scroll;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
 }
 
 *, *::before, *::after {
