@@ -5,7 +5,7 @@
 from flask import Flask, request, jsonify, send_from_directory
 import mysql.connector
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 from dotenv import load_dotenv
 from flask_cors import CORS
@@ -32,6 +32,41 @@ def serve(path):
         return f"Error: index.html not found in {app.static_folder}", 404
     return send_from_directory(app.static_folder, 'index.html')
 
+    from datetime import datetime, timedelta
+# @app.route('/api/sumpData', methods=['GET'])
+@app.route('/api/sumpData', methods=['GET'])
+def get_sump_data():
+    try:
+        hours = request.args.get('hours', default=24, type=int)
+        
+        # Calculate threshold in Python to keep the SQL string clean
+        threshold = datetime.now() - timedelta(hours=hours)
+        threshold_str = threshold.strftime('%Y-%m-%d %H:%M:%S')
+        
+        conn = mysql.connector.connect(**db_config)
+        cursor = conn.cursor(dictionary=True)
+        
+        # The SQL driver only sees one %s and won't confuse %Y with a placeholder
+        query = """
+            SELECT id, payload FROM sumpData 
+            WHERE payload->>'$.datetime' >= %s
+            ORDER BY id DESC
+        """
+        
+        cursor.execute(query, (threshold_str,))
+        rows = cursor.fetchall()
+        
+        cursor.close()
+        conn.close()
+
+        for row in rows:
+            if isinstance(row['payload'], str):
+                row['payload'] = json.loads(row['payload'])
+                
+        return jsonify(rows)
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({"error": str(e)}), 500
 
 @app.route('/api/data', methods=['GET', 'POST'])
 def handle_data():
@@ -54,7 +89,7 @@ def handle_data():
     try:
         conn = mysql.connector.connect(**db_config)
         cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT id, payload FROM sumpData ORDER BY id DESC LIMIT 20")
+        cursor.execute("SELECT id, payload FROM sumpData ORDER BY id DESC LIMIT 200")
         rows = cursor.fetchall()
         cursor.close()
         conn.close()

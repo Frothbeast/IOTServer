@@ -1,19 +1,28 @@
-import React from 'react';
-import { useServerData } from './hooks/useServerData';
+// import React from 'react';
+import React, { useState } from 'react';
+import { useSumpData } from './hooks/useSumpData';
 import SumpTable from './components/sumpTable/sumpTable';
 import './App.css';
 
-const APP_START_TIME = Date.now();
 
 function App() {
-    const { counter, totalTime, clickCounter, sumpRecords, isLoading, resetTimer } = useServerData(APP_START_TIME);
+//     const { sumpRecords, isLoading } = useSumpData(hours);
+    const [selectedHours, setSelectedHours] = useState(24);
+    const { sumpRecords, isLoading } = useSumpData(selectedHours);
 
     if (isLoading) return <div>Loading...</div>;
 
     return (
         <div className="App">
-            <h1>Sump Pump Monitor</h1>
-            <p>Counter: {counter}</p>
+            <select
+                value={selectedHours}
+//                 onChange={(e) => setSelectedHours(Number(e.target.value))}>
+                onChange={(e) => setSelectedHours(Number(e.target.value))}>
+                <option value={1}>Last Hour</option>
+                <option value={24}>Last 24 Hours</option>
+                <option value={168}>Last Week</option>
+            </select>
+{/* <SumpTable sumpRecords={sumpRecords} /> */}
             <SumpTable sumpRecords={sumpRecords} />
         </div>
     );

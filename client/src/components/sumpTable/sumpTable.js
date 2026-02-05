@@ -3,7 +3,7 @@ import './sumpTable.css';
 
 const SumpTable = ({ sumpRecords = [] }) => {
     return (
-	<div classname="sumpTableContainer">
+	<div className="sumpTableContainer">
             <table className="sumpTable">
                 <thead className="sumpTableHeader">
                     <tr className="sumpTableHeaderRow">
