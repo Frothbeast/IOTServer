@@ -19,7 +19,7 @@ const SumpTable = ({ sumpRecords = [], columnStats }) => {
     		            <th className="sumpTableHeaderCell">Duty Cycle</th> 
                     </tr>
                     <tr className="sumpTableHeaderRow">
-                        <th className="sumpTableHeaderCell" style="font-size:1vw">MAX</th>
+                        <th className="sumpTableHeaderCell" style="font-size:1vw;">MAX</th>
                         <th className="sumpTableHeaderCell">{columnStats.datetime.max}</th>
                         <th className="sumpTableHeaderCell">{columnStats.Hadc.max}</th>
                         <th className="sumpTableHeaderCell">{columnStats.Ladc.max}</th>
@@ -29,7 +29,7 @@ const SumpTable = ({ sumpRecords = [], columnStats }) => {
     		            <th className="sumpTableHeaderCell">{columnStats.duty.max}</th> 
                     </tr>
                     <tr className="sumpTableHeaderRow">
-                        <th className="sumpTableHeaderCell" style="font-size:1vw">AVG</th>
+                        <th className="sumpTableHeaderCell" style="font-size:1vw;">AVG</th>
                         <th className="sumpTableHeaderCell">{columnStats.datetime.avg}</th>
                         <th className="sumpTableHeaderCell">{columnStats.Hadc.avg}</th>
                         <th className="sumpTableHeaderCell">{columnStats.Ladc.avg}</th>
@@ -39,7 +39,7 @@ const SumpTable = ({ sumpRecords = [], columnStats }) => {
     		            <th className="sumpTableHeaderCell">{columnStats.duty.avg}</th> 
                     </tr>
                     <tr className="sumpTableHeaderRow">
-                        <th className="sumpTableHeaderCell" style="font-size:1vw">MIN</th>
+                        <th className="sumpTableHeaderCell" style="font-size:1vw;">MIN</th>
                         <th className="sumpTableHeaderCell">{columnStats.datetime.min}</th>
                         <th className="sumpTableHeaderCell">{columnStats.Hadc.min}</th>
                         <th className="sumpTableHeaderCell">{columnStats.Ladc.min}</th>
