@@ -90,5 +90,6 @@
  
 }
 .sumpTableHeaderRow {
+  border-style: solid;
   border: #ffffff;
 }
