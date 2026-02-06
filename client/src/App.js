@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { useSumpData } from './hooks/useSumpData';
 import SumpTable from './components/sumpTable/sumpTable';
 import './App.css';
-import ControlBar from './components/ControlBar';
+import ControlBar from './components/ControlBar/ControlBar';
 
 // Math library stays outside for clean access
 const StatsLib = {
