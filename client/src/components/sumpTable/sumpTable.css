@@ -4,7 +4,7 @@
   container-type: inline-size;
   width: 100%;
   overflow: hidden;
-  height: 500px;
+  height: auto;
   overflow-y: auto;
   max-width: 100%;
   min-width: 400px;
