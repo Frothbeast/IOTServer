@@ -1,6 +1,6 @@
 // Destructure the props you need from the parent
 import './ControlBar.css';
-const ControlBar = ({ selectedHours, onHoursChange, stats, toggleSidebar, isSidebarOpen }) => {
+const ControlBar = ({ selectedHours, onHoursChange, columnStats, toggleSidebar, isSidebarOpen }) => {
   return (
     <header className="controlBar" >
         <div className="brand">SumpMonitor v1</div>
@@ -13,7 +13,7 @@ const ControlBar = ({ selectedHours, onHoursChange, stats, toggleSidebar, isSide
 
         {/* Displaying those "fun indicators" in the bar */}
         <div className="mini-stats">
-            Last Run: {lastDatetime}
+            Last Run: {columnStats.lastDatetime}
         </div>
 
         <button onClick={toggleSidebar}>
