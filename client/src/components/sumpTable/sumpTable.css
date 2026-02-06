@@ -50,7 +50,7 @@
 .sumpTableCell, .sumpTableHeaderCell {
   letter-spacing: 1px;
   font-size: 2vw;
-  padding: 10px;
+  padding: 0px;
   text-align: center;
   white-space: normal;
   word-break: normal;
