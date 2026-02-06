@@ -4,6 +4,8 @@
   container-type: inline-size;
   width: 100%;
   overflow: hidden;
+  height: 300px;
+  overflow-y: auto;
   max-width: 100%;
   min-width: 400px;
 }
@@ -16,6 +18,9 @@
   color: var(--menu-colour);
 }
 .sumpTableHeaderRow { 
+  position: sticky;
+  top: 0;
+  z-index: 10;
   border-radius: var(--border-radius);
 }
 .sumpTableHeaderCell {
@@ -41,7 +46,7 @@
 .sumpTableCell, .sumpTableHeaderCell {
   letter-spacing: 1px;
   font-size: 2vw;
-  padding: 1px;
+  padding: 10px;
   text-align: center;
   white-space: normal;
   word-break: normal;
