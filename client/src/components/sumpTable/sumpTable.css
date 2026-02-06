@@ -17,11 +17,13 @@
   background-color: var(--menu-background);
   color: var(--menu-colour);
 }
-.sumpTableHeaderRow { 
+.sumpTableHeader { 
   position: sticky;
-  top: 0;
+  top: var(--controlBar-height);
   z-index: 10;
   border-radius: var(--border-radius);
+  height: var(--sumpTable__header-height);
+  padding: 0px;
 }
 .sumpTableHeaderCell {
   border-radius: var(--border-radius);
@@ -54,6 +56,7 @@
   overflow-wrap: anywhere;
   display: table-cell;
 }
+ 
 .sumpTableRow:nth-child(even) {
   background-color: oklch(from var(--menu-background) clamp(0, l + 0.2, 1) c h); 
 }
@@ -76,6 +79,7 @@
 
 /* Ensure your table allows auto layout */
 .sumpTable {
-    table-layout: auto; /* Required for min-content to calculate correctly */
-    width: 100%;
+  table-layout: auto; /* Required for min-content to calculate correctly */
+  width: 100%;
+  top: calc(var(--controlBar-height) + var(--sumpTable__header-height));
 }
