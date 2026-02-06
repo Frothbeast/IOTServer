@@ -32,7 +32,7 @@
   text-transform: uppercase;
   background-color: oklch(from var(--menu-background) clamp(0, l + 0.2, 1) c h);
   color: oklch(from var(--menu-colour) clamp(0, l + 0.2, 1) c h);
-  
+  border-bottom: 1px solid;
 }
 .sumpTableCell {
   border-bottom: 1px solid #444;
@@ -88,8 +88,4 @@
 .sumpTableRowPlaceHolderControlBar {
   height: var(--controlBar-height);
  
-}
-.sumpTableHeaderRow {
-  border-style: solid;
-  border: #ffffff;
 }
