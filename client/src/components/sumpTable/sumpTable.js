@@ -1,7 +1,9 @@
 import React from 'react';
 import './sumpTable.css';
 
-const SumpTable = ({ sumpRecords = [] }) => {
+const SumpTable = ({ sumpRecords = [], columnStats }) => {
+    if (!columnStats) return null;
+
     return (
 	<div className="sumpTableContainer">
             <table className="sumpTable">

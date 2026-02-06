@@ -65,7 +65,7 @@ return (
 
     <main>
       <div className="tableWrapper">
-      	<SumpTable sumpRecords={sumpRecords} />
+      	<SumpTable sumpRecords={sumpRecords} columnStats={columnStats}/>
       </div>
     </main>
 
