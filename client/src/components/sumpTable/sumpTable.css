@@ -87,5 +87,5 @@
 
 .sumpTableRowPlaceHolderControlBar {
   height: var(--controlBar-height);
- 
+  border: none;
 }
