@@ -50,7 +50,7 @@
 .sumpTableCell, .sumpTableHeaderCell {
   letter-spacing: 1px;
   font-size: 2vw;
-  padding: 10px;
+  padding: 0px;
   text-align: center;
   white-space: normal;
   word-break: normal;
@@ -71,7 +71,7 @@
 .sumpTable .sumpTableCell:first-child {
   width: min-content;      /* Sets the width exactly to the widest word */
   min-width: unset;        /* Ensure no min-width lock is interfering */
-  padding: 5px;            /* Add back your padding */
+  padding: 1px;            /* Add back your padding */
   text-align: left;        /* Align the time stamps left */
 }
 
@@ -87,5 +87,4 @@
 
 .sumpTableRowPlaceHolderControlBar {
   height: var(--controlBar-height);
- 
 }
