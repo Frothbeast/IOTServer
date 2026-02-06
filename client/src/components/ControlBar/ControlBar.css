@@ -7,7 +7,7 @@
   width: 100%;
   
   /* REMOVE 'height: 60px' from here */
-  height: auto; /* Let the content determine the height */
+  height: var(--controlBar-height); /* Let the content determine the height */
   
   background: rgba(44, 62, 80, 0.9);
   /* ... other styles (padding, flex, etc.) ... */

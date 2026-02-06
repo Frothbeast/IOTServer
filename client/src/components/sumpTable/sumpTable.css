@@ -4,19 +4,28 @@
   container-type: inline-size;
   width: 100%;
   overflow: hidden;
+  height: 500px;
+  overflow-y: auto;
   max-width: 100%;
   min-width: 400px;
+  border: 1px solid #999;
 }
 .sumpTable {
   width: 100%;
   min-width: 100%;
   border-collapse: collapse; 
+  border-spacing: 0;
   table-layout: auto;
   background-color: var(--menu-background);
   color: var(--menu-colour);
 }
-.sumpTableHeaderRow { 
+.sumpTableHeader { 
+  position: sticky;
+  top: var(--controlBar-height);
+  z-index: 10;
   border-radius: var(--border-radius);
+  height: var(--sumpTable__header-height);
+  padding: 0px;
 }
 .sumpTableHeaderCell {
   border-radius: var(--border-radius);
@@ -41,7 +50,7 @@
 .sumpTableCell, .sumpTableHeaderCell {
   letter-spacing: 1px;
   font-size: 2vw;
-  padding: 1px;
+  padding: 10px;
   text-align: center;
   white-space: normal;
   word-break: normal;
@@ -49,6 +58,7 @@
   overflow-wrap: anywhere;
   display: table-cell;
 }
+ 
 .sumpTableRow:nth-child(even) {
   background-color: oklch(from var(--menu-background) clamp(0, l + 0.2, 1) c h); 
 }
@@ -71,6 +81,11 @@
 
 /* Ensure your table allows auto layout */
 .sumpTable {
-    table-layout: auto; /* Required for min-content to calculate correctly */
-    width: 100%;
+  table-layout: auto; /* Required for min-content to calculate correctly */
+  width: 100%;
+}
+
+.sumpTableRowPlaceHolderControlBar {
+  height: var(--controlBar-height);
+ 
 }
