@@ -36,7 +36,7 @@ function App() {
         const hoursOns = sumpRecords.map(r => parseFloat(r.payload?.hoursOn)).filter(v => !isNaN(v));
         const duties = sumpRecords.map(r => parseFloat(r.payload?.duty)).filter(v => !isNaN(v));
         const datetime = sumpRecords.map(r => r.payload?.datetime);
-        
+        const lastDatetime = datetime[datetime.length - 1];
         return {
             Hadc: { avg: StatsLib.avg(Hadcs), max: StatsLib.max(Hadcs), min: StatsLib.min(Hadcs) },
             Ladc: { avg: StatsLib.avg(Ladcs), max: StatsLib.max(Ladcs), min: StatsLib.min(Ladcs) },

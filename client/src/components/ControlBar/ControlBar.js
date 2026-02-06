@@ -13,7 +13,7 @@ const ControlBar = ({ selectedHours, onHoursChange, stats, toggleSidebar, isSide
 
         {/* Displaying those "fun indicators" in the bar */}
         <div className="mini-stats">
-            Avg Depth: {stats?.depth.avg}cm
+            Last Run: {lastDatetime}
         </div>
 
         <button onClick={toggleSidebar}>
