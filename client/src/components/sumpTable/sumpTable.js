@@ -53,13 +53,14 @@ const SumpTable = ({ sumpRecords = [], columnStats }) => {
                     <tr className="sumpTableRowPlaceHolderControlBar"></tr>
                     {Array.isArray(sumpRecords) && sumpRecords.map((record) => (
                         <tr key={record.id} className="sumpTableRow">
+                            <td className="sumpTableCell"></td>
                             <td className="sumpTableCell">{record.payload?.datetime ? record.payload.datetime.split(' ')[1] : "N/a"}</td>
                             <td className="sumpTableCell">{record.payload?.Hadc ?? "N/a"}</td>
-			    <td className="sumpTableCell">{record.payload?.Ladc ?? "N/a"}</td>
+			                <td className="sumpTableCell">{record.payload?.Ladc ?? "N/a"}</td>
                             <td className="sumpTableCell">{record.payload?.timeOn ?? "N/a"}</td>
                             <td className="sumpTableCell">{record.payload?.timeOff ?? "N/a"}</td>
                             <td className="sumpTableCell">{record.payload?.hoursOn ?? "N/a"}</td>
-			    <td className="sumpTableCell">{record.payload?.duty ?? "N/a"}</td>
+			                <td className="sumpTableCell">{record.payload?.duty ?? "N/a"}</td>
                         </tr>
                     ))}
                 </tbody>
