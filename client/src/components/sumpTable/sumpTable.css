@@ -8,11 +8,13 @@
   overflow-y: auto;
   max-width: 100%;
   min-width: 400px;
+  border: 1px solid #999;
 }
 .sumpTable {
   width: 100%;
   min-width: 100%;
   border-collapse: collapse; 
+  border-spacing: 0;
   table-layout: auto;
   background-color: var(--menu-background);
   color: var(--menu-colour);
@@ -81,5 +83,11 @@
 .sumpTable {
   table-layout: auto; /* Required for min-content to calculate correctly */
   width: 100%;
-  top: calc(var(--controlBar-height) + var(--sumpTable__header-height));
+}
+
+.sumpTableRowPlaceHolderControlBar {
+  height: --controlBar-height;
+}
+.sumpTableRowPlaceholderHeader {
+  height: --sumpTable__header-height;
 }
