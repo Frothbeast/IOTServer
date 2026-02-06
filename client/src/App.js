@@ -47,7 +47,8 @@ function App() {
             datetime: { avg: StatsLib.avg(datetime.slice(1).map((v, i) => v - datetime[i])),
                         max: StatsLib.max(datetime.slice(1).map((v, i) => v - datetime[i])),
                         min: StatsLib.min(datetime.slice(1).map((v, i) => v - datetime[i]))
-                        }
+                        },
+            lastDatetime: lastDatetime
         };
     }, [sumpRecords]);
 
