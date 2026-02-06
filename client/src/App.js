@@ -59,7 +59,7 @@ return (
     <ControlBar
       selectedHours={selectedHours} 
       onHoursChange={setSelectedHours} // Pass the setter function
-      stats={columnStats}              // Pass the calculated stats
+      columnStats={columnStats}              // Pass the calculated stats
       toggleSidebar={() => setSidebarOpen(!isSidebarOpen)}
       isSidebarOpen={isSidebarOpen}
     />

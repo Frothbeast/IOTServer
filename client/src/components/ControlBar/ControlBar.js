@@ -13,7 +13,7 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, toggleSidebar, 
 
         {/* Displaying those "fun indicators" in the bar */}
         <div className="mini-stats">
-            Last Run: {columnStats.lastDatetime}
+            Last Run: {columnStats?.lastDatetime ?? "N/a"}
         </div>
 
         <button onClick={toggleSidebar}>
