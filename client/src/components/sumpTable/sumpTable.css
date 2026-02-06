@@ -20,32 +20,57 @@
 }
 .sumpTableHeaderCell {
   border-radius: var(--border-radius);
-  padding: 1px;
-  text-align: center;
   text-transform: uppercase;
-  font-size: 20px;
-  letter-spacing: 1px;
   background-color: oklch(from var(--menu-background) clamp(0, l + 0.2, 1) c h);
   color: oklch(from var(--menu-colour) clamp(0, l + 0.2, 1) c h);
+  
 }
 .sumpTableCell {
-  padding: 1px;
   border-bottom: 1px solid #444;
-  text-align: center;
   font-family: monospace;
-  text-overflow: clip;
+  letter-spacing: 1px;
+  font-size: 2vw; /* Careful with this; it can cause issues on very small screens */
+  padding: 1px;
+  text-align: center;
   white-space: normal;
-  font-size: 20px;
-}
-.sumpTableCell, .sumpTableHeaderCell {
-  width: 10ch;
-  white-space: normal; 
   word-break: normal;
   word-wrap: normal;
   overflow-wrap: anywhere;
+}
+
+.sumpTableCell, .sumpTableHeaderCell {
+  letter-spacing: 1px;
+  font-size: 2vw;
+  padding: 1px;
+  text-align: center;
+  white-space: normal;
+  word-break: normal;
+  word-wrap: normal;
+  overflow-wrap: anywhere;
+  display: table-cell;
 }
 .sumpTableRow:nth-child(even) {
   background-color: oklch(from var(--menu-background) clamp(0, l + 0.2, 1) c h); 
 }
 
+.sumpTable .sumpTableCell {
+  word-spacing: normal; /* Explicitly reset this property to default */
+  width: auto;          /* Reset width to auto by default */
+  display: table-cell;
+}
+.sumpTable .sumpTableCell:first-child {
+  width: min-content;      /* Sets the width exactly to the widest word */
+  min-width: unset;        /* Ensure no min-width lock is interfering */
+  padding: 5px;            /* Add back your padding */
+  text-align: left;        /* Align the time stamps left */
+}
 
+.sumpTable td:not(:first-child) {
+  width: auto;
+}
+
+/* Ensure your table allows auto layout */
+.sumpTable {
+    table-layout: auto; /* Required for min-content to calculate correctly */
+    width: 100%;
+}

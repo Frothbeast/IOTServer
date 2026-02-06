@@ -7,7 +7,7 @@ const SumpTable = ({ sumpRecords = [] }) => {
             <table className="sumpTable">
                 <thead className="sumpTableHeader">
                     <tr className="sumpTableHeaderRow">
-                        <th className="sumpTableHeaderCell">DATE/ TIME</th>
+                        <th className="sumpTableHeaderCell">TIME</th>
                         <th className="sumpTableHeaderCell">High ADC</th>
                         <th className="sumpTableHeaderCell">Low ADC</th>
                         <th className="sumpTableHeaderCell">On Time</th>
@@ -19,7 +19,7 @@ const SumpTable = ({ sumpRecords = [] }) => {
                 <tbody>
                     {Array.isArray(sumpRecords) && sumpRecords.map((record) => (
                         <tr key={record.id} className="sumpTableRow">
-                            <td className="sumpTableCell">{record.payload?.datetime ?? "N/a"}</td>
+                            <td className="sumpTableCell">{record.payload?.datetime ? record.payload.datetime.split(' ')[1] : "N/a"}</td>
                             <td className="sumpTableCell">{record.payload?.Hadc ?? "N/a"}</td>
 			    <td className="sumpTableCell">{record.payload?.Ladc ?? "N/a"}</td>
                             <td className="sumpTableCell">{record.payload?.timeOn ?? "N/a"}</td>

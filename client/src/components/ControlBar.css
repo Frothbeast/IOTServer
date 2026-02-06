@@ -1,0 +1,45 @@
+.controlBar {
+  position: fixed; 
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  width: 100%;
+  
+  /* REMOVE 'height: 60px' from here */
+  height: auto; /* Let the content determine the height */
+  
+  background: rgba(44, 62, 80, 0.9);
+  /* ... other styles (padding, flex, etc.) ... */
+}
+
+/* Add a new rule for your new wrapper div */
+.tableWrapper { 
+  /* The space dynamically matches the height of the bar above */
+  margin-top: var(--control-bar-height); 
+}
+.statsSummary {
+  display: flex;
+  gap: 20px;
+  padding: 10px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #ddd;
+}
+
+.sidebar {
+  position: fixed;
+  right: -300px; /* Hidden by default */
+  top: 0;
+  width: 300px;
+  height: 100%;
+  background: white;
+  box-shadow: -2px 0 5px rgba(0,0,0,0.2);
+  transition: right 0.3s ease;
+  padding: 20px;
+  z-index: 200;
+}
+
+.sidebar.open {
+  right: 0; /* Slide in */
+}
+
