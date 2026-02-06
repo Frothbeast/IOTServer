@@ -59,7 +59,7 @@
   display: table-cell;
 }
  
-.sumpTableRow:nth-child(even) {
+.sumpTableRow:nth-child(odd) {
   background-color: oklch(from var(--menu-background) clamp(0, l + 0.2, 1) c h); 
 }
 
