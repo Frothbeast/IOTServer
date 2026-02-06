@@ -46,7 +46,7 @@ Global Fonts: @import or font-family declarations for the whole app.
   background-color: var(--menu-background);
   min-height: 100vh;
   color: var(--menu-colour);
-  padding: 5px;
+  padding: 0px;
   overflow: scroll;
   display: flex;
   flex-direction: column;
