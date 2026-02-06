@@ -18,7 +18,6 @@ const SumpTable = ({ sumpRecords = [] }) => {
                 </thead>
                 <tbody className="sumpTableBody">
                     <tr className="sumpTableRowPlaceHolderControlBar"></tr>
-                    <tr className="sumpTableRowPlaceholderHeader"></tr>    
                     {Array.isArray(sumpRecords) && sumpRecords.map((record) => (
                         <tr key={record.id} className="sumpTableRow">
                             <td className="sumpTableCell">{record.payload?.datetime ? record.payload.datetime.split(' ')[1] : "N/a"}</td>
