@@ -44,9 +44,9 @@ function App() {
             timeOff: { avg: StatsLib.avg(timeOffs), max: StatsLib.max(timeOffs), min: StatsLib.min(timeOffs) },
             hoursOn: { avg: StatsLib.avg(hoursOns), max: StatsLib.max(hoursOns), min: StatsLib.min(hoursOns) },
             duty: { avg: StatsLib.avg(duties), max: StatsLib.max(duties), min: StatsLib.min(duties) },
-            datetime: { avg: StatsLib.avg(datetime.slice(1).map((v, i) => v - datetime[i])),
-                        max: StatsLib.max(datetime.slice(1).map((v, i) => v - datetime[i])),
-                        min: StatsLib.min(datetime.slice(1).map((v, i) => v - datetime[i]))
+            datetime: {   avg: StatsLib.avg(datetimeStrings.map(s => new Date(s).getTime()).slice(1).map((v, i, arr) => v - new Date(datetimeStrings[i]).getTime())),
+                            max: StatsLib.max(datetimeStrings.map(s => new Date(s).getTime()).slice(1).map((v, i, arr) => v - new Date(datetimeStrings[i]).getTime())),
+                            min: StatsLib.min(datetimeStrings.map(s => new Date(s).getTime()).slice(1).map((v, i, arr) => v - new Date(datetimeStrings[i]).getTime()))
                         },
             lastDatetime: lastDatetime
         };
