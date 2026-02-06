@@ -61,7 +61,7 @@
 .sumpTable .sumpTableCell:first-child {
   width: min-content;      /* Sets the width exactly to the widest word */
   min-width: unset;        /* Ensure no min-width lock is interfering */
-  padding: 5px;            /* Add back your padding */
+  padding: 1px;            /* Add back your padding */
   text-align: left;        /* Align the time stamps left */
 }
 
