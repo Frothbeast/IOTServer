@@ -49,7 +49,7 @@
   left: 0;
   bottom: 0;
   /* Ensure it fills the entire space */
-  width: 25%;
+  width: 30%;
   height: 100%;
  
   object-fit: cover;
@@ -60,14 +60,27 @@
 
 .selectedHours {
   position: absolute;
-  top: 0; right: 0; 
-  width: 25%; height: 50%;
+  bottom: 0; right: 0; 
+  width: 30%; height: 50%;
   display: flex;
   align-items: center; /* Vertically centers the text */
   justify-content: flex-end;
   font-size: 4cqw;
+  background: rgba(44, 62, 80, 0.541);
+}
+
+.selectedHours :hover{
+  background: rgba(211, 216, 221, 0.541);
 }
 
 .sidebarButton {
 
+}
+
+.lastRun{
+  top:0;
+  left:30%;
+  right:70%;
+  bottom: 50%;
+  
 }

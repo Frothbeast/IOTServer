@@ -11,8 +11,8 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, toggleSidebar, 
             <option value={168}>Last Week</option>
         </select>
 
-        {/* Displaying those "fun indicators" in the bar */}
-        <div className="mini-stats">
+        
+        <div className="lastRun">
             Last Run: {columnStats?.lastDatetime ?? "N/a"}
         </div>
 
