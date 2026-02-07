@@ -5,18 +5,13 @@
   right: 0;
   z-index: 1000;
   width: 100%;
-  
-  /* REMOVE 'height: 60px' from here */
-  height: var(--controlBar-height); /* Let the content determine the height */
-  
+  height: var(--controlBar-height); 
   background: rgba(44, 62, 80, 0.541);
-  /* ... other styles (padding, flex, etc.) ... */
 }
 
-/* Add a new rule for your new wrapper div */
 .tableWrapper { 
-  /* The space dynamically matches the height of the bar above */
   margin-top: var(--control-bar-height); 
+  position: relative
 }
 .statsSummary {
   display: flex;
@@ -27,7 +22,7 @@
 
 .sidebar {
   position: fixed;
-  right: -75cqw; /* Hidden by default */
+  right: -75cqw; 
   top: 0;
   width: 75cqw;
   height: 100%;
