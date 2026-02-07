@@ -3,7 +3,7 @@ import './ControlBar.css';
 const ControlBar = ({ selectedHours, onHoursChange, columnStats, toggleSidebar, isSidebarOpen }) => {
   return (
     <header className="controlBar" >
-        <div className="brand">SumpMonitor v1</div>
+        <div className="brand">Sump</div>
         
         <select value={selectedHours} onChange={(e) => onHoursChange(Number(e.target.value))}>
             <option value={1}>Last Hour</option>
