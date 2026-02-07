@@ -66,16 +66,20 @@
   align-items: center; /* Vertically centers the text */
   justify-content: flex-end;
   font-size: 4cqw;
-  background: rgba(44, 62, 80, 0.541);
+  background-color: rgba(44, 62, 80, 0.541);
   text-align: center;
 }
 
 .selectedHours :hover{
-  background: rgba(211, 216, 221, 0.541);
+  background-color: rgba(211, 216, 221, 0.541);
 }
 
 .sidebarButton {
-
+  top:50%;
+  left:30%;
+  right:70%;
+  bottom: 0;
+  object-fit: cover;
 }
 
 .lastRun{
@@ -83,5 +87,5 @@
   left:30%;
   right:70%;
   bottom: 50%;
-  
+  object-fit: cover;
 }
