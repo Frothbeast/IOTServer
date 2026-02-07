@@ -27,7 +27,7 @@
 
 .sidebar {
   position: fixed;
-  right: -300px; /* Hidden by default */
+  right: -75cqw; /* Hidden by default */
   top: 0;
   width: 75cqw;
   height: 100%;
@@ -65,6 +65,7 @@
   bottom: 25%;
   object-fit: cover;
   font-size: 2cqw;
+  text-align: center;
 }
 
 .selectedHours :hover{
