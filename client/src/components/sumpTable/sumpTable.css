@@ -28,13 +28,14 @@
   padding: 0px;
 }
 .sumpTableHeaderCell {
+  font-size: 1vw;
   border-radius: var(--border-radius);
   text-transform: uppercase;
   background-color: oklch(from var(--menu-background) clamp(0, l + 0.2, 1) c h);
   color: oklch(from var(--menu-colour) clamp(0, l + 0.2, 1) c h);
-  border-bottom: 1px solid;
 }
 .sumpTableCell {
+  font-size: 2vw;
   border-bottom: 1px solid #444;
   font-family: monospace;
   letter-spacing: 1px;
@@ -49,7 +50,6 @@
 
 .sumpTableCell, .sumpTableHeaderCell {
   letter-spacing: 1px;
-  font-size: 2vw;
   padding: 0px;
   text-align: center;
   white-space: normal;
