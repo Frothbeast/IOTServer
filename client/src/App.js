@@ -11,6 +11,13 @@ const StatsLib = {
   min: (arr) => arr.length ? Math.min(...arr) : 0,
 };
 
+const formatMsToTime = (ms) => {
+  const h = Math.floor(ms / 3600000).toString().padStart(2, '0');
+  const m = Math.floor((ms % 3600000) / 60000).toString().padStart(2, '0');
+  const s = Math.floor((ms % 60000) / 1000).toString().padStart(2, '0');
+  return `${h}:${m}:${s}`;
+};
+
 function App() {
     const [selectedHours, setSelectedHours] = useState(24);
     const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -29,12 +36,30 @@ function App() {
     const columnStats = useMemo(() => {
         if (!sumpRecords?.length) return null;
 
-        const depths = sumpRecords.map(r => parseFloat(r.payload?.depth)).filter(v => !isNaN(v));
-        const temps = sumpRecords.map(r => parseFloat(r.payload?.temp)).filter(v => !isNaN(v));
+        const Hadcs = sumpRecords.map(r => parseFloat(r.payload?.Hadc)).filter(v => !isNaN(v));
+        const Ladcs = sumpRecords.map(r => parseFloat(r.payload?.Ladc)).filter(v => !isNaN(v));
+        const timeOns = sumpRecords.map(r => parseFloat(r.payload?.timeOn)).filter(v => !isNaN(v));
+        const timeOffs = sumpRecords.map(r => parseFloat(r.payload?.timeOff)).filter(v => !isNaN(v));
+        const hoursOns = sumpRecords.map(r => parseFloat(r.payload?.hoursOn)).filter(v => !isNaN(v));
+        const duties = sumpRecords.map(r => parseFloat(r.payload?.duty)).filter(v => !isNaN(v));
+        const datetime = sumpRecords.map(r => r.payload?.datetime);
+        const lastDatetime = datetime[datetime.length - 1];
+        const avgTimeString = formatMsToTime(StatsLib.avg(datetime.slice(1).map((v, i) => new Date(datetime[i]).getTime() - new Date(v).getTime())));
+        const maxTimeString = formatMsToTime(StatsLib.max(datetime.slice(1).map((v, i) => new Date(datetime[i]).getTime() - new Date(v).getTime())));
+        const minTimeString = formatMsToTime(StatsLib.min(datetime.slice(1).map((v, i) => new Date(datetime[i]).getTime() - new Date(v).getTime())));
 
         return {
-            depth: { avg: StatsLib.avg(depths), max: StatsLib.max(depths), min: StatsLib.min(depths) },
-            temp: { avg: StatsLib.avg(temps), max: StatsLib.max(temps), min: StatsLib.min(temps) }
+            Hadc: { avg: StatsLib.avg(Hadcs), max: StatsLib.max(Hadcs), min: StatsLib.min(Hadcs) },
+            Ladc: { avg: StatsLib.avg(Ladcs), max: StatsLib.max(Ladcs), min: StatsLib.min(Ladcs) },
+            timeOn: { avg: StatsLib.avg(timeOns), max: StatsLib.max(timeOns), min: StatsLib.min(timeOns) },
+            timeOff: { avg: StatsLib.avg(timeOffs), max: StatsLib.max(timeOffs), min: StatsLib.min(timeOffs) },
+            hoursOn: { avg: StatsLib.avg(hoursOns), max: StatsLib.max(hoursOns), min: StatsLib.min(hoursOns) },
+            duty: { avg: StatsLib.avg(duties), max: StatsLib.max(duties), min: StatsLib.min(duties) },
+            datetime: {     avg: avgTimeString,
+                            max: maxTimeString,
+                            min: minTimeString
+                        },
+            lastDatetime: lastDatetime
         };
     }, [sumpRecords]);
 
@@ -45,14 +70,14 @@ return (
     <ControlBar
       selectedHours={selectedHours} 
       onHoursChange={setSelectedHours} // Pass the setter function
-      stats={columnStats}              // Pass the calculated stats
+      columnStats={columnStats}              // Pass the calculated stats
       toggleSidebar={() => setSidebarOpen(!isSidebarOpen)}
       isSidebarOpen={isSidebarOpen}
     />
 
     <main>
       <div className="tableWrapper">
-      	<SumpTable sumpRecords={sumpRecords} />
+      	<SumpTable sumpRecords={sumpRecords} columnStats={columnStats}/>
       </div>
     </main>
 

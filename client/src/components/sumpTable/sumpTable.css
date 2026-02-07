@@ -4,7 +4,7 @@
   container-type: inline-size;
   width: 100%;
   overflow: hidden;
-  height: 500px;
+  height: auto;
   overflow-y: auto;
   max-width: 100%;
   min-width: 400px;
@@ -32,7 +32,7 @@
   text-transform: uppercase;
   background-color: oklch(from var(--menu-background) clamp(0, l + 0.2, 1) c h);
   color: oklch(from var(--menu-colour) clamp(0, l + 0.2, 1) c h);
-  
+  border-bottom: 1px solid;
 }
 .sumpTableCell {
   border-bottom: 1px solid #444;
@@ -59,7 +59,7 @@
   display: table-cell;
 }
  
-.sumpTableRow:nth-child(even) {
+.sumpTableRow:nth-child(odd) {
   background-color: oklch(from var(--menu-background) clamp(0, l + 0.2, 1) c h); 
 }
 
@@ -87,5 +87,5 @@
 
 .sumpTableRowPlaceHolderControlBar {
   height: var(--controlBar-height);
- 
+  border: none;
 }

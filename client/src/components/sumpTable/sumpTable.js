@@ -1,32 +1,66 @@
 import React from 'react';
 import './sumpTable.css';
 
-const SumpTable = ({ sumpRecords = [] }) => {
+const SumpTable = ({ sumpRecords = [], columnStats }) => {
+    if (!columnStats) return null;
+
     return (
 	<div className="sumpTableContainer">
             <table className="sumpTable">
                 <thead className="sumpTableHeader">
                     <tr className="sumpTableHeaderRow">
+                        <th className="sumpTableHeaderCell"></th>
                         <th className="sumpTableHeaderCell">TIME</th>
                         <th className="sumpTableHeaderCell">High ADC</th>
                         <th className="sumpTableHeaderCell">Low ADC</th>
                         <th className="sumpTableHeaderCell">On Time</th>
                         <th className="sumpTableHeaderCell">Off Time</th>
                         <th className="sumpTableHeaderCell">Hours ON</th>
-    		        <th className="sumpTableHeaderCell">Duty Cycle</th> 
+    		            <th className="sumpTableHeaderCell">Duty Cycle</th> 
+                    </tr>
+                    <tr className="sumpTableHeaderRow">
+                        <th className="sumpTableHeaderCell" style={{ fontSize: "1vw" }}>MAX</th>
+                        <th className="sumpTableHeaderCell">{columnStats.datetime.max}</th>
+                        <th className="sumpTableHeaderCell">{columnStats.Hadc.max}</th>
+                        <th className="sumpTableHeaderCell">{columnStats.Ladc.max}</th>
+                        <th className="sumpTableHeaderCell">{columnStats.timeOn.max}</th>
+                        <th className="sumpTableHeaderCell">{columnStats.timeOff.max}</th>
+                        <th className="sumpTableHeaderCell">{columnStats.hoursOn.max}</th>
+    		            <th className="sumpTableHeaderCell">{columnStats.duty.max}</th> 
+                    </tr>
+                    <tr className="sumpTableHeaderRow">
+                        <th className="sumpTableHeaderCell" style={{ fontSize: "1vw" }}>AVG</th>
+                        <th className="sumpTableHeaderCell">{columnStats.datetime.avg}</th>
+                        <th className="sumpTableHeaderCell">{columnStats.Hadc.avg}</th>
+                        <th className="sumpTableHeaderCell">{columnStats.Ladc.avg}</th>
+                        <th className="sumpTableHeaderCell">{columnStats.timeOn.avg}</th>
+                        <th className="sumpTableHeaderCell">{columnStats.timeOff.avg}</th>
+                        <th className="sumpTableHeaderCell">{columnStats.hoursOn.avg}</th>
+    		            <th className="sumpTableHeaderCell">{columnStats.duty.avg}</th> 
+                    </tr>
+                    <tr className="sumpTableHeaderRow">
+                        <th className="sumpTableHeaderCell" style={{ fontSize: "1vw" }}>MIN</th>
+                        <th className="sumpTableHeaderCell">{columnStats.datetime.min}</th>
+                        <th className="sumpTableHeaderCell">{columnStats.Hadc.min}</th>
+                        <th className="sumpTableHeaderCell">{columnStats.Ladc.min}</th>
+                        <th className="sumpTableHeaderCell">{columnStats.timeOn.min}</th>
+                        <th className="sumpTableHeaderCell">{columnStats.timeOff.min}</th>
+                        <th className="sumpTableHeaderCell">{columnStats.hoursOn.min}</th>
+    		            <th className="sumpTableHeaderCell">{columnStats.duty.min}</th>  
                     </tr>
                 </thead>
                 <tbody className="sumpTableBody">
                     <tr className="sumpTableRowPlaceHolderControlBar"></tr>
                     {Array.isArray(sumpRecords) && sumpRecords.map((record) => (
                         <tr key={record.id} className="sumpTableRow">
+                            <td className="sumpTableCell"></td>
                             <td className="sumpTableCell">{record.payload?.datetime ? record.payload.datetime.split(' ')[1] : "N/a"}</td>
                             <td className="sumpTableCell">{record.payload?.Hadc ?? "N/a"}</td>
-			    <td className="sumpTableCell">{record.payload?.Ladc ?? "N/a"}</td>
+			                <td className="sumpTableCell">{record.payload?.Ladc ?? "N/a"}</td>
                             <td className="sumpTableCell">{record.payload?.timeOn ?? "N/a"}</td>
                             <td className="sumpTableCell">{record.payload?.timeOff ?? "N/a"}</td>
                             <td className="sumpTableCell">{record.payload?.hoursOn ?? "N/a"}</td>
-			    <td className="sumpTableCell">{record.payload?.duty ?? "N/a"}</td>
+			                <td className="sumpTableCell">{record.payload?.duty ?? "N/a"}</td>
                         </tr>
                     ))}
                 </tbody>
