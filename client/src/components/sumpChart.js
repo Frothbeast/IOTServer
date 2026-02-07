@@ -27,7 +27,15 @@ const SumpChart = ({ datasets, labels }) => {
         responsive: true,
         maintainAspectRatio: false,
         plugins: { 
-          legend: { display: true } 
+          legend: { display: true, 
+                    labels: {
+                      boxWidth: 10,
+                      boxHeight: 2,
+                      padding: 1,
+                      font: {size: 6}
+
+                    }
+          } 
         },
         scales: {
           x: { display: false },

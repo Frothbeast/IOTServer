@@ -18,12 +18,12 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
             datasets={[
               { 
                 label: "Ladc", 
-                color: "blue", 
+                color: "pink", 
                 data: sumpRecords.map(r => r.payload?.Ladc) 
               },
              { 
                 label: "Hadc", 
-                color: "red", 
+                color: "green", 
                 data: sumpRecords.map(r => r.payload?.Hadc) 
               }
             ]} 
@@ -35,7 +35,7 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
             datasets={[
               { 
                 label: "timeOn", 
-                color: "blue", 
+                color: "yellow", 
                 data: sumpRecords.map(r => r.payload?.timeOn) 
               },
               { 
@@ -52,7 +52,7 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
             datasets={[
               { 
                 label: "duty", 
-                color: "blue", 
+                color: "green", 
                 data: sumpRecords.map(r => r.payload?.duty) 
               }
             ]} 
@@ -64,7 +64,7 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
             datasets={[
               { 
                 label: "period", 
-                color: "blue", 
+                color: "red", 
                 data: sumpRecords.map(r => r.payload?.duty) 
               }
             ]} 
