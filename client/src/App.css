@@ -29,7 +29,7 @@ Global Fonts: @import or font-family declarations for the whole app.
   /* BEM-specific Helpers */
   --border-radius: 1px;
   /* Control Bar needs */
-  --controlBar-height: 20vw;
+  --controlBar-height: 10vw;
   /* sumpTable needs */
   --sumpTable__header-height: 10vw;
 }
