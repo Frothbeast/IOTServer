@@ -54,6 +54,6 @@ Global Fonts: @import or font-family declarations for the whole app.
 }
 
 *, *::before, *::after {
-  box-sizing: content-box;
+  box-sizing: border-box;
 }
 
