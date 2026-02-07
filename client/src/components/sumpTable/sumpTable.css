@@ -8,7 +8,7 @@
   overflow-y: auto;
   max-width: 100%;
   min-width: 400px;
-  border: 1px solid #999;
+  border: none;
 }
 .sumpTable {
   width: 100%;
@@ -23,20 +23,19 @@
   position: sticky;
   top: var(--controlBar-height);
   z-index: 10;
-  border-radius: var(--border-radius);
+  border-radius: 0;
   height: var(--sumpTable__header-height);
   padding: 0px;
 }
 .sumpTableHeaderCell {
   font-size: 2vw;
-  border-radius: var(--border-radius);
+  border-radius: 0;
   text-transform: uppercase;
   background-color: oklch(from var(--menu-background) clamp(0, l + 0.2, 1) c h);
   color: oklch(from var(--menu-colour) clamp(0, l + 0.2, 1) c h);
 }
 .sumpTableCell {
   font-size: 2vw;
-  border-bottom: 1px solid #444;
   font-family: monospace;
   letter-spacing: 1px;
   font-size: 2vw; /* Careful with this; it can cause issues on very small screens */
