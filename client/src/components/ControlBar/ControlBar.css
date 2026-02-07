@@ -55,4 +55,5 @@
   /* Optional: Center images and control their fit */
   object-fit: cover;
   z-index: -1;
+  font-size: 20cqw;
 }
