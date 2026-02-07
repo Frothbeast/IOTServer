@@ -29,9 +29,9 @@ Global Fonts: @import or font-family declarations for the whole app.
   /* BEM-specific Helpers */
   --border-radius: 1px;
   /* Control Bar needs */
-  --controlBar-height: 20vh;
+  --controlBar-height: 20vw;
   /* sumpTable needs */
-  --sumpTable__header-height: 10vh;
+  --sumpTable__header-height: 10vw;
 }
 
 @media (prefers-color-scheme: dark) {
