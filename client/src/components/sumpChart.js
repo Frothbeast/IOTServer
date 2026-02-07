@@ -24,7 +24,7 @@ const SumpChart = ({ data, label, color }) => {
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
+        plugins: { legend: { display: true } },
         scales: { x: { display: false }, y: { display: false } }
       }
     });

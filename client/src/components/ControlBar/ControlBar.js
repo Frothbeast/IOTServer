@@ -7,8 +7,9 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
     <header className="controlBar">
       <div className="brand">Sump</div>
       <select className="selectedHours" value={selectedHours} onChange={(e) => onHoursChange(Number(e.target.value))}>
-        <option value={1}>Last Hour</option>
-        <option value={24}>Last 24 Hours</option>
+        <option value={1}>Hour</option>
+        <option value={24}>Day</option>
+        <option value={168}>Week</option>
       </select>
 
         
