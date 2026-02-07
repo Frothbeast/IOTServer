@@ -57,3 +57,7 @@ Global Fonts: @import or font-family declarations for the whole app.
   box-sizing: border-box;
 }
 
+body {
+  margin: 0;
+  padding: 0;
+}
