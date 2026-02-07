@@ -11,20 +11,65 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
         <option value={24}>Day</option>
         <option value={168}>Week</option>
       </select>
-
         
       <div className="chartContainer1">
-        <SumpChart label="Hadc" color="red" data={sumpRecords.map(r => r.payload?.Hadc)} />
-      </div>
-      <div className="chartContainer2">
-        <SumpChart label="Ladc" color="blue" data={sumpRecords.map(r => r.payload?.Ladc)} />
-      </div>
+        <SumpChart 
+          labels={sumpRecords.map((_, i) => i)}
+            datasets={[
+              { 
+                label: "Ladc", 
+                color: "blue", 
+                data: sumpRecords.map(r => r.payload?.Ladc) 
+              },
+             { 
+                label: "Hadc", 
+                color: "red", 
+                data: sumpRecords.map(r => r.payload?.Hadc) 
+              }
+            ]} 
+          />
+        </div>
+        <div className="chartContainer2">
+          <SumpChart 
+            labels={sumpRecords.map((_, i) => i)}
+            datasets={[
+              { 
+                label: "timeOn", 
+                color: "blue", 
+                data: sumpRecords.map(r => r.payload?.timeOn) 
+              },
+              { 
+                label: "timeOff", 
+                color: "red", 
+                data: sumpRecords.map(r => r.payload?.timeOff) 
+              }
+            ]} 
+          />
+        </div>
         <div className="chartContainer3">
-        <SumpChart label="Ladc" color="yellow" data={sumpRecords.map(r => r.payload?.duty)} />
-      </div>
+          <SumpChart 
+            labels={sumpRecords.map((_, i) => i)}
+            datasets={[
+              { 
+                label: "duty", 
+                color: "blue", 
+                data: sumpRecords.map(r => r.payload?.duty) 
+              }
+            ]} 
+          />
+        </div>
         <div className="chartContainer4">
-        <SumpChart label="Ladc" color="green" data={sumpRecords.map(r => r.payload?.timeOn)} />
-      </div>
+          <SumpChart 
+            labels={sumpRecords.map((_, i) => i)}
+            datasets={[
+              { 
+                label: "period", 
+                color: "blue", 
+                data: sumpRecords.map(r => r.payload?.duty) 
+              }
+            ]} 
+          />
+        </div>
 
       <div className="lastRun">Last Run: {columnStats?.lastDatetime ?? "N/a"}</div>
       <button className="sidebarButton" onClick={toggleSidebar}>
