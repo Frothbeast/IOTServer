@@ -6,7 +6,7 @@ import ControlBar from './components/ControlBar/ControlBar';
 
 // Math library stays outside for clean access
 const StatsLib = {
-  avg: (arr) => arr.length ? (arr.reduce((a, b) => a + b, 0) / arr.length).toFixed(2) : 0,
+  avg: (arr) => arr.length ? (arr.reduce((a, b) => a + b, 0) / arr.length).toFixed(0) : 0,
   max: (arr) => arr.length ? Math.max(...arr) : 0,
   min: (arr) => arr.length ? Math.min(...arr) : 0,
 };
