@@ -44,7 +44,7 @@
 }
 
 .brand {
-    position: absolute;
+  position: absolute;
   top: 0;
   left: 0;
   bottom: 0;
@@ -75,6 +75,7 @@
 }
 
 .sidebarButton {
+  position: absolute;
   top:50%;
   left:30%;
   right:70%;
@@ -83,6 +84,7 @@
 }
 
 .lastRun{
+  position: absolute;
   top:0;
   left:30%;
   right:70%;
