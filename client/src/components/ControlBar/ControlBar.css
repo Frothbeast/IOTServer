@@ -9,7 +9,7 @@
   /* REMOVE 'height: 60px' from here */
   height: var(--controlBar-height); /* Let the content determine the height */
   
-  background: rgba(44, 62, 80, 0.9);
+  background: rgba(44, 62, 80, 0.541);
   /* ... other styles (padding, flex, etc.) ... */
 }
 
@@ -23,7 +23,6 @@
   gap: 20px;
   padding: 10px;
   background: #f8f9fa;
-  border-bottom: 1px solid #ddd;
 }
 
 .sidebar {
@@ -43,3 +42,53 @@
   right: 0; /* Slide in */
 }
 
+.brand {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  /* Ensure it fills the entire space */
+  width: 30%;
+  height: 100%;
+ 
+  object-fit: cover;
+  z-index: -1;
+  font-size: 8cqw;
+  text-align: center;
+}
+
+.selectedHours {
+  position: absolute;
+  bottom: 0; right: 0; 
+  width: 30%; height: 50%;
+  display: flex;
+  align-items: center; /* Vertically centers the text */
+  justify-content: flex-end;
+  font-size: 4cqw;
+  background-color: rgba(44, 62, 80, 0.541);
+  text-align: center;
+}
+
+.selectedHours :hover{
+  background-color: rgba(211, 216, 221, 0.541);
+}
+
+.sidebarButton {
+  position: absolute;
+  top:50%;
+  left:30%;
+  right:30%;
+  bottom: 0;
+  object-fit: cover;
+  font-size: 3cqw;
+}
+
+.lastRun{
+  position: absolute;
+  top:0;
+  left:30%;
+  right:30%;
+  bottom: 50%;
+  object-fit: cover;
+  font-size: 3cqw;
+}

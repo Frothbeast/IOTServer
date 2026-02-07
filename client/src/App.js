@@ -6,7 +6,7 @@ import ControlBar from './components/ControlBar/ControlBar';
 
 // Math library stays outside for clean access
 const StatsLib = {
-  avg: (arr) => arr.length ? (arr.reduce((a, b) => a + b, 0) / arr.length).toFixed(2) : 0,
+  avg: (arr) => arr.length ? (arr.reduce((a, b) => a + b, 0) / arr.length).toFixed(0) : 0,
   max: (arr) => arr.length ? Math.max(...arr) : 0,
   min: (arr) => arr.length ? Math.min(...arr) : 0,
 };
@@ -43,7 +43,7 @@ function App() {
         const hoursOns = sumpRecords.map(r => parseFloat(r.payload?.hoursOn)).filter(v => !isNaN(v));
         const duties = sumpRecords.map(r => parseFloat(r.payload?.duty)).filter(v => !isNaN(v));
         const datetime = sumpRecords.map(r => r.payload?.datetime);
-        const lastDatetime = datetime[datetime.length - 1];
+        const lastDatetime = datetime[0];
         const avgTimeString = formatMsToTime(StatsLib.avg(datetime.slice(1).map((v, i) => new Date(datetime[i]).getTime() - new Date(v).getTime())));
         const maxTimeString = formatMsToTime(StatsLib.max(datetime.slice(1).map((v, i) => new Date(datetime[i]).getTime() - new Date(v).getTime())));
         const minTimeString = formatMsToTime(StatsLib.min(datetime.slice(1).map((v, i) => new Date(datetime[i]).getTime() - new Date(v).getTime())));
