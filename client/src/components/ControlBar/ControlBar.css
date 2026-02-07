@@ -61,26 +61,28 @@
   position: absolute;
   bottom: 0; right: 0; 
   width: 30%; height: 50%;
-  display: flex;
-  align-items: center; /* Vertically centers the text */
-  justify-content: flex-end;
-  font-size: 4cqw;
-  background-color: rgba(44, 62, 80, 0.541);
-  text-align: center;
+  position: absolute;
+  top:50%;
+  left:50%;
+  right:30%;
+  bottom: 75%;
+  object-fit: cover;
+  font-size: 2cqw;
 }
 
 .selectedHours :hover{
   background-color: rgba(211, 216, 221, 0.541);
+  color: chartreuse;
 }
 
 .sidebarButton {
   position: absolute;
   top:50%;
   left:30%;
-  right:30%;
-  bottom: 0;
+  right:50%;
+  bottom: 75%;
   object-fit: cover;
-  font-size: 3cqw;
+  font-size: 2cqw;
 }
 
 .lastRun{
