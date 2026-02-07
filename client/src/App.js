@@ -1,4 +1,3 @@
-// App.js
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { useSumpData } from './hooks/useSumpData';
 import SumpTable from './components/sumpTable/sumpTable';
@@ -11,7 +10,6 @@ function App() {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const { sumpRecords, isLoading } = useSumpData(selectedHours);
 
-  // App only handles the "orchestration" of data
   const columnStats = useMemo(() => calculateColumnStats(sumpRecords), [sumpRecords]);
 
   if (isLoading) return <div className="loader">Loading...</div>;
@@ -29,12 +27,7 @@ function App() {
       <main>
         <div className="tableWrapper">
           <SumpTable sumpRecords={sumpRecords} columnStats={columnStats} />
-          <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
-            <div class="chartContainer1">Chart 1</div>
-            <div class="chartContainer2">Chart 2</div>
-            <div class="chartContainer3">Chart 3</div>
-            <div class="chartContainer4">Chart 4</div>
-          </div>
+          <Sidebar isOpen={isSidebarOpen} sumpRecords={sumpRecords} />
         </div>
       </main>
     </div>
