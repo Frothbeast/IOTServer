@@ -29,7 +29,7 @@ function App() {
       <main>
         <div className="tableWrapper">
           <SumpTable sumpRecords={sumpRecords} columnStats={columnStats} />
-          <div className="sidebar">
+          <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
             <div class="chartContainer1">Chart 1</div>
             <div class="chartContainer2">Chart 2</div>
             <div class="chartContainer3">Chart 3</div>
