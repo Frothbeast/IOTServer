@@ -81,6 +81,7 @@
   right:30%;
   bottom: 0;
   object-fit: cover;
+  font-size: 3cqw;
 }
 
 .lastRun{
@@ -90,4 +91,5 @@
   right:30%;
   bottom: 50%;
   object-fit: cover;
+  font-size: 3cqw;
 }
