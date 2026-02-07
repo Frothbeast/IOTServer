@@ -32,3 +32,4 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
     </header>
   );
 };
+export default ControlBar;
