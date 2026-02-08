@@ -27,14 +27,14 @@
   top: 10vw;
   left: 0;
   right: 50%;
-  bottom: calc(50% + 5vw);
+  bottom: calc(50% - 5vw);
 }
 
 .sidebar .chartContainer2 {
   top: 10vw;
   left: 50%;
   right: 0;
-  bottom: calc(50% + 5vw);
+  bottom: calc(50% - 5vw);
 }
 
 .sidebar .chartContainer3 {
