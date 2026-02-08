@@ -16,13 +16,13 @@ const Sidebar = ({ isOpen, sumpRecords }) => {
             boxHeight: 2,
             padding: 1,
             font: {size: 22},
-            color: green
+            color: 'green'
           }
         } 
       },
       scales: {
         x: { display: false }, 
-        y: { display: true, color: 'green', grace: '10%',grid: {
+        y: { display: true, ticks: {color: 'green'}, grace: '10%',grid: {
             color: 'rgb(255, 255, 255)' 
           }
         }
@@ -51,7 +51,7 @@ const Sidebar = ({ isOpen, sumpRecords }) => {
       <div className="chartContainer3">
         <SumpChart 
           labels={sumpRecords.map((_, i) => i)}
-          datasets={[{ label: "duty", color: "green", data: sumpRecords.map(r => r.payload?.duty) }]}
+          datasets={[{ label: "duty", color: 'green', data: sumpRecords.map(r => r.payload?.duty) }]}
           options={sidebarChartOptions} 
         />
       </div>
