@@ -16,7 +16,13 @@
 .sidebar.open {
   right: 0; /* Slide in */
 }
-
+.sidebar-content {
+  container-type: inline-size;
+  container-name: sidebarArea;
+  width: 100%;
+  height: 100%;
+  position: relative; /* Charts are absolute to this */
+}
 /* Shared styles for all containers */
 .sidebar [class^="chartContainer"] {
   position: absolute;
@@ -55,29 +61,29 @@
   bottom: 0;
 }
 
-@container bar (max-width: 600px) {
-  :is(.sidebar *) .chartContainer1 {
+@container sidebarArea (max-width: 600px) {
+  .chartContainer1 {
     top: 10vw;
     left: 0;
     right: 0;
     bottom: 67.5vw;
   }
 
-  :is(.sidebar *) .chartContainer2 {
+  .chartContainer2 {
     top: 32.5vw;
     left: 0;
     right: 0;
     bottom: 45vw;
   }
 
-  :is(.sidebar *) .chartContainer3 {
+  .chartContainer3 {
     top: 55vw;
     left: 0%;
     right: 0;
     bottom: 22.5vw;
   }
 
-  :is(.sidebar *) .chartContainer4 {
+  .chartContainer4 {
     top: 77.5vw; 
     left: 0;
     right: 0;
