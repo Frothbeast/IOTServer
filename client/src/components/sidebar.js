@@ -12,17 +12,21 @@ const Sidebar = ({ isOpen, sumpRecords }) => {
           position: 'top', 
           align: 'start',   
           labels: {
-            boxWidth: 20,
+            boxWidth: 40,
             boxHeight: 2,
             padding: 1,
-            font: {size: 18}
+            font: {size: 22}
           }
         } 
       },
       scales: {
-        x: { display: true }, // Example: Show X axis in sidebar but not in control bar
-        y: { display: false, grace: '10%' }
+        x: { display: false }, 
+        y: { display: true, grace: '10%',grid: {
+            color: 'rgba(3, 151, 40, 0.2)' 
+          }
+        }
       }
+
     };
 
   return (
