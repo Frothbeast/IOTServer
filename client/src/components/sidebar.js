@@ -56,9 +56,16 @@ const Sidebar = ({ isOpen, sumpRecords }) => {
         />
       </div>
       <div className="chartContainer4">
-        <SumpChart 
+        <SumpChart
           labels={sumpRecords.map((_, i) => i)}
-          datasets={[{ label: "period", color: "red", data: sumpRecords.map(r => r.payload?.duty) }]} 
+          datasets={[{
+            label: "period",color: "red",
+            data: sumpRecords.map((r, i) => {if (i === 0) return 0;
+              const current = new Date(r.payload?.datetime).getTime();
+              const previous = new Date(sumpRecords[i - 1].payload?.datetime).getTime();
+              return (current - previous) / 60000;
+            })
+          }]}
           options={sidebarChartOptions}
         />
       </div>
