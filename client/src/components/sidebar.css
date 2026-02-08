@@ -61,28 +61,28 @@
 
 @container sidebarArea (max-width: 600px) {
   .sidebar-content .chartContainer1 {
-    top: 10vw;
+    top: calc(10vw);
     left: 0;
     right: 0;
-    bottom: 67.5vw;
+    bottom: calc(75% + 7.5vw);
   }
 
   .sidebar-content .chartContainer2 {
-    top: 32.5vw;
+    top: calc(75% -7.5vw);
     left: 0;
     right: 0;
-    bottom: 45vw;
+    bottom: calc(50% -5vw);
   }
 
   .sidebar-content .chartContainer3 {
-    top: 55vw;
+    top: calc(50% - 5vw);
     left: 0%;
     right: 0;
-    bottom: 22.5vw;
+    bottom: calc(22.5% -2.5vw);
   }
 
   .sidebar-content .chartContainer4 {
-    top: 77.5vw; 
+    top: calc(22.5% - 2.5vw); 
     left: 0;
     right: 0;
     bottom: 0;
