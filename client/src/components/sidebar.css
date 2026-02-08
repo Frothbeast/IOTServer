@@ -1,4 +1,6 @@
 .sidebar {
+  container-type: inline-size;
+  container-name: bar;
   position: fixed;
   right: 100%; 
   top: 0;
@@ -53,7 +55,7 @@
   bottom: 0;
 }
 
-@container (max-width: 600px) {
+@container bar (max-width: 600px) {
   .sidebar .chartContainer1 {
     top: 10vw;
     left: 0;
