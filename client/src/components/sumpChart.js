@@ -7,28 +7,48 @@ const SumpChart = ({ datasets, labels, options }) => {
 
   useEffect(() => {
     const ctx = chartRef.current.getContext('2d');
-    if (chartInstance.current) chartInstance.current.destroy();
 
-    chartInstance.current = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: labels,
-        datasets: datasets.map(ds => ({
-          label: ds.label,
-          data: ds.data,
-          borderColor: ds.color,
-          borderWidth: 2,
-          pointRadius: 0,
-          fill: false,
-          tension: 0.4
-        }))
-      },
-      options: options
+    if (chartInstance.current) {
+      chartInstance.current.data.labels = labels;
+      datasets.forEach((ds, index) => {
+        if (chartInstance.current.data.datasets[index]) {
+          chartInstance.current.data.datasets[index].data = ds.data;
+          chartInstance.current.data.datasets[index].label = ds.label;
+          chartInstance.current.data.datasets[index].borderColor = ds.color;
+        }
+      });
+      chartInstance.current.options = options;
+      chartInstance.current.update();
+    } else {
+
+      chartInstance.current = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: datasets.map(ds => ({
+            label: ds.label,
+            data: ds.data,
+            borderColor: ds.color,
+            borderWidth: 2,
+            pointRadius: 0,
+            fill: false,
+            tension: 0.4
+          }))
+        },
+        options: options
+      });
     }
-  );
 
-    return () => chartInstance.current?.destroy();
-  }, [datasets, labels]);
+  }, [datasets, labels, options]);
+
+  useEffect(() => {
+    return () => {
+      if (chartInstance.current) {
+        chartInstance.current.destroy();
+        chartInstance.current = null;
+      }
+    };
+  }, []);
 
   return <canvas ref={chartRef} />;
 };

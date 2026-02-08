@@ -5,33 +5,28 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
   const controlBarChartOptions = ({
     responsive: true,
     maintainAspectRatio: false,
-    plugins: { 
-      legend: { 
-        display: true,
-        position: 'top', 
-        align: 'start',   
-        labels: {
-          boxWidth: 10,
-          boxHeight: 2,
-          padding: 1,
-          font: {size: 10}
-        }
+    plugins: {
+      legend:{
+        display: false
       } 
     },
     layout: {
-      padding: {
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0
-      }
+      padding: 0
     },
     scales: {
-      x: { display: false },
-      y: {display: false,
-        grace: '10%'
+      x: {
+        display: false 
+      },
+      y: {
+        display: false,
+      }
+    },
+    elements: {
+      point: {
+        radius: 0
       }
     }
+    
   })
   
   return (
