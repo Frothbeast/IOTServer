@@ -56,9 +56,9 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
                 label: "Hadc", 
                 color: "green", 
                 data: sumpRecords.map(r => r.payload?.Hadc),
-              },
-              {options:controlBarChartOptions} 
-            ]} 
+              }
+            ]}
+            options={controlBarChartOptions}  
           />
         </div>
         <div className="chartContainer2">
@@ -74,9 +74,9 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
                 label: "timeOff", 
                 color: "red", 
                 data: sumpRecords.map(r => r.payload?.timeOff),  
-              },
-              {options:controlBarChartOptions} 
+              } 
             ]} 
+            options={controlBarChartOptions}  
           />
         </div>
         <div className="chartContainer3">
@@ -87,9 +87,9 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
                 label: "duty", 
                 color: "green", 
                 data: sumpRecords.map(r => r.payload?.duty) 
-              },
-              {options:controlBarChartOptions} 
-            ]} 
+              } 
+            ]}
+            options={controlBarChartOptions}  
           />
         </div>
         <div className="chartContainer4">
@@ -100,9 +100,9 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
                 label: "period", 
                 color: "red", 
                 data: sumpRecords.map(r => r.payload?.duty) 
-              },
-              {options:controlBarChartOptions} 
-            ]} 
+              } 
+            ]}
+            options={controlBarChartOptions}   
           />
         </div>
 
