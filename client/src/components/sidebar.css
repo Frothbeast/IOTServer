@@ -56,28 +56,28 @@
 }
 
 @container bar (max-width: 600px) {
-  .chartContainer1 {
+  :is(.sidebar *) .chartContainer1 {
     top: 10vw;
     left: 0;
     right: 0;
     bottom: 67.5vw;
   }
 
-  .chartContainer2 {
+  :is(.sidebar *) .chartContainer2 {
     top: 32.5vw;
     left: 0;
     right: 0;
     bottom: 45vw;
   }
 
-  .chartContainer3 {
+  :is(.sidebar *) .chartContainer3 {
     top: 55vw;
     left: 0%;
     right: 0;
     bottom: 22.5vw;
   }
 
-  .chartContainer4 {
+  :is(.sidebar *) .chartContainer4 {
     top: 77.5vw; 
     left: 0;
     right: 0;
