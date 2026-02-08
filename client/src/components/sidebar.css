@@ -1,6 +1,4 @@
 .sidebar {
-  container-type: inline-size;
-  container-name: bar;
   position: fixed;
   right: 100%; 
   top: 0;
@@ -14,16 +12,16 @@
 }
 
 .sidebar.open {
-  right: 0; /* Slide in */
+  right: 0; 
 }
 .sidebar-content {
   container-type: inline-size;
   container-name: sidebarArea;
   width: 100%;
   height: 100%;
-  position: relative; /* Charts are absolute to this */
+  position: relative; 
 }
-/* Shared styles for all containers */
+
 .sidebar [class^="chartContainer"] {
   position: absolute;
   object-fit: cover;
@@ -33,28 +31,28 @@
 }
 
 /* Specific positioning */
-.sidebar .chartContainer1 {
+.sidebar-content .chartContainer1 {
   top: 10vw;
   left: 0;
   right: 50%;
   bottom: calc(50% - 5vw);
 }
 
-.sidebar .chartContainer2 {
+.sidebar-content .chartContainer2 {
   top: 10vw;
   left: 50%;
   right: 0;
   bottom: calc(50% - 5vw);
 }
 
-.sidebar .chartContainer3 {
+.sidebar-content .chartContainer3 {
   top: calc(50% + 5vw);
   left: 0%;
   right: 50%;
   bottom: 0;
 }
 
-.sidebar .chartContainer4 {
+.sidebar-content .chartContainer4 {
   top: calc(50% + 5vw); 
   left: 50%;
   right: 0;
@@ -62,28 +60,28 @@
 }
 
 @container sidebarArea (max-width: 600px) {
-  .chartContainer1 {
+  .sidebar-content .chartContainer1 {
     top: 10vw;
     left: 0;
     right: 0;
     bottom: 67.5vw;
   }
 
-  .chartContainer2 {
+  .sidebar-content .chartContainer2 {
     top: 32.5vw;
     left: 0;
     right: 0;
     bottom: 45vw;
   }
 
-  .chartContainer3 {
+  .sidebar-content .chartContainer3 {
     top: 55vw;
     left: 0%;
     right: 0;
     bottom: 22.5vw;
   }
 
-  .chartContainer4 {
+  .sidebar-content .chartContainer4 {
     top: 77.5vw; 
     left: 0;
     right: 0;
