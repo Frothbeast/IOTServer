@@ -64,25 +64,25 @@
     top: calc(10vw);
     left: 0;
     right: 0;
-    bottom: calc(75% + 7.5vw);
+    bottom: calc(75% - 7.5vw);
   }
 
   .sidebar-content .chartContainer2 {
-    top: calc(75% -7.5vw);
+    top: calc(75% + 2.5vw);
     left: 0;
     right: 0;
     bottom: calc(50% -5vw);
   }
 
   .sidebar-content .chartContainer3 {
-    top: calc(50% - 5vw);
+    top: calc(50% + 5vw);
     left: 0%;
     right: 0;
     bottom: calc(22.5% -2.5vw);
   }
 
   .sidebar-content .chartContainer4 {
-    top: calc(22.5% - 2.5vw); 
+    top: calc(75.5% + 7.5vw); 
     left: 0;
     right: 0;
     bottom: 0;
