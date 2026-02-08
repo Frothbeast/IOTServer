@@ -2,6 +2,39 @@ import SumpChart from '../sumpChart';
 import './ControlBar.css';
 
 const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, toggleSidebar, isSidebarOpen }) => {
+  const controlBarChartOptions = ({
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { 
+      legend: { 
+        display: true,
+        position: 'top', 
+        align: 'start',   
+        labels: {
+          boxWidth: 10,
+          boxHeight: 2,
+          padding: 1,
+          font: {size: 10}
+        }
+      } 
+    },
+    layout: {
+      padding: {
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0
+      }
+    }
+
+    scales: {
+      x: { display: false },
+      y: {display: false,
+        grace: '10%'
+      }
+    }
+  })
+  
   return (
     <header className="controlBar">
       <div className="brand">Sump</div>
@@ -18,13 +51,14 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
               { 
                 label: "Ladc", 
                 color: "pink", 
-                data: sumpRecords.map(r => r.payload?.Ladc) 
+                data: sumpRecords.map(r => r.payload?.Ladc),
               },
              { 
                 label: "Hadc", 
                 color: "green", 
-                data: sumpRecords.map(r => r.payload?.Hadc) 
-              }
+                data: sumpRecords.map(r => r.payload?.Hadc),
+              },
+              {options:controlBarChartOptions} 
             ]} 
           />
         </div>
@@ -35,13 +69,14 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
               { 
                 label: "timeOn", 
                 color: "yellow", 
-                data: sumpRecords.map(r => r.payload?.timeOn) 
+                data: sumpRecords.map(r => r.payload?.timeOn), 
               },
               { 
                 label: "timeOff", 
                 color: "red", 
-                data: sumpRecords.map(r => r.payload?.timeOff) 
-              }
+                data: sumpRecords.map(r => r.payload?.timeOff),  
+              },
+              {options:controlBarChartOptions} 
             ]} 
           />
         </div>
@@ -53,7 +88,8 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
                 label: "duty", 
                 color: "green", 
                 data: sumpRecords.map(r => r.payload?.duty) 
-              }
+              },
+              {options:controlBarChartOptions} 
             ]} 
           />
         </div>
@@ -65,7 +101,8 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
                 label: "period", 
                 color: "red", 
                 data: sumpRecords.map(r => r.payload?.duty) 
-              }
+              },
+              {options:controlBarChartOptions} 
             ]} 
           />
         </div>
