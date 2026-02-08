@@ -22,7 +22,7 @@ const Sidebar = ({ isOpen, sumpRecords }) => {
       scales: {
         x: { display: false }, 
         y: { display: true, grace: '10%',grid: {
-            color: 'rgba(3, 151, 40, 0.2)' 
+            color: 'rgb(255, 255, 255)' 
           }
         }
       }
