@@ -63,7 +63,7 @@ const Sidebar = ({ isOpen, sumpRecords }) => {
             data: sumpRecords.map((r, i) => {if (i === 0) return 0;
               const current = new Date(r.payload?.datetime).getTime();
               const previous = new Date(sumpRecords[i - 1].payload?.datetime).getTime();
-              return (current - previous) / 60000;
+              return ( previous -current) / 60000;
             })
           }]}
           options={sidebarChartOptions}
