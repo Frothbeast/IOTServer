@@ -54,8 +54,7 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
                 data: sumpRecords.map(r => r.payload?.Hadc),
               }
             ]}
-            options={getOptions(0, 1024)}
-            // options={controlBarChartOptions}  
+            options={getOptions(0, 1024)}  
           />
         </div>
         <div className="chartContainer2">
@@ -73,8 +72,7 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
                 data: sumpRecords.map(r => r.payload?.timeOff),  
               } 
             ]} 
-            options={getOptions(0, 1000)}
-            // options={controlBarChartOptions}  
+            options={getOptions(0, 1000)} 
           />
         </div>
         <div className="chartContainer3">
@@ -87,22 +85,22 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
                 data: sumpRecords.map(r => r.payload?.duty) 
               } 
             ]}
-            options={getOptions(0, 100)}
-            // options={controlBarChartOptions}  
+            options={getOptions(0, 100)}  
           />
         </div>
         <div className="chartContainer4">
           <SumpChart 
             labels={sumpRecords.map((_, i) => i)}
-            datasets={[
-              { 
-                label: "period", 
-                color: "red", 
-                data: sumpRecords.map(r => r.payload?.duty) 
-              } 
+            datasets={[{
+              label: "period",color: "red",
+              data: sumpRecords.slice(1).map((r, i) => {
+                const current = new Date(r.payload?.datetime).getTime();
+                const previous = new Date(sumpRecords[i].payload?.datetime).getTime();
+                return ( previous -current) / 60000;
+              })
+              }
             ]}
-            options={getOptions(0, 100)}
-            // options={controlBarChartOptions}   
+            options={getOptions(0, 100)}   
           />
         </div>
 
