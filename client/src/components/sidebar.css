@@ -20,7 +20,7 @@
   top:10vw;
   left:0;
   right:50%;
-  bottom: 50%-5vw;
+  bottom: calc(50%-5vw);
   object-fit: cover;
 }
 .sidebar .chartContainer2{
@@ -28,12 +28,12 @@
   top:10vw;
   left:50%;
   right:0;
-  bottom: 50%-5vw;
+  bottom: calc(50%-5vw);
   object-fit: cover;
 }
 .sidebar .chartContainer3{
   position: absolute;
-  top:50%-5vw;
+  top:calc(50%-5vw);
   left:0%;
   right:50%;
   bottom: 0;
@@ -41,7 +41,7 @@
 }
 .sidebar .chartContainer4{
   position: absolute;
-  top:50%-5vw; 
+  top:calc(50%-5vw); 
   left:50%;
   right:0;
   bottom: 0;
