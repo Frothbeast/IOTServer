@@ -16,7 +16,7 @@ const Sidebar = ({ isOpen, sumpRecords }) => {
             boxHeight: 2,
             padding: 1,
             font: {size: 22},
-            color: 'grey'
+            color: 'lightgrey'
           }
         } 
       },
@@ -60,12 +60,13 @@ const Sidebar = ({ isOpen, sumpRecords }) => {
           labels={sumpRecords.map((_, i) => i)}
           datasets={[{
             label: "period",color: "red",
-            data: sumpRecords.map((r, i) => {if (i === 0) return 0;
+            data: sumpRecords.slice(1).map((r, i) => {
               const current = new Date(r.payload?.datetime).getTime();
-              const previous = new Date(sumpRecords[i - 1].payload?.datetime).getTime();
+              const previous = new Date(sumpRecords[i].payload?.datetime).getTime();
               return ( previous -current) / 60000;
             })
-          }]}
+            }
+          ]}
           options={sidebarChartOptions}
         />
       </div>
