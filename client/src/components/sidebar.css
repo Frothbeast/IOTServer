@@ -52,3 +52,33 @@
   right: 0;
   bottom: 0;
 }
+
+@container (max-width: 600px) {
+  .sidebar .chartContainer1 {
+    top: 10vw;
+    left: 0;
+    right: 0;
+    bottom: 67.5vw;
+  }
+
+  .sidebar .chartContainer2 {
+    top: 32.5vw;
+    left: 0;
+    right: 0;
+    bottom: 45vw;
+  }
+
+  .sidebar .chartContainer3 {
+    top: 55vw;
+    left: 0%;
+    right: 0;
+    bottom: 22.5vw;
+  }
+
+  .sidebar .chartContainer4 {
+    top: 77.5vw; 
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+}
