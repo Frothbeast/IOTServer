@@ -32,7 +32,7 @@ const Sidebar = ({ isOpen, sumpRecords }) => {
 
   return (
     <div className={`sidebar ${isOpen ? 'open' : ''}`}>
-      <div className="sidebar-content">>
+      <div className="sidebar-content">
         <div className="chartContainer1">
           <SumpChart 
             labels={sumpRecords.map((_, i) => i)}
