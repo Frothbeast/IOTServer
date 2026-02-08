@@ -19,7 +19,7 @@
 .sidebar [class^="chartContainer"] {
   position: absolute;
   object-fit: cover;
-  border: 1px solid darkgray;
+  border: 1px solid darkgreen;
   border-radius: 1px;
 }
 

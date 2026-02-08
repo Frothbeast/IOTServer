@@ -15,13 +15,14 @@ const Sidebar = ({ isOpen, sumpRecords }) => {
             boxWidth: 40,
             boxHeight: 2,
             padding: 1,
-            font: {size: 22}
+            font: {size: 22},
+            color: green
           }
         } 
       },
       scales: {
         x: { display: false }, 
-        y: { display: true, grace: '10%',grid: {
+        y: { display: true, color: green, grace: '10%',grid: {
             color: 'rgb(255, 255, 255)' 
           }
         }
