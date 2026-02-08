@@ -1,5 +1,5 @@
 
-.chartContainer1{
+.sidebar .chartContainer1{
   position: absolute;
   top:0;
   left:0;
@@ -7,7 +7,7 @@
   bottom: 50%;
   object-fit: cover;
 }
-.chartContainer2{
+.sidebar .chartContainer2{
   position: absolute;
   top:0;
   left:0;
@@ -15,7 +15,7 @@
   bottom: 50%;
   object-fit: cover;
 }
-.chartContainer3{
+.sidebar .chartContainer3{
   position: absolute;
   top:50%;
   left:0%;
@@ -23,7 +23,7 @@
   bottom: 0;
   object-fit: cover;
 }
-.chartContainer4{
+.sidebar .chartContainer4{
   position: absolute;
   top:50%; 
   left:50%;
