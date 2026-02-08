@@ -2,23 +2,25 @@ import SumpChart from '../sumpChart';
 import './ControlBar.css';
 
 const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, toggleSidebar, isSidebarOpen }) => {
-  const controlBarChartOptions = ({
+  const getOptions = (min, max) => ({
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
-      legend:{
+      legend: {
         display: false
-      } 
+      }
     },
     layout: {
       padding: 0
     },
     scales: {
       x: {
-        display: false 
+        display: false
       },
       y: {
         display: false,
+        min: min,
+        max: max
       }
     },
     elements: {
@@ -26,9 +28,8 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
         radius: 0
       }
     }
-    
-  })
-  
+  });
+
   return (
     <header className="controlBar">
       <div className="brand">Sump</div>
@@ -53,7 +54,8 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
                 data: sumpRecords.map(r => r.payload?.Hadc),
               }
             ]}
-            options={controlBarChartOptions}  
+            options={getOptions(0, 1024)}
+            // options={controlBarChartOptions}  
           />
         </div>
         <div className="chartContainer2">
@@ -71,7 +73,8 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
                 data: sumpRecords.map(r => r.payload?.timeOff),  
               } 
             ]} 
-            options={controlBarChartOptions}  
+            options={getOptions(0, 1000)}
+            // options={controlBarChartOptions}  
           />
         </div>
         <div className="chartContainer3">
@@ -84,7 +87,8 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
                 data: sumpRecords.map(r => r.payload?.duty) 
               } 
             ]}
-            options={controlBarChartOptions}  
+            options={getOptions(0, 100)}
+            // options={controlBarChartOptions}  
           />
         </div>
         <div className="chartContainer4">
@@ -97,7 +101,8 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
                 data: sumpRecords.map(r => r.payload?.duty) 
               } 
             ]}
-            options={controlBarChartOptions}   
+            options={getOptions(0, 100)}
+            // options={controlBarChartOptions}   
           />
         </div>
 
@@ -108,4 +113,5 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
     </header>
   );
 };
+
 export default ControlBar;
