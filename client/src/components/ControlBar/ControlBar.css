@@ -20,23 +20,6 @@
   background: #f8f9fa;
 }
 
-.sidebar {
-  position: fixed;
-  right: -75cqw; 
-  top: 0;
-  width: 75cqw;
-  height: 100%;
-  background-color: var(--menu-background);
-  box-shadow: -2px 0 5px rgba(0,0,0,0.2);
-  transition: right 0.3s ease;
-  padding: 20px;
-  z-index: 200;
-}
-
-.sidebar.open {
-  right: 0; /* Slide in */
-}
-
 .brand {
   position: absolute;
   top: 0;

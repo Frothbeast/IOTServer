@@ -12,10 +12,10 @@ const Sidebar = ({ isOpen, sumpRecords }) => {
           position: 'top', 
           align: 'start',   
           labels: {
-            boxWidth: 10,
+            boxWidth: 20,
             boxHeight: 2,
             padding: 1,
-            font: {size: 10}
+            font: {size: 18}
           }
         } 
       },
