@@ -68,7 +68,7 @@
   }
 
   .sidebar-content .chartContainer2 {
-    top: calc(75% + 2.5vw);
+    top: calc(25% + 2.5vw);
     left: 0;
     right: 0;
     bottom: calc(50% -5vw);
