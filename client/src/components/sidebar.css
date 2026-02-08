@@ -26,8 +26,8 @@
 .sidebar .chartContainer2{
   position: absolute;
   top:0;
-  left:0;
-  right:50%;
+  left:50%;
+  right:0;
   bottom: 50%;
   object-fit: cover;
 }
