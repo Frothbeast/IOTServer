@@ -15,36 +15,38 @@
   right: 0; /* Slide in */
 }
 
-.sidebar .chartContainer1{
+/* Shared styles for all containers */
+.sidebar [class^="chartContainer"] {
   position: absolute;
-  top:10vw;
-  left:0;
-  right:50%;
-  bottom: calc(50%-5vw);
   object-fit: cover;
-}
-.sidebar .chartContainer2{
-  position: absolute;
-  top:10vw;
-  left:50%;
-  right:0;
-  bottom: calc(50%-5vw);
-  object-fit: cover;
-}
-.sidebar .chartContainer3{
-  position: absolute;
-  top:calc(50%-5vw);
-  left:0%;
-  right:50%;
-  bottom: 0;
-  object-fit: cover;
-}
-.sidebar .chartContainer4{
-  position: absolute;
-  top:calc(50%-5vw); 
-  left:50%;
-  right:0;
-  bottom: 0;
-  object-fit: cover;
+  border: 1px solid white;
 }
 
+/* Specific positioning */
+.sidebar .chartContainer1 {
+  top: 10vw;
+  left: 0;
+  right: 50%;
+  bottom: calc(50% + 5vw);
+}
+
+.sidebar .chartContainer2 {
+  top: 10vw;
+  left: 50%;
+  right: 0;
+  bottom: calc(50% + 5vw);
+}
+
+.sidebar .chartContainer3 {
+  top: calc(50% + 5vw);
+  left: 0%;
+  right: 50%;
+  bottom: 0;
+}
+
+.sidebar .chartContainer4 {
+  top: calc(50% + 5vw); 
+  left: 50%;
+  right: 0;
+  bottom: 0;
+}
