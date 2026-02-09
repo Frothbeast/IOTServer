@@ -98,7 +98,7 @@
 .sumpTableCell1 {
   width: min-content;
 }
-.sumpTableCell2 {
+.sumpTableCell2,[class^="sumpTableHeaderCell2Row"] {
   width: 11vw;
 }
 .sumpTablePlaceholder{
