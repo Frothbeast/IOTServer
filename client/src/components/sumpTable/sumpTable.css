@@ -27,7 +27,7 @@
   height: var(--sumpTable__header-height);
   padding: 0px;
 }
-.sumpTableHeaderCell {
+.sumpTableHeaderCell, .sumpTableCell1 {
   font-size: 2vw;
   border-radius: 0;
   text-transform: uppercase;
