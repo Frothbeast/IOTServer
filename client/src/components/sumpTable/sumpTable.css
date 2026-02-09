@@ -53,7 +53,13 @@
 .sumpTableRow:nth-child(odd) {
   background-color: oklch(from var(--menu-background) clamp(0, l + 0.2, 1) c h); 
 }
-
+[class^="sumpTableHeaderCell1Row"] {
+  border-radius: 0;
+  text-transform: uppercase;
+  background-color: var(--sumpTable__header-backgroundColour);
+  color: var(--sumpTable__header-colour);
+  font-size: var(--sumpTable__header-smallFont);
+}
 [class^="sumpTableHeaderCellRow"], [class^="sumpTableHeaderCell1Row"] {
   position: sticky;
   z-index: 10;
@@ -77,13 +83,7 @@
 .sumpTableHeaderCellRow4, .sumpTableHeaderCell1Row4, .sumpTableHeaderCell2Row4  {
   top: calc( 3 * var(--sumpTable__headerRow-height) + var(--controlBar-height));
 }
-[class^="sumpTableHeaderCell1Row"] {
-  border-radius: 0;
-  text-transform: uppercase;
-  background-color: var(--sumpTable__header-backgroundColour);
-  color: var(--sumpTable__header-colour);
-  font-size: var(--sumpTable__header-smallFont);
-}
+
 .sumpTable .sumpTableCell {
   word-spacing: normal; 
   width: auto;          
