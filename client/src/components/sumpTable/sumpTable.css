@@ -99,7 +99,7 @@
   width: min-content;
 }
 .sumpTableCell2,[class^="sumpTableHeaderCell2Row"] {
-  width: 11vw;
+  width: 5vw;
 }
 .sumpTablePlaceholder{
   height: var(--sumpTable__header-height);
