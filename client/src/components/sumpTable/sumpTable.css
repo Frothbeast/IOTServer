@@ -20,11 +20,12 @@
   background-color: var(--menu-background);
   color: var(--menu-colour);
 }
-@container sumpContainer (max-width:800px) {
+@container sumpContainer (max-width:844px) {
   .sumpTable {
     --sumpTable__header-font: 5cqw;
     --sumpTable__data-font: 5cqw;
-    --sumpTable__header-smallFont: 4cqw; 
+    --sumpTable__header-smallFont: 4cqw;
+    --sumpTable__headerRow-height: 3cqw;
   }
   
 }
