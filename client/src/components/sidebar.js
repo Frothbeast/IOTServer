@@ -38,23 +38,23 @@ const Sidebar = ({ isOpen, sumpRecords }) => {
         <div className="chartContainer1">
           <SumpChart 
             labels={sumpRecords.map((_, i) => i)}
-            datasets={[{ label: "Ladc", color: "pink", data: sumpRecords.map(r => r.payload?.Ladc) },
-                      { label: "Hadc", color: "lightgreen", data: sumpRecords.map(r => r.payload?.Hadc) }]} 
+            datasets={[{ label: "Low ADC Value", color: "lightblue", data: sumpRecords.map(r => r.payload?.Ladc) },
+                      { label: "High ADC Value", color: "lightgreen", data: sumpRecords.map(r => r.payload?.Hadc) }]} 
             options={sidebarChartOptions}           
           />
         </div>
         <div className="chartContainer2">
           <SumpChart 
             labels={sumpRecords.map((_, i) => i)}
-            datasets={[{ label: "timeOn", color: "yellow", data: sumpRecords.map(r => r.payload?.timeOn) },
-                      { label: "timeOff", color: "red", data: sumpRecords.map(r => r.payload?.timeOff) }]} 
+            datasets={[{ label: "Pump On time(s)", color: "pink", data: sumpRecords.map(r => r.payload?.timeOn) },
+                      { label: "Pump Off Time(s)", color: "red", data: sumpRecords.map(r => r.payload?.timeOff) }]} 
             options={sidebarChartOptions}
           />
         </div>
         <div className="chartContainer3">
           <SumpChart 
             labels={sumpRecords.map((_, i) => i)}
-            datasets={[{ label: "duty", color: "lightgreen", data: sumpRecords.map(r => r.payload?.duty) }]}
+            datasets={[{ label: "Duty Cycle", color: "purple", data: sumpRecords.map(r => r.payload?.duty) }]}
             options={sidebarChartOptions} 
           />
         </div>
@@ -62,7 +62,7 @@ const Sidebar = ({ isOpen, sumpRecords }) => {
           <SumpChart
             labels={sumpRecords.map((_, i) => i)}
             datasets={[{
-              label: "period",color: "red",
+              label: "Minutes between pumps",color: "cyan",
               data: sumpRecords.slice(1).map((r, i) => {
                 const current = new Date(r.payload?.datetime).getTime();
                 const previous = new Date(sumpRecords[i].payload?.datetime).getTime();
