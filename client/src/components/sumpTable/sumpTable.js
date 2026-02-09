@@ -9,16 +9,14 @@ const SumpTable = ({ sumpRecords = [], columnStats }) => {
             <table className="sumpTable">
                 <thead className="sumpTableHeader">
                     <tr className="sumpTableHeaderRow">
-                        <div classname="sumpTableHeaderRowTitles">
-                            <th className="sumpTableHeaderCell"></th>
-                            <th className="sumpTableHeaderCell">TIME</th>
-                            <th className="sumpTableHeaderCell">High</th>
-                            <th className="sumpTableHeaderCell">Low</th>
-                            <th className="sumpTableHeaderCell">On</th>
-                            <th className="sumpTableHeaderCell">Off</th>
-                            <th className="sumpTableHeaderCell">Hours</th>
-                            <th className="sumpTableHeaderCell">Duty</th> 
-                        </div>
+                        <th className="sumpTableHeaderCell" style={{ fontSize: "1vw" }}></th>
+                        <th className="sumpTableHeaderCell" style={{ fontSize: "1vw" }}>TIME</th>
+                        <th className="sumpTableHeaderCell" style={{ fontSize: "1vw" }}>High</th>
+                        <th className="sumpTableHeaderCell" style={{ fontSize: "1vw" }}>Low</th>
+                        <th className="sumpTableHeaderCell" style={{ fontSize: "1vw" }}>On</th>
+                        <th className="sumpTableHeaderCell" style={{ fontSize: "1vw" }}>Off</th>
+                        <th className="sumpTableHeaderCell" style={{ fontSize: "1vw" }}>Hours</th>
+                        <th className="sumpTableHeaderCell" style={{ fontSize: "1vw" }}>Duty</th> 
                     </tr>
                     <tr className="sumpTableHeaderRow">
                         <th className="sumpTableHeaderCell" style={{ fontSize: "1vw" }}>MAX</th>
