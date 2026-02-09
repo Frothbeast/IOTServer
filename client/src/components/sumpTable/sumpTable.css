@@ -73,7 +73,9 @@
   padding: 1px;            /* Add back your padding */
   text-align: left;        /* Align the time stamps left */
 }
-
+.sumpTableRow .sumpTableCell:first-child {
+width: min-content; 
+}
 .sumpTable td:not(:first-child) {
   width: auto;
 }
