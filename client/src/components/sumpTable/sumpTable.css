@@ -22,9 +22,9 @@
 }
 @container sumpContainer (max-width:800px) {
   .sumpTable {
-    --sumpTable__header-font: 10cqw;
-    --sumpTable__data-font: 10cqw;
-    --sumpTable__header-smallFont: 8cqw; 
+    --sumpTable__header-font: 6cqw;
+    --sumpTable__data-font: 6cqw;
+    --sumpTable__header-smallFont: 5cqw; 
   }
   
 }
@@ -104,8 +104,9 @@
 }
 
 .sumpTableCell1, [class^=".sumpTableHeaderCell1Row"] {
-  width: min-content;
   font-size: var(--sumpTable__header-smallFont);
+  width: min-content;
+  
 }
 .sumpTableCell2{
   font-size: var(--sumpTable__data-font);
