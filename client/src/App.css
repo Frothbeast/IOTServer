@@ -33,6 +33,7 @@ Global Fonts: @import or font-family declarations for the whole app.
   /* sumpTable needs */
   --sumpTable__header-height: 10vw;
   --sumpTable__headerRow-height: 2vw;
+  --sumpTable__header-font: 2vw;
   --sumpTable__header-smallFont: 1vw;
 }
 
