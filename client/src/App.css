@@ -47,8 +47,8 @@ Global Fonts: @import or font-family declarations for the whole app.
 }
 
 :root {
-  --sumpTable__header-backgroundColour: oklch(from var(--menu-colour) l calc(c - 0.1) h);
-  --sumpTable__header-colour: oklch(from var(--menu-background) l calc(c - 0.1) h);
+  --sumpTable__header-backgroundColour: oklch(from var(--menu-colour) l calc(c - 0.4) h);
+  --sumpTable__header-colour: oklch(from var(--menu-background) l calc(c - 0.4) h);
 }
 
 .App {
