@@ -76,32 +76,33 @@
   object-fit: cover;
   border: 1px solid rgb(120, 121, 120);
   border-radius: 1px;
-  padding: 1vw;
+  padding: 0;
+  margin: 1px;
 }
 
 .controlBar .chartContainer1{
-  top:1%;
-  left:71%;
-  right:16%;
-  bottom: 51%;
+  top:0%;
+  left:70%;
+  right:15%;
+  bottom: 50%;
 }
 .controlBar .chartContainer2{
-  top:1%;
-  left:86%;
-  right:1%;
-  bottom: 51%;
+  top:0%;
+  left:85%;
+  right:0%;
+  bottom: 50%;
 }
 .controlBar .chartContainer3{
-  top:51%;
-  left:71%;
-  right:16%;
-  bottom: 1%;
+  top:50%;
+  left:70%;
+  right: 15%;
+  bottom: 0;
 }
 .controlBar .chartContainer4{
-  top:51%; 
-  left:86%;
-  right:1%;
-  bottom: 1%;
+  top:50%; 
+  left:85%;
+  right:0%;
+  bottom: 0%;
 }
 .chart-watermark {
   position: absolute;
