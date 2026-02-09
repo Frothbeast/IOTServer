@@ -31,7 +31,7 @@
  
   object-fit: cover;
   z-index: -1;
-  font-size: 6cqw;
+  font-size: 8cqw;
   text-align: center;
 }
 
@@ -80,28 +80,28 @@
 }
 
 .controlBar .chartContainer1{
-  top:0;
-  left:70%;
-  right:15%;
-  bottom: 50%;
+  top:1%;
+  left:71%;
+  right:16%;
+  bottom: 51%;
 }
 .controlBar .chartContainer2{
-  top:0;
-  left:85%;
-  right:0%;
-  bottom: 50%;
+  top:1%;
+  left:86%;
+  right:1%;
+  bottom: 51%;
 }
 .controlBar .chartContainer3{
-  top:50%;
-  left:70%;
-  right:15%;
-  bottom: 0;
+  top:51%;
+  left:71%;
+  right:16%;
+  bottom: 1%;
 }
 .controlBar .chartContainer4{
-  top:50%; 
-  left:85%;
-  right:0;
-  bottom: 0;
+  top:51%; 
+  left:86%;
+  right:1%;
+  bottom: 1%;
 }
 .chart-watermark {
   position: absolute;
