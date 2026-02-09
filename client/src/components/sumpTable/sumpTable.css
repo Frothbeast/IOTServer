@@ -21,6 +21,8 @@
 }
 
 .sumpTableHeader { 
+  position: sticky;
+  top: var(--controlBar-height);
   z-index: 10;
   border-radius: 0;
   height: var(--sumpTable__header-height);
@@ -28,8 +30,6 @@
 }
 
 .sumpTableHeaderCell, .sumpTableHeaderCell1 {
-  position: sticky;
-  top: var(--controlBar-height);
   border-radius: 0;
   text-transform: uppercase;
   background-color: oklch(from var(--menu-background) clamp(0, l + 0.2, 1) c h);
