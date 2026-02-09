@@ -47,11 +47,11 @@
   overflow-wrap: anywhere;
 }
  
-.sumpTableHeaderCell, [class^="sumpTableHeaderCell1Row"] {
+[class^="sumpTableHeaderCell1Row"] {
   border-radius: 0;
   text-transform: uppercase;
-  background-color: oklch(from var(--menu-background) clamp(0, l + 0.2, 1) c h);
-  color: oklch(from var(--menu-colour) clamp(0, l + 0.2, 1) c h);
+  background-color: var(--sumpTable__header-backgroundColour);
+  color: var(--sumpTable__header-colour);
   font-size: 2vw;
 }
 
@@ -64,6 +64,8 @@
   z-index: 10;
   height: var(--sumpTable__headerRow-height);
   font-size: var(--sumpTable__header-font);
+  background-color: oklch(from var(--menu-background) clamp(0, l + 0.2, 1) c h);
+  color: oklch(from var(--menu-colour) clamp(0, l + 0.2, 1) c h);
 }
 .sumpTableHeaderCellRow1, .sumpTableHeaderCell1Row1 {
   font-size: var(--sumpTable__header-smallFont);
