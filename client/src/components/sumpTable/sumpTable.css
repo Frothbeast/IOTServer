@@ -73,13 +73,16 @@
   padding: 1px;            /* Add back your padding */
   text-align: left;        /* Align the time stamps left */
 }
-.sumpTableRow .sumpTableCell:first-child {
-width: min-content; 
-}
+
 .sumpTable td:not(:first-child) {
   width: auto;
 }
-
+.sumpTableHeaderCell1{
+  font-size: 1vw;
+}
+.sumpTableCell1{
+  width: min-content;
+}
 /* Ensure your table allows auto layout */
 .sumpTable {
   table-layout: auto; /* Required for min-content to calculate correctly */
