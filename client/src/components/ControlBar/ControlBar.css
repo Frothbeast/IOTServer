@@ -9,7 +9,7 @@
 }
 
 .tableWrapper { 
-  margin-top: var(--controlBar-height); 
+  margin-top: 0; 
   position: relative;
 }
 .statsSummary {
