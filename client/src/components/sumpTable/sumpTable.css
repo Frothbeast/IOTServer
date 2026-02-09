@@ -20,7 +20,7 @@
   background-color: var(--menu-background);
   color: var(--menu-colour);
 }
-@container sumpContainer(max-width:800px) {
+@container sumpContainer (max-width:800px) {
   .sumpTable {
     --sumpTable__header-font: 10cqw;
     --sumpTable__data-font: 10cqw;
