@@ -25,7 +25,9 @@ export const calculateColumnStats = (sumpRecords) => {
   const datetime = sumpRecords.map(r => r.payload?.datetime);
   
   const diffs = datetime.slice(1).map((v, i) => new Date(datetime[i]).getTime() - new Date(v).getTime());
-
+  const parts = datetime[0].split(" ");
+  const reordered = [parts[1], parts[0]]; 
+  const reversed = reordered.join(" ");
   return {
     Hadc: { avg: StatsLib.avg(Hadcs), max: StatsLib.max(Hadcs), min: StatsLib.min(Hadcs) },
     Ladc: { avg: StatsLib.avg(Ladcs), max: StatsLib.max(Ladcs), min: StatsLib.min(Ladcs) },
@@ -38,6 +40,6 @@ export const calculateColumnStats = (sumpRecords) => {
       max: formatMsToTime(StatsLib.max(diffs)),
       min: formatMsToTime(StatsLib.min(diffs))
     },
-    lastDatetime: datetime[0]
+    lastDatetime: reversed
   };
 };

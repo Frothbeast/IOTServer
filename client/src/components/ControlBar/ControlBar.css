@@ -4,19 +4,13 @@
   left: 0;
   right: 0;
   z-index: 1000;
-  width: 100%;
-  
-  /* REMOVE 'height: 60px' from here */
-  height: var(--controlBar-height); /* Let the content determine the height */
-  
+  height: var(--controlBar-height); 
   background: rgba(44, 62, 80, 0.541);
-  /* ... other styles (padding, flex, etc.) ... */
 }
 
-/* Add a new rule for your new wrapper div */
 .tableWrapper { 
-  /* The space dynamically matches the height of the bar above */
-  margin-top: var(--control-bar-height); 
+  margin-top: 0; 
+  position: relative;
 }
 .statsSummary {
   display: flex;
@@ -25,32 +19,12 @@
   background: #f8f9fa;
 }
 
-.sidebar {
-  position: fixed;
-  right: -75cqw; /* Hidden by default */
-  top: 0;
-  width: 75cqw;
-  height: 100%;
-  background: white;
-  box-shadow: -2px 0 5px rgba(0,0,0,0.2);
-  transition: right 0.3s ease;
-  padding: 20px;
-  z-index: 200;
-}
-
-.sidebar.open {
-  right: 0; /* Slide in */
-}
-
 .brand {
   position: absolute;
   top: 0;
   left: 0;
   bottom: 0;
-  /* Ensure it fills the entire space */
   width: 30%;
-  height: 100%;
- 
   object-fit: cover;
   z-index: -1;
   font-size: 8cqw;
@@ -93,35 +67,53 @@
   font-size: 3cqw;
 }
 
-.chartContainer1{
+.controlBar [class^="chartContainer"] {
   position: absolute;
-  top:0;
+  object-fit: cover;
+  border: 1px solid rgb(120, 121, 120);
+  border-radius: 1px;
+  padding: 0;
+  margin: 1px;
+}
+
+.controlBar .chartContainer1{
+  top:0%;
   left:70%;
   right:15%;
   bottom: 50%;
-  object-fit: cover;
 }
-.chartContainer2{
-  position: absolute;
-  top:0;
+.controlBar .chartContainer2{
+  top:0%;
   left:85%;
   right:0%;
   bottom: 50%;
-  object-fit: cover;
 }
-.chartContainer3{
-  position: absolute;
+.controlBar .chartContainer3{
   top:50%;
   left:70%;
-  right:15%;
+  right: 15%;
   bottom: 0;
-  object-fit: cover;
 }
-.chartContainer4{
-  position: absolute;
+.controlBar .chartContainer4{
   top:50%; 
   left:85%;
-  right:0;
-  bottom: 0;
-  object-fit: cover;
+  right:0%;
+  bottom: 0%;
+}
+.chart-watermark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  font-size: 3cqw; 
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.1);
+  z-index: 0; 
+  pointer-events: none; 
+  user-select: none; 
 }

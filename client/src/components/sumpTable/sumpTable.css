@@ -1,53 +1,44 @@
 .sumpTableContainer {
+  top: 0;
   display: inline-block;
   container-name: sumpContainer;
   container-type: inline-size;
   width: 100%;
-  overflow: hidden;
-  height: auto;
+  height: 100vh;
   overflow-y: auto;
   max-width: 100%;
   min-width: 400px;
   border: none;
 }
+
 .sumpTable {
   width: 100%;
   min-width: 100%;
-  border-collapse: collapse; 
+  border-collapse: collapse;
   border-spacing: 0;
   table-layout: auto;
   background-color: var(--menu-background);
   color: var(--menu-colour);
 }
+
 .sumpTableHeader { 
-  position: sticky;
   top: var(--controlBar-height);
   z-index: 10;
   border-radius: 0;
   height: var(--sumpTable__header-height);
-  padding: 0px;
 }
-.sumpTableHeaderCell {
-  font-size: 3vw;
-  border-radius: 0;
-  text-transform: uppercase;
-  background-color: oklch(from var(--menu-background) clamp(0, l + 0.2, 1) c h);
-  color: oklch(from var(--menu-colour) clamp(0, l + 0.2, 1) c h);
+
+.sumpTableHeaderCell1{
+  font-size: 1vw;
 }
+
 .sumpTableCell {
-  font-size: 3vw;
   font-family: monospace;
-  letter-spacing: 1px;
-  font-size: 2vw; /* Careful with this; it can cause issues on very small screens */
-  padding: 1px;
-  text-align: center;
-  white-space: normal;
-  word-break: normal;
-  word-wrap: normal;
-  overflow-wrap: anywhere;
+  font-size: 2vw;
 }
 
 .sumpTableCell, .sumpTableHeaderCell {
+  display: table-cell;
   letter-spacing: 1px;
   padding: 0px;
   text-align: center;
@@ -55,36 +46,62 @@
   word-break: normal;
   word-wrap: normal;
   overflow-wrap: anywhere;
-  display: table-cell;
 }
  
+[class^="sumpTableHeaderCell1Row"] {
+  border-radius: 0;
+  text-transform: uppercase;
+  background-color: var(--sumpTable__header-backgroundColour);
+  color: var(--sumpTable__header-colour);
+  font-size: 2vw;
+}
+
 .sumpTableRow:nth-child(odd) {
   background-color: oklch(from var(--menu-background) clamp(0, l + 0.2, 1) c h); 
 }
 
+[class^="sumpTableHeaderCellRow"], [class^="sumpTableHeaderCell1Row"] {
+  position: sticky;
+  z-index: 10;
+  height: var(--sumpTable__headerRow-height);
+  font-size: var(--sumpTable__header-font);
+  background-color: oklch(from var(--menu-background) clamp(0, l + 0.2, 1) c h);
+  color: oklch(from var(--menu-colour) clamp(0, l + 0.2, 1) c h);
+}
+.sumpTableHeaderCellRow1, .sumpTableHeaderCell1Row1 {
+  font-size: var(--sumpTable__header-smallFont);
+  top: var(--controlBar-height);
+}
+.sumpTableHeaderCellRow2, .sumpTableHeaderCell1Row2 {
+  top: calc( var(--sumpTable__headerRow-height) + var(--controlBar-height));
+}
+.sumpTableHeaderCellRow3, .sumpTableHeaderCell1Row3 {
+  top: calc( 2 * var(--sumpTable__headerRow-height) + var(--controlBar-height));
+}
+.sumpTableHeaderCellRow4, .sumpTableHeaderCell1Row4 {
+  top: calc( 3 * var(--sumpTable__headerRow-height) + var(--controlBar-height));
+}
+
 .sumpTable .sumpTableCell {
-  word-spacing: normal; /* Explicitly reset this property to default */
-  width: auto;          /* Reset width to auto by default */
+  word-spacing: normal; 
+  width: auto;          
   display: table-cell;
 }
+
 .sumpTable .sumpTableCell:first-child {
-  width: min-content;      /* Sets the width exactly to the widest word */
-  min-width: unset;        /* Ensure no min-width lock is interfering */
-  padding: 1px;            /* Add back your padding */
-  text-align: left;        /* Align the time stamps left */
+  width: min-content;    
+  min-width: unset;       
+  padding: 1px;            
+  text-align: left;       
 }
 
 .sumpTable td:not(:first-child) {
   width: auto;
 }
 
-/* Ensure your table allows auto layout */
-.sumpTable {
-  table-layout: auto; /* Required for min-content to calculate correctly */
-  width: 100%;
+.sumpTableCell1{
+  width: min-content;
 }
-
-.sumpTableRowPlaceHolderControlBar {
-  height: var(--controlBar-height);
-  border: none;
+.sumpTablePlaceholder{
+  height: var(--sumpTable__header-height);
 }
