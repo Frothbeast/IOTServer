@@ -48,6 +48,11 @@ Global Fonts: @import or font-family declarations for the whole app.
   }
 }
 
+:root {
+  --sumpTable__header-backgroundColour: var(--menu-colour);
+  --sumpTable__header-colour: var(--menu-background);
+}
+
 .App {
   text-align: center;
   background-color: var(--menu-background);
