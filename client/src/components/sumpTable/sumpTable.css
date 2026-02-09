@@ -62,17 +62,19 @@
   background-color: oklch(from var(--menu-background) clamp(0, l + 0.2, 1) c h);
   color: oklch(from var(--menu-colour) clamp(0, l + 0.2, 1) c h);
 }
-.sumpTableHeaderCellRow1, .sumpTableHeaderCell1Row1 {
-  font-size: var(--sumpTable__header-smallFont);
+.sumpTableHeaderCellRow1, .sumpTableHeaderCell1Row1, .sumpTableHeaderCell2Row1 {
   top: var(--controlBar-height);
 }
-.sumpTableHeaderCellRow2, .sumpTableHeaderCell1Row2 {
+.sumpTableHeaderCellRow1, .sumpTableHeaderCell1Row1 {
+  font-size: var(--sumpTable__header-smallFont);
+} 
+.sumpTableHeaderCellRow2, .sumpTableHeaderCell1Row2, .sumpTableHeaderCell2Row2  {
   top: calc( var(--sumpTable__headerRow-height) + var(--controlBar-height));
 }
-.sumpTableHeaderCellRow3, .sumpTableHeaderCell1Row3 {
+.sumpTableHeaderCellRow3, .sumpTableHeaderCell1Row3, .sumpTableHeaderCell2Row3  {
   top: calc( 2 * var(--sumpTable__headerRow-height) + var(--controlBar-height));
 }
-.sumpTableHeaderCellRow4, .sumpTableHeaderCell1Row4 {
+.sumpTableHeaderCellRow4, .sumpTableHeaderCell1Row4, .sumpTableHeaderCell2Row4  {
   top: calc( 3 * var(--sumpTable__headerRow-height) + var(--controlBar-height));
 }
 [class^="sumpTableHeaderCell1Row"] {
