@@ -3,22 +3,23 @@
   container-name: sumpContainer;
   container-type: inline-size;
   width: 100%;
-  overflow: hidden;
   height: auto;
   overflow-y: auto;
   max-width: 100%;
   min-width: 400px;
   border: none;
 }
+
 .sumpTable {
   width: 100%;
   min-width: 100%;
-  border-collapse: collapse; 
+  border-collapse: collapse;
   border-spacing: 0;
   table-layout: auto;
   background-color: var(--menu-background);
   color: var(--menu-colour);
 }
+
 .sumpTableHeader { 
   position: sticky;
   top: var(--controlBar-height);
@@ -27,27 +28,26 @@
   height: var(--sumpTable__header-height);
   padding: 0px;
 }
+
 .sumpTableHeaderCell, .sumpTableHeaderCell1 {
-  font-size: 2vw;
   border-radius: 0;
   text-transform: uppercase;
   background-color: oklch(from var(--menu-background) clamp(0, l + 0.2, 1) c h);
   color: oklch(from var(--menu-colour) clamp(0, l + 0.2, 1) c h);
+  font-size: 2vw;
 }
+
+.sumpTableHeaderCell1{
+  font-size: 1vw;
+}
+
 .sumpTableCell {
-  font-size: 3vw;
   font-family: monospace;
-  letter-spacing: 1px;
-  font-size: 2vw; /* Careful with this; it can cause issues on very small screens */
-  padding: 1px;
-  text-align: center;
-  white-space: normal;
-  word-break: normal;
-  word-wrap: normal;
-  overflow-wrap: anywhere;
+  font-size: 2vw;
 }
 
 .sumpTableCell, .sumpTableHeaderCell {
+  display: table-cell;
   letter-spacing: 1px;
   padding: 0px;
   text-align: center;
@@ -55,7 +55,6 @@
   word-break: normal;
   word-wrap: normal;
   overflow-wrap: anywhere;
-  display: table-cell;
 }
  
 .sumpTableRow:nth-child(odd) {
@@ -63,30 +62,24 @@
 }
 
 .sumpTable .sumpTableCell {
-  word-spacing: normal; /* Explicitly reset this property to default */
-  width: auto;          /* Reset width to auto by default */
+  word-spacing: normal; 
+  width: auto;          
   display: table-cell;
 }
+
 .sumpTable .sumpTableCell:first-child {
-  width: min-content;      /* Sets the width exactly to the widest word */
-  min-width: unset;        /* Ensure no min-width lock is interfering */
-  padding: 1px;            /* Add back your padding */
-  text-align: left;        /* Align the time stamps left */
+  width: min-content;    
+  min-width: unset;       
+  padding: 1px;            
+  text-align: left;       
 }
 
 .sumpTable td:not(:first-child) {
   width: auto;
 }
-.sumpTableHeaderCell1{
-  font-size: 1vw;
-}
+
 .sumpTableCell1{
   width: min-content;
-}
-/* Ensure your table allows auto layout */
-.sumpTable {
-  table-layout: auto; /* Required for min-content to calculate correctly */
-  width: 100%;
 }
 
 .sumpTableRowPlaceHolderControlBar {

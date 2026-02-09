@@ -4,14 +4,13 @@
   left: 0;
   right: 0;
   z-index: 1000;
-  width: 100%;
   height: var(--controlBar-height); 
   background: rgba(44, 62, 80, 0.541);
 }
 
 .tableWrapper { 
-  margin-top: var(--control-bar-height); 
-  position: relative
+  margin-top: var(--controlBar-height); 
+  position: relative;
 }
 .statsSummary {
   display: flex;
@@ -25,10 +24,7 @@
   top: 0;
   left: 0;
   bottom: 0;
-  /* Ensure it fills the entire space */
   width: 30%;
-  height: 100%;
- 
   object-fit: cover;
   z-index: -1;
   font-size: 8cqw;
