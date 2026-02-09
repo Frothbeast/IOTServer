@@ -10,14 +10,7 @@
   min-width: 400px;
   border: none;
 }
-@container sumpContainer(max-width:800px) {
-  .sumpTableContainer {
-    --sumpTable__header-font: 10cqw;
-    --sumpTable__data-font: 10cqw;
-    --sumpTable__header-smallFont: 8cqw; 
-  }
-  
-}
+
 .sumpTable {
   width: 100%;
   min-width: 100%;
@@ -27,7 +20,14 @@
   background-color: var(--menu-background);
   color: var(--menu-colour);
 }
-
+@container sumpContainer(max-width:800px) {
+  .sumpTable {
+    --sumpTable__header-font: 10cqw;
+    --sumpTable__data-font: 10cqw;
+    --sumpTable__header-smallFont: 8cqw; 
+  }
+  
+}
 .sumpTableHeader { 
   top: var(--controlBar-height);
   z-index: 10;
