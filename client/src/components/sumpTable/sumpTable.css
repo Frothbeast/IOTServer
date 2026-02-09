@@ -98,6 +98,9 @@
 .sumpTableCell1 {
   width: min-content;
 }
+.sumpTableCell2{
+  font-size: var(--sumpTable__data-font);
+}
 .sumpTableCell2,[class^="sumpTableHeaderCell2Row"] {
   width: 5vw;
 }
