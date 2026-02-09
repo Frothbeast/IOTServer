@@ -21,7 +21,6 @@
 }
 
 .sumpTableHeader { 
-  position: sticky;
   top: var(--controlBar-height);
   z-index: 10;
   border-radius: 0;
@@ -81,6 +80,26 @@
   width: min-content;
 }
 
-.sumpTableHeaderRowTitles {
-  font-size: 1vw;
+.sumpTableHeaderRow1 {
+  position: sticky;
+  top: var(--controlBar-height);
+  height: var(--sumpTable__headerRow-height);
+}
+
+.sumpTableHeaderRow2 {
+  position: sticky;
+  top: calc( var(--sumpTable__headerRow-height) + var(--controlBar-height));
+  height: var(--sumpTable__headerRow-height);
+}
+
+.sumpTableHeaderRow3 {
+  position: sticky;
+  top: calc( 2 * var(--sumpTable__headerRow-height) + var(--controlBar-height));
+  height: var(--sumpTable__headerRow-height);
+}
+
+.sumpTableHeaderRow4 {
+  position: sticky;
+  top: calc( 3 * var(--sumpTable__headerRow-height) + var(--controlBar-height));
+  height: var(--sumpTable__headerRow-height);
 }

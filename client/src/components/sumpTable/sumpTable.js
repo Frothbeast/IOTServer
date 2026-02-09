@@ -8,7 +8,7 @@ const SumpTable = ({ sumpRecords = [], columnStats }) => {
 	<div className="sumpTableContainer">
             <table className="sumpTable">
                 <thead className="sumpTableHeader">
-                    <tr className="sumpTableHeaderRow">
+                    <tr className="sumpTableHeaderRow1">
                         <th className="sumpTableHeaderCell1"></th>
                         <th className="sumpTableHeaderCell" style={{ fontSize: "1vw" }}>TIME</th>
                         <th className="sumpTableHeaderCell" style={{ fontSize: "1vw" }}>High</th>
@@ -18,7 +18,7 @@ const SumpTable = ({ sumpRecords = [], columnStats }) => {
                         <th className="sumpTableHeaderCell" style={{ fontSize: "1vw" }}>Hours</th>
                         <th className="sumpTableHeaderCell" style={{ fontSize: "1vw" }}>Duty</th> 
                     </tr>
-                    <tr className="sumpTableHeaderRow">
+                    <tr className="sumpTableHeaderRow2">
                         <th className="sumpTableHeaderCell1">MAX</th>
                         <th className="sumpTableHeaderCell">{columnStats.datetime.max}</th>
                         <th className="sumpTableHeaderCell">{columnStats.Hadc.max}</th>
@@ -28,7 +28,7 @@ const SumpTable = ({ sumpRecords = [], columnStats }) => {
                         <th className="sumpTableHeaderCell">{columnStats.hoursOn.max}</th>
     		            <th className="sumpTableHeaderCell">{columnStats.duty.max}</th> 
                     </tr>
-                    <tr className="sumpTableHeaderRow">
+                    <tr className="sumpTableHeaderRow3">
                         <th className="sumpTableHeaderCell1">AVG</th>
                         <th className="sumpTableHeaderCell">{columnStats.datetime.avg}</th>
                         <th className="sumpTableHeaderCell">{columnStats.Hadc.avg}</th>
@@ -38,7 +38,7 @@ const SumpTable = ({ sumpRecords = [], columnStats }) => {
                         <th className="sumpTableHeaderCell">{columnStats.hoursOn.avg}</th>
     		            <th className="sumpTableHeaderCell">{columnStats.duty.avg}</th> 
                     </tr>
-                    <tr className="sumpTableHeaderRow">
+                    <tr className="sumpTableHeaderRow4">
                         <th className="sumpTableHeaderCell1">MIN</th>
                         <th className="sumpTableHeaderCell">{columnStats.datetime.min}</th>
                         <th className="sumpTableHeaderCell">{columnStats.Hadc.min}</th>

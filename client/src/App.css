@@ -32,6 +32,7 @@ Global Fonts: @import or font-family declarations for the whole app.
   --controlBar-height: 10vw;
   /* sumpTable needs */
   --sumpTable__header-height: 10vw;
+  --sumpTable__headerRow-height: 2vw;
 }
 
 @media (prefers-color-scheme: dark) {
