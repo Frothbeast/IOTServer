@@ -35,6 +35,7 @@ Global Fonts: @import or font-family declarations for the whole app.
   --sumpTable__headerRow-height: 2vw;
   --sumpTable__header-font: 2vw;
   --sumpTable__header-smallFont: 1vw;
+  --sumpTable__data-font: 1.8vw;
 }
 
 @media (prefers-color-scheme: dark) {

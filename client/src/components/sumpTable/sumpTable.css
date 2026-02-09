@@ -34,7 +34,7 @@
 
 .sumpTableCell {
   font-family: monospace;
-  font-size: 2vw;
+  font-size: var(--sumpTable__data-font);
 }
 
 .sumpTableCell, .sumpTableHeaderCell {
