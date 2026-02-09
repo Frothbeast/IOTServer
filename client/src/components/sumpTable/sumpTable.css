@@ -54,11 +54,11 @@
   color: var(--sumpTable__header-colour);
   font-size: var(--sumpTable__header-smallFont);
 }
-[class^="sumpTableHeaderCellRow"], [class^="sumpTableHeaderCell1Row"] {
+[class^="sumpTableHeaderCellRow"], [class^="sumpTableHeaderCell1Row"], [class^="sumpTableHeaderCell2Row"] {
   position: sticky;
   z-index: 10;
   height: var(--sumpTable__headerRow-height);
-  font-size: var(--sumpTable__header-smallFont);
+  font-size: var(--sumpTable__header-font);
   background-color: var(--sumpTable__header-backgroundColour);
   color: var(--sumpTable__header-colour);
 }
