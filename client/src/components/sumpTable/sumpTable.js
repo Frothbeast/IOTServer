@@ -54,7 +54,7 @@ const SumpTable = ({ sumpRecords = [], columnStats }) => {
                     {Array.isArray(sumpRecords) && sumpRecords.map((record) => (
                         <tr key={record.id} className="sumpTableRow">
                             <td className="sumpTableCell1"></td>
-                            <td className="sumpTableCell">{record.payload?.datetime ? record.payload.datetime.split(' ')[1] : "N/a"}</td>
+                            <td className="sumpTableCell"style={{ width: '10vw' }}>{record.payload?.datetime ? record.payload.datetime.split(' ')[1] : "N/a"}</td>
                             <td className="sumpTableCell">{record.payload?.Hadc ?? "N/a"}</td>
 			                <td className="sumpTableCell">{record.payload?.Ladc ?? "N/a"}</td>
                             <td className="sumpTableCell">{record.payload?.timeOn ?? "N/a"}</td>
