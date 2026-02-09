@@ -25,7 +25,8 @@
     --sumpTable__header-font: 5cqw;
     --sumpTable__data-font: 5cqw;
     --sumpTable__header-smallFont: 4cqw;
-    --sumpTable__headerRow-height: 3cqw;
+    --sumpTable__header-height: 20vw;
+    --sumpTable__headerRow-height: 4vw; 
   }
   
 }
