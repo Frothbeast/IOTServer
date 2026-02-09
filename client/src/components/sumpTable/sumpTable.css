@@ -23,10 +23,10 @@
 @container sumpContainer (max-width:844px) {
   .sumpTable {
     --sumpTable__header-font: 5cqw;
-    --sumpTable__data-font: 5cqw;
-    --sumpTable__header-smallFont: 4cqw;
+    --sumpTable__data-font: 4cqw;
+    --sumpTable__header-smallFont: 3cqw;
     --sumpTable__header-height: 20vw;
-    --sumpTable__headerRow-height: 4vw; 
+    --sumpTable__headerRow-height: 8vw; 
   }
   
 }
