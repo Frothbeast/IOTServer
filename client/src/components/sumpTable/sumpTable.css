@@ -28,15 +28,6 @@
   height: var(--sumpTable__header-height);
 }
 
-.sumpTableHeaderCell, .sumpTableHeaderCell1 {
-  position: sticky;
-  border-radius: 0;
-  text-transform: uppercase;
-  background-color: oklch(from var(--menu-background) clamp(0, l + 0.2, 1) c h);
-  color: oklch(from var(--menu-colour) clamp(0, l + 0.2, 1) c h);
-  font-size: 2vw;
-}
-
 .sumpTableHeaderCell1{
   font-size: 1vw;
 }
@@ -57,6 +48,15 @@
   overflow-wrap: anywhere;
 }
  
+.sumpTableHeaderCell, .sumpTableHeaderCell1 {
+  position: sticky;
+  border-radius: 0;
+  text-transform: uppercase;
+  background-color: oklch(from var(--menu-background) clamp(0, l + 0.2, 1) c h);
+  color: oklch(from var(--menu-colour) clamp(0, l + 0.2, 1) c h);
+  font-size: 2vw;
+}
+
 .sumpTableRow:nth-child(odd) {
   background-color: oklch(from var(--menu-background) clamp(0, l + 0.2, 1) c h); 
 }
