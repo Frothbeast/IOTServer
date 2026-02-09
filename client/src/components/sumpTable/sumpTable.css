@@ -28,7 +28,7 @@
   padding: 0px;
 }
 .sumpTableHeaderCell {
-  font-size: 3vw;
+  font-size: 2vw;
   border-radius: 0;
   text-transform: uppercase;
   background-color: oklch(from var(--menu-background) clamp(0, l + 0.2, 1) c h);
