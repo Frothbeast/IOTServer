@@ -37,19 +37,19 @@ Global Fonts: @import or font-family declarations for the whole app.
   --sumpTable__header-font: 2vw;
   --sumpTable__header-smallFont: 1vw;
   --sumpTable__data-font: 1.8vw;
+  --sumpTable__header-backgroundColour: oklch(from var(--menu-colour) l calc(c + 0.4) h);
+  --sumpTable__header-colour: oklch(from var(--menu-background) l calc(c + 0.4) h);
 }
 
 @media (prefers-color-scheme: dark) {
  :root{
     --menu-colour: var(--main-background);
     --menu-background: var(--main-colour);
+    --sumpTable__header-backgroundColour: oklch(from var(--menu-colour) l calc(c - 0.4) h);
+    --sumpTable__header-colour: oklch(from var(--menu-background) l calc(c - 0.4) h);
   }
 }
 
-:root {
-  --sumpTable__header-backgroundColour: oklch(from var(--menu-colour) l calc(c - 0.4) h);
-  --sumpTable__header-colour: oklch(from var(--menu-background) l calc(c - 0.4) h);
-}
 
 .App {
   text-align: center;
