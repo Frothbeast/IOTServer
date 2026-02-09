@@ -15,7 +15,8 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
     },
     scales: {
       x: {
-        display: false
+        display: false,
+        reverse: true
       },
       y: {
         display: false,
