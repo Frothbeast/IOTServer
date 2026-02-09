@@ -12,9 +12,9 @@
 }
 @container sumpContainer(max-width:800px) {
   .sumpTableContainer {
-    --sumpTable__header-font: 10vw;
-    --sumpTable__data-font: 10vw;
-    --sumpTable__header-smallFont: 8vw; 
+    --sumpTable__header-font: 10cqw;
+    --sumpTable__data-font: 10cqw;
+    --sumpTable__header-smallFont: 8cqw; 
   }
   
 }
