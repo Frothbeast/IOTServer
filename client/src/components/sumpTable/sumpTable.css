@@ -102,4 +102,6 @@
 .sumpTableCell1{
   width: min-content;
 }
-
+.sumpTablePlaceholder{
+  height: var(--sumpTable__header-height);
+}
