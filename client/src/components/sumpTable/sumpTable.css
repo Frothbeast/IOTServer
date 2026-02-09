@@ -88,3 +88,7 @@
   height: var(--controlBar-height);
   border: none;
 }
+
+.sumpTableHeaderRowTitles {
+  font-size: 1vw;
+}

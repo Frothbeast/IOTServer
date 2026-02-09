@@ -9,17 +9,19 @@ const SumpTable = ({ sumpRecords = [], columnStats }) => {
             <table className="sumpTable">
                 <thead className="sumpTableHeader">
                     <tr className="sumpTableHeaderRow">
-                        <th className="sumpTableHeaderCell"></th>
-                        <th className="sumpTableHeaderCell">TIME</th>
-                        <th className="sumpTableHeaderCell">High</th>
-                        <th className="sumpTableHeaderCell">Low</th>
-                        <th className="sumpTableHeaderCell">On</th>
-                        <th className="sumpTableHeaderCell">Off</th>
-                        <th className="sumpTableHeaderCell">Hours</th>
-    		            <th className="sumpTableHeaderCell">Duty</th> 
+                        <div classname="sumpTableHeaderRowTitles">
+                            <th className="sumpTableHeaderCell"></th>
+                            <th className="sumpTableHeaderCell">TIME</th>
+                            <th className="sumpTableHeaderCell">High</th>
+                            <th className="sumpTableHeaderCell">Low</th>
+                            <th className="sumpTableHeaderCell">On</th>
+                            <th className="sumpTableHeaderCell">Off</th>
+                            <th className="sumpTableHeaderCell">Hours</th>
+                            <th className="sumpTableHeaderCell">Duty</th> 
+                        </div>
                     </tr>
                     <tr className="sumpTableHeaderRow">
-                        <th className="sumpTableHeaderCell" style={{ fontSize: "0.5vw" }}>MAX</th>
+                        <th className="sumpTableHeaderCell" style={{ fontSize: "1vw" }}>MAX</th>
                         <th className="sumpTableHeaderCell">{columnStats.datetime.max}</th>
                         <th className="sumpTableHeaderCell">{columnStats.Hadc.max}</th>
                         <th className="sumpTableHeaderCell">{columnStats.Ladc.max}</th>
@@ -29,7 +31,7 @@ const SumpTable = ({ sumpRecords = [], columnStats }) => {
     		            <th className="sumpTableHeaderCell">{columnStats.duty.max}</th> 
                     </tr>
                     <tr className="sumpTableHeaderRow">
-                        <th className="sumpTableHeaderCell" style={{ fontSize: "0.5vw" }}>AVG</th>
+                        <th className="sumpTableHeaderCell" style={{ fontSize: "1vw" }}>AVG</th>
                         <th className="sumpTableHeaderCell">{columnStats.datetime.avg}</th>
                         <th className="sumpTableHeaderCell">{columnStats.Hadc.avg}</th>
                         <th className="sumpTableHeaderCell">{columnStats.Ladc.avg}</th>
@@ -39,7 +41,7 @@ const SumpTable = ({ sumpRecords = [], columnStats }) => {
     		            <th className="sumpTableHeaderCell">{columnStats.duty.avg}</th> 
                     </tr>
                     <tr className="sumpTableHeaderRow">
-                        <th className="sumpTableHeaderCell" style={{ fontSize: "0.5vw" }}>MIN</th>
+                        <th className="sumpTableHeaderCell" style={{ fontSize: "1vw" }}>MIN</th>
                         <th className="sumpTableHeaderCell">{columnStats.datetime.min}</th>
                         <th className="sumpTableHeaderCell">{columnStats.Hadc.min}</th>
                         <th className="sumpTableHeaderCell">{columnStats.Ladc.min}</th>
