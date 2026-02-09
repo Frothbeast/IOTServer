@@ -71,7 +71,7 @@
 .sumpTableHeaderCellRow1, .sumpTableHeaderCell1Row1, .sumpTableHeaderCell2Row1 {
   top: var(--controlBar-height);
 }
-.sumpTableHeaderCellRow1, .sumpTableHeaderCell1Row1 {
+.sumpTableHeaderCell1Row1 {
   font-size: var(--sumpTable__header-smallFont);
 } 
 .sumpTableHeaderCellRow2, .sumpTableHeaderCell1Row2, .sumpTableHeaderCell2Row2  {
