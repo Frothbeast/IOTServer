@@ -50,7 +50,6 @@ const SumpTable = ({ sumpRecords = [], columnStats }) => {
                     </tr>
                 </thead>
                 <tbody className="sumpTableBody">
-                    <tr className="sumpTableRowPlaceHolderControlBar"></tr>
                     {Array.isArray(sumpRecords) && sumpRecords.map((record) => (
                         <tr key={record.id} className="sumpTableRow">
                             <td className="sumpTableCell1"></td>
