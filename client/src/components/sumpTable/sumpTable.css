@@ -47,7 +47,7 @@
   overflow-wrap: anywhere;
 }
  
-.sumpTableHeaderCell, .sumpTableHeaderCell1 {
+.sumpTableHeaderCell, [class^="sumpTableHeaderCell1Row"] {
   border-radius: 0;
   text-transform: uppercase;
   background-color: oklch(from var(--menu-background) clamp(0, l + 0.2, 1) c h);
@@ -57,6 +57,24 @@
 
 .sumpTableRow:nth-child(odd) {
   background-color: oklch(from var(--menu-background) clamp(0, l + 0.2, 1) c h); 
+}
+
+[class^="sumpTableHeaderCell1Row"]{
+  position: sticky;
+  height: var(--sumpTable__headerRow-height);
+}
+.sumpTableHeaderCellRow1 {
+  font-size: var(--sumpTable__header-smallFont);
+  top: var(--controlBar-height);
+}
+.sumpTableHeaderCellRow2 {
+  top: calc( var(--sumpTable__headerRow-height) + var(--controlBar-height));
+}
+.sumpTableHeaderCellRow3 {
+  top: calc( 2 * var(--sumpTable__headerRow-height) + var(--controlBar-height));
+}
+.sumpTableHeaderCellRow4 {
+  top: calc( 3 * var(--sumpTable__headerRow-height) + var(--controlBar-height));
 }
 
 .sumpTable .sumpTableCell {
@@ -80,26 +98,3 @@
   width: min-content;
 }
 
-.sumpTableHeaderRow1 {
-  position: sticky;
-  top: var(--controlBar-height);
-  height: var(--sumpTable__headerRow-height);
-}
-
-.sumpTableHeaderRow2 {
-  position: sticky;
-  top: calc( var(--sumpTable__headerRow-height) + var(--controlBar-height));
-  height: var(--sumpTable__headerRow-height);
-}
-
-.sumpTableHeaderRow3 {
-  position: sticky;
-  top: calc( 2 * var(--sumpTable__headerRow-height) + var(--controlBar-height));
-  height: var(--sumpTable__headerRow-height);
-}
-
-.sumpTableHeaderRow4 {
-  position: sticky;
-  top: calc( 3 * var(--sumpTable__headerRow-height) + var(--controlBar-height));
-  height: var(--sumpTable__headerRow-height);
-}

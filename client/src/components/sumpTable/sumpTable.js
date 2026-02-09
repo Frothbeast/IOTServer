@@ -9,44 +9,44 @@ const SumpTable = ({ sumpRecords = [], columnStats }) => {
             <table className="sumpTable">
                 <thead className="sumpTableHeader">
                     <tr className="sumpTableHeaderRow1">
-                        <th className="sumpTableHeaderCell1"></th>
-                        <th className="sumpTableHeaderCell" style={{ fontSize: "1vw" }}>TIME</th>
-                        <th className="sumpTableHeaderCell" style={{ fontSize: "1vw" }}>High</th>
-                        <th className="sumpTableHeaderCell" style={{ fontSize: "1vw" }}>Low</th>
-                        <th className="sumpTableHeaderCell" style={{ fontSize: "1vw" }}>On</th>
-                        <th className="sumpTableHeaderCell" style={{ fontSize: "1vw" }}>Off</th>
-                        <th className="sumpTableHeaderCell" style={{ fontSize: "1vw" }}>Hours</th>
-                        <th className="sumpTableHeaderCell" style={{ fontSize: "1vw" }}>Duty</th> 
+                        <th className="sumpTableHeaderCell1Row1"></th>
+                        <th className="sumpTableHeaderCellRow1" >TIME</th>
+                        <th className="sumpTableHeaderCellRow1" >High</th>
+                        <th className="sumpTableHeaderCellRow1" >Low</th>
+                        <th className="sumpTableHeaderCellRow1" >On</th>
+                        <th className="sumpTableHeaderCellRow1" >Off</th>
+                        <th className="sumpTableHeaderCellRow1" >Hours</th>
+                        <th className="sumpTableHeaderCellRow1" >Duty</th> 
                     </tr>
                     <tr className="sumpTableHeaderRow2">
-                        <th className="sumpTableHeaderCell1">MAX</th>
-                        <th className="sumpTableHeaderCell">{columnStats.datetime.max}</th>
-                        <th className="sumpTableHeaderCell">{columnStats.Hadc.max}</th>
-                        <th className="sumpTableHeaderCell">{columnStats.Ladc.max}</th>
-                        <th className="sumpTableHeaderCell">{columnStats.timeOn.max}</th>
-                        <th className="sumpTableHeaderCell">{columnStats.timeOff.max}</th>
-                        <th className="sumpTableHeaderCell">{columnStats.hoursOn.max}</th>
-    		            <th className="sumpTableHeaderCell">{columnStats.duty.max}</th> 
+                        <th className="sumpTableHeaderCell1Row2">MAX</th>
+                        <th className="sumpTableHeaderCellRow2">{columnStats.datetime.max}</th>
+                        <th className="sumpTableHeaderCellRow2">{columnStats.Hadc.max}</th>
+                        <th className="sumpTableHeaderCellRow2">{columnStats.Ladc.max}</th>
+                        <th className="sumpTableHeaderCellRow2">{columnStats.timeOn.max}</th>
+                        <th className="sumpTableHeaderCellRow2">{columnStats.timeOff.max}</th>
+                        <th className="sumpTableHeaderCellRow2">{columnStats.hoursOn.max}</th>
+    		            <th className="sumpTableHeaderCellRow2">{columnStats.duty.max}</th> 
                     </tr>
                     <tr className="sumpTableHeaderRow3">
-                        <th className="sumpTableHeaderCell1">AVG</th>
-                        <th className="sumpTableHeaderCell">{columnStats.datetime.avg}</th>
-                        <th className="sumpTableHeaderCell">{columnStats.Hadc.avg}</th>
-                        <th className="sumpTableHeaderCell">{columnStats.Ladc.avg}</th>
-                        <th className="sumpTableHeaderCell">{columnStats.timeOn.avg}</th>
-                        <th className="sumpTableHeaderCell">{columnStats.timeOff.avg}</th>
-                        <th className="sumpTableHeaderCell">{columnStats.hoursOn.avg}</th>
-    		            <th className="sumpTableHeaderCell">{columnStats.duty.avg}</th> 
+                        <th className="sumpTableHeaderCell1Row3">AVG</th>
+                        <th className="sumpTableHeaderCellRow3">{columnStats.datetime.avg}</th>
+                        <th className="sumpTableHeaderCellRow3">{columnStats.Hadc.avg}</th>
+                        <th className="sumpTableHeaderCellRow3">{columnStats.Ladc.avg}</th>
+                        <th className="sumpTableHeaderCellRow3">{columnStats.timeOn.avg}</th>
+                        <th className="sumpTableHeaderCellRow3">{columnStats.timeOff.avg}</th>
+                        <th className="sumpTableHeaderCellRow3">{columnStats.hoursOn.avg}</th>
+    		            <th className="sumpTableHeaderCellRow3">{columnStats.duty.avg}</th> 
                     </tr>
                     <tr className="sumpTableHeaderRow4">
-                        <th className="sumpTableHeaderCell1">MIN</th>
-                        <th className="sumpTableHeaderCell">{columnStats.datetime.min}</th>
-                        <th className="sumpTableHeaderCell">{columnStats.Hadc.min}</th>
-                        <th className="sumpTableHeaderCell">{columnStats.Ladc.min}</th>
-                        <th className="sumpTableHeaderCell">{columnStats.timeOn.min}</th>
-                        <th className="sumpTableHeaderCell">{columnStats.timeOff.min}</th>
-                        <th className="sumpTableHeaderCell">{columnStats.hoursOn.min}</th>
-    		            <th className="sumpTableHeaderCell">{columnStats.duty.min}</th>  
+                        <th className="sumpTableHeaderCell1Row4">MIN</th>
+                        <th className="sumpTableHeaderCellRow4">{columnStats.datetime.min}</th>
+                        <th className="sumpTableHeaderCellRow4">{columnStats.Hadc.min}</th>
+                        <th className="sumpTableHeaderCellRow4">{columnStats.Ladc.min}</th>
+                        <th className="sumpTableHeaderCellRow4">{columnStats.timeOn.min}</th>
+                        <th className="sumpTableHeaderCellRow4">{columnStats.timeOff.min}</th>
+                        <th className="sumpTableHeaderCellRow4">{columnStats.hoursOn.min}</th>
+    		            <th className="sumpTableHeaderCellRow4">{columnStats.duty.min}</th>  
                     </tr>
                 </thead>
                 <tbody className="sumpTableBody">
