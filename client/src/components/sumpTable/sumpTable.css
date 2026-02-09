@@ -42,7 +42,7 @@
   font-size: var(--sumpTable__data-font);
 }
 
-.sumpTableCell, .sumpTableHeaderCell {
+.sumpTableCell, [class^="sumpTableHeaderCell"] {
   display: table-cell;
   letter-spacing: 1px;
   padding: 0px;
