@@ -99,8 +99,11 @@
   width: auto;
 }
 
-.sumpTableCell1{
+.sumpTableCell1 {
   width: min-content;
+}
+.sumTableCell2 {
+  width: 11vw;
 }
 .sumpTablePlaceholder{
   height: var(--sumpTable__header-height);
