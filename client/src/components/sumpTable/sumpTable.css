@@ -20,7 +20,16 @@
   background-color: var(--menu-background);
   color: var(--menu-colour);
 }
-
+@container sumpContainer (max-width:844px) {
+  .sumpTable {
+    --sumpTable__header-font: 5cqw;
+    --sumpTable__data-font: 4cqw;
+    --sumpTable__header-smallFont: 3cqw;
+    --sumpTable__header-height: 16vw;
+    --sumpTable__headerRow-height: 6vw; 
+  }
+  
+}
 .sumpTableHeader { 
   top: var(--controlBar-height);
   z-index: 10;
@@ -28,16 +37,12 @@
   height: var(--sumpTable__header-height);
 }
 
-.sumpTableHeaderCell1{
-  font-size: 1vw;
+.sumpTableCell {
+  font-family: monospace;
+  font-size: var(--sumpTable__data-font);
 }
 
 .sumpTableCell {
-  font-family: monospace;
-  font-size: 2vw;
-}
-
-.sumpTableCell, .sumpTableHeaderCell {
   display: table-cell;
   letter-spacing: 1px;
   padding: 0px;
@@ -48,37 +53,38 @@
   overflow-wrap: anywhere;
 }
  
-[class^="sumpTableHeaderCell1Row"] {
-  border-radius: 0;
-  text-transform: uppercase;
-  background-color: var(--sumpTable__header-backgroundColour);
-  color: var(--sumpTable__header-colour);
-  font-size: 2vw;
-}
-
 .sumpTableRow:nth-child(odd) {
-  background-color: oklch(from var(--menu-background) clamp(0, l + 0.2, 1) c h); 
+  background-color: var(--sumpTable__header-backgroundColour); 
 }
 
-[class^="sumpTableHeaderCellRow"], [class^="sumpTableHeaderCell1Row"] {
+
+[class^="sumpTableHeaderCellRow"], [class^="sumpTableHeaderCell1Row"], [class^="sumpTableHeaderCell2Row"] {
   position: sticky;
   z-index: 10;
   height: var(--sumpTable__headerRow-height);
   font-size: var(--sumpTable__header-font);
-  background-color: oklch(from var(--menu-background) clamp(0, l + 0.2, 1) c h);
-  color: oklch(from var(--menu-colour) clamp(0, l + 0.2, 1) c h);
+  background-color: var(--sumpTable__header-backgroundColour);
+  color: var(--sumpTable__header-colour);
 }
-.sumpTableHeaderCellRow1, .sumpTableHeaderCell1Row1 {
+
+[class^="sumpTableHeaderCell1Row"] {
+  border-radius: 0;
+  text-transform: uppercase;
   font-size: var(--sumpTable__header-smallFont);
+}
+.sumpTableHeaderCellRow1, .sumpTableHeaderCell1Row1, .sumpTableHeaderCell2Row1 {
   top: var(--controlBar-height);
 }
-.sumpTableHeaderCellRow2, .sumpTableHeaderCell1Row2 {
+.sumpTableHeaderCell1Row1 {
+  font-size: var(--sumpTable__header-smallFont);
+} 
+.sumpTableHeaderCellRow2, .sumpTableHeaderCell1Row2, .sumpTableHeaderCell2Row2  {
   top: calc( var(--sumpTable__headerRow-height) + var(--controlBar-height));
 }
-.sumpTableHeaderCellRow3, .sumpTableHeaderCell1Row3 {
+.sumpTableHeaderCellRow3, .sumpTableHeaderCell1Row3, .sumpTableHeaderCell2Row3  {
   top: calc( 2 * var(--sumpTable__headerRow-height) + var(--controlBar-height));
 }
-.sumpTableHeaderCellRow4, .sumpTableHeaderCell1Row4 {
+.sumpTableHeaderCellRow4, .sumpTableHeaderCell1Row4, .sumpTableHeaderCell2Row4  {
   top: calc( 3 * var(--sumpTable__headerRow-height) + var(--controlBar-height));
 }
 
@@ -99,9 +105,23 @@
   width: auto;
 }
 
-.sumpTableCell1{
+.sumpTableCell1, [class^="sumpTableHeaderCell1Row"] {
+  font-size: var(--sumpTable__header-smallFont);
   width: min-content;
+  
+}
+ .sumpTableHeaderCell2Row1, .sumpTableHeaderCellRow1 {
+  font-size: var(--sumpTable__header-smallFont);
+ }
+
+.sumpTableCell2{
+  font-size: var(--sumpTable__data-font);
+}
+.sumpTableCell2, [class^="sumpTableHeaderCell2Row"] {
+  width: 5vw;
 }
 .sumpTablePlaceholder{
   height: var(--sumpTable__header-height);
 }
+
+

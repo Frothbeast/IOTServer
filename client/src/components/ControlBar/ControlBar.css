@@ -37,7 +37,7 @@
   left:50%;
   right:30%;
   bottom: 25%;
-  object-fit: cover;
+  object-fit:cover;
   font-size: 2cqw;
   text-align: center;
 }
@@ -55,6 +55,7 @@
   bottom: 25%;
   object-fit: cover;
   font-size: 2cqw;
+  text-align: center;
 }
 
 .lastRun{
