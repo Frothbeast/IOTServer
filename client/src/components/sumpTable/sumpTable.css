@@ -110,10 +110,14 @@
   width: min-content;
   
 }
+ .sumpTableHeaderCell2Row1, .sumpTableHeaderCellRow1 {
+  font-size: var(--sumpTable__header-smallFont);
+ }
+
 .sumpTableCell2{
   font-size: var(--sumpTable__data-font);
 }
-.sumpTableCell2,[class^="sumpTableHeaderCell2Row"] {
+.sumpTableCell2, [class^="sumpTableHeaderCell2Row"] {
   width: 5vw;
 }
 .sumpTablePlaceholder{
