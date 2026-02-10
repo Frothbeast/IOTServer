@@ -12,7 +12,7 @@ Global Fonts: @import or font-family declarations for the whole app.
 */
 :root {
   /* Colors */
-  --main-background: oklch(96% 0.005 250);
+  --main-background: oklch(87.681% 0.09796 178.583);
   --main-colour: oklch(35% 0.02 250);
 
   --menu-colour: var(--main-colour);
