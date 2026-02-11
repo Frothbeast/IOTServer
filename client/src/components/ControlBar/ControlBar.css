@@ -64,7 +64,7 @@
   display: block;
 }
 
-.miniChartContainer canvas {
+.chartContainer canvas {
   width: 100% !important;
   height: 100% !important;
 }
@@ -74,7 +74,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 3cqw;
+  font-size: 1cqw;
 }
 
 .chart-watermark {

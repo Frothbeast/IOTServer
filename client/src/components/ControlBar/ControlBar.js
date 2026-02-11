@@ -48,7 +48,7 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
           </div>
       </div>
       <div className="chartSection">
-        <div className="chartContainer1">
+        <div className="chartContainer">
           <div className="chart-watermark">ADC</div>
           <SumpChart
             labels={sumpRecords.map((_, i) => i)}
@@ -67,7 +67,7 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
             options={getOptions(400, 1024)}
           />
         </div>
-        <div className="chartContainer2">
+        <div className="chartContainer">
           <div className="chart-watermark">TIME</div>
           <SumpChart
             labels={sumpRecords.map((_, i) => i)}
@@ -86,7 +86,7 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
             options={getOptions(0, 1000)}
           />
         </div>
-        <div className="chartContainer3">
+        <div className="chartContainer">
           <div className="chart-watermark">DUTY</div>
           <SumpChart
             labels={sumpRecords.map((_, i) => i)}
@@ -100,7 +100,7 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
             options={getOptions(0, 100)}
           />
         </div>
-        <div className="chartContainer4">
+        <div className="chartContainer">
           <div className="chart-watermark">PERIOD</div>
           <SumpChart
             labels={sumpRecords.map((_, i) => i)}
