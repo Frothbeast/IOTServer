@@ -48,7 +48,6 @@
   text-align: center;
   cursor: pointer;
   transition: background 0.2s;
-  flex-basis: 50%;
 }
 
 .chartSection {
