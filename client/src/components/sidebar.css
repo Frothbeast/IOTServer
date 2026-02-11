@@ -1,6 +1,6 @@
 .sidebar {
   right: 100%; 
-  top: 0;
+  top: var(--controlBar-height);
   width: 100%;
   height: 100%;
   background-color: var(--menu-background);
@@ -41,6 +41,7 @@
 
 @container sidebarArea (max-width: 600px) {
   .sidebar [class^="chartContainer"] {
-    flex-basis: 100%
+    flex-basis: 100%;
+    height: 25%;
   }
 }
