@@ -55,12 +55,12 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
             datasets={[
               {
                 label: "Ladc",
-                color: "pink",
+                color: "lightblue",
                 data: sumpRecords.map(r => r.payload?.Ladc),
               },
               {
                 label: "Hadc",
-                color: "green",
+                color: "lightgreen",
                 data: sumpRecords.map(r => r.payload?.Hadc),
               }
             ]}
@@ -74,16 +74,16 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
             datasets={[
               {
                 label: "timeOn",
-                color: "yellow",
+                color: "pink",
                 data: sumpRecords.map(r => r.payload?.timeOn),
               },
               {
                 label: "timeOff",
-                color: "red",
+                color: "yellow",
                 data: sumpRecords.map(r => r.payload?.timeOff),
               }
             ]}
-            options={getOptions(0, 1000)}
+            options={getOptions(0, 3500)}
           />
         </div>
         <div className="chartContainer">
@@ -93,11 +93,11 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
             datasets={[
               {
                 label: "duty",
-                color: "green",
+                color: "purple",
                 data: sumpRecords.map(r => r.payload?.duty)
               }
             ]}
-            options={getOptions(0, 100)}
+            options={getOptions(-1, 99)}
           />
         </div>
         <div className="chartContainer">
@@ -105,7 +105,7 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
           <SumpChart
             labels={sumpRecords.map((_, i) => i)}
             datasets={[{
-              label: "period",color: "red",
+              label: "period",color: "cyan",
               data: sumpRecords.slice(1).map((r, i) => {
                 const current = new Date(r.payload?.datetime).getTime();
                 const previous = new Date(sumpRecords[i].payload?.datetime).getTime();
