@@ -54,7 +54,7 @@ const Sidebar = ({ isOpen, sumpRecords }) => {
         <div className="chartContainer">
           <SumpChart 
             labels={sumpRecords.map((_, i) => i)}
-            datasets={[{ label: "Duty Cycle", color: "purple", data: sumpRecords.map(r => r.payload?.duty) }]}
+            datasets={[{ label: "Duty Cycle", color: "lavender", data: sumpRecords.map(r => r.payload?.duty) }]}
             options={sidebarChartOptions} 
           />
         </div>
