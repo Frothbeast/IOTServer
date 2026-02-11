@@ -35,17 +35,17 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
     <header className="controlBar">
       <div className="brand">Sump</div>
       <div className="centerSection">
-        <select className="selectedHours" value={selectedHours} onChange={(e) => onHoursChange(Number(e.target.value))}>
-          <option value={1}>Hour</option>
-          <option value={24}>Day</option>
-          <option value={168}>Week</option>
-        </select>
-        <div className="buttonRow">
-            <div className="lastRun">Last Run: {columnStats?.lastDatetime ?? "N/a"}</div>
+        <div className="lastRun">Last Run: {columnStats?.lastDatetime ?? "N/a"}</div>
+          <div className="buttonRow">
             <button className="sidebarButton" onClick={toggleSidebar}>
-                {isSidebarOpen ? "Close Chart" : "View Graph"}
+              {isSidebarOpen ? "Close Chart" : "View Graph"}
             </button>
-        </div>
+            <select className="selectedHours" value={selectedHours} onChange={(e) => onHoursChange(Number(e.target.value))}>
+              <option value={1}>Hour</option>
+              <option value={24}>Day</option>
+              <option value={168}>Week</option>
+            </select>
+          </div>
       </div>
       <div className="chartSection">
         <div className="chartContainer1">
