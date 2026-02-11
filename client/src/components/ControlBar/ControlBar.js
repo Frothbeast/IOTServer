@@ -1,4 +1,4 @@
-import SumpChart from '../sumpChart';
+import SumpChart from '../sumpTable/sumpChart';
 import './ControlBar.css';
 
 const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, toggleSidebar, isSidebarOpen }) => {
