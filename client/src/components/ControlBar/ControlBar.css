@@ -12,7 +12,7 @@
 }
 
 .brand {
-  flex: 0 0 auto
+  flex: 0 0 auto;
   object-fit: cover;
   z-index: -1;
   font-size: 8cqw;
