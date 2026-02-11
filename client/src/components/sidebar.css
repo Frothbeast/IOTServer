@@ -8,7 +8,7 @@
   transition: right 0.3s ease;
   padding: 20px;
   z-index: 200;
-  position: relative;
+  position: fixed;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
