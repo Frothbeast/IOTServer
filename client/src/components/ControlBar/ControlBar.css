@@ -69,7 +69,7 @@
   align-items: stretch;
 }
 .chartContainer {
-  flex: 1;
+  flex-basis: 50%;
   position: relative;
   box-sizing: border-box;
   height: 50%;
