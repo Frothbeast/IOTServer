@@ -49,7 +49,7 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
       </div>
       <div className="chartSection">
         <div className="chartContainer">
-          <div className="chart-watermark">ADC</div>
+          <div className="chartWatermark">ADC</div>
           <SumpChart
             labels={sumpRecords.map((_, i) => i)}
             datasets={[
@@ -68,7 +68,7 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
           />
         </div>
         <div className="chartContainer">
-          <div className="chart-watermark">TIME</div>
+          <div className="chartWatermark">TIME</div>
           <SumpChart
             labels={sumpRecords.map((_, i) => i)}
             datasets={[
@@ -87,7 +87,7 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
           />
         </div>
         <div className="chartContainer">
-          <div className="chart-watermark">DUTY</div>
+          <div className="chartWatermark">DUTY</div>
           <SumpChart
             labels={sumpRecords.map((_, i) => i)}
             datasets={[
@@ -101,7 +101,7 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
           />
         </div>
         <div className="chartContainer">
-          <div className="chart-watermark">PERIOD</div>
+          <div className="chartWatermark">PERIOD</div>
           <SumpChart
             labels={sumpRecords.map((_, i) => i)}
             datasets={[{
