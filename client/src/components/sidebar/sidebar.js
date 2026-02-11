@@ -1,5 +1,5 @@
 import React from 'react';
-import SumpChart from './sumpTable/sumpChart';
+import SumpChart from '../sumpTable/sumpChart';
 import './sidebar.css'; 
 
 const Sidebar = ({ isOpen, sumpRecords }) => {
