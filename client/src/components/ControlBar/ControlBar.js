@@ -93,7 +93,7 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
             datasets={[
               {
                 label: "duty",
-                color: "purple",
+                color: "lightpurple",
                 data: sumpRecords.map(r => r.payload?.duty)
               }
             ]}
