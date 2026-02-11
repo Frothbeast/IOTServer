@@ -35,7 +35,7 @@ const Sidebar = ({ isOpen, sumpRecords }) => {
   return (
     <div className={`sidebar ${isOpen ? 'open' : ''}`}>
       <div className="sidebar-content">
-        <div className="chartContainer1">
+        <div className="chartContainer">
           <SumpChart 
             labels={sumpRecords.map((_, i) => i)}
             datasets={[{ label: "Low ADC Value", color: "lightblue", data: sumpRecords.map(r => r.payload?.Ladc) },
@@ -43,7 +43,7 @@ const Sidebar = ({ isOpen, sumpRecords }) => {
             options={sidebarChartOptions}           
           />
         </div>
-        <div className="chartContainer2">
+        <div className="chartContainer">
           <SumpChart 
             labels={sumpRecords.map((_, i) => i)}
             datasets={[{ label: "Pump On time(s)", color: "pink", data: sumpRecords.map(r => r.payload?.timeOn) },
@@ -51,14 +51,14 @@ const Sidebar = ({ isOpen, sumpRecords }) => {
             options={sidebarChartOptions}
           />
         </div>
-        <div className="chartContainer3">
+        <div className="chartContainer">
           <SumpChart 
             labels={sumpRecords.map((_, i) => i)}
             datasets={[{ label: "Duty Cycle", color: "purple", data: sumpRecords.map(r => r.payload?.duty) }]}
             options={sidebarChartOptions} 
           />
         </div>
-        <div className="chartContainer4">
+        <div className="chartContainer">
           <SumpChart
             labels={sumpRecords.map((_, i) => i)}
             datasets={[{

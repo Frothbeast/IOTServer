@@ -1,5 +1,4 @@
 .sidebar {
-  position: fixed;
   right: 100%; 
   top: 0;
   width: 100%;
@@ -9,6 +8,14 @@
   transition: right 0.3s ease;
   padding: 20px;
   z-index: 200;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
 }
 
 .sidebar.open {
@@ -23,68 +30,17 @@
 }
 
 .sidebar [class^="chartContainer"] {
-  position: absolute;
-  object-fit: cover;
+  flex-basis: 50%;
+  position: relative;
+  box-sizing: border-box;
+  height: 50%;
   border: 1px solid rgb(120, 121, 120);
   border-radius: 1px;
   margin: 5px;
 }
 
-/* Specific positioning */
-.sidebar-content .chartContainer1 {
-  top: 10vw;
-  left: 0;
-  right: 50%;
-  bottom: calc(50% - 5vw);
-}
-
-.sidebar-content .chartContainer2 {
-  top: 10vw;
-  left: 50%;
-  right: 0;
-  bottom: calc(50% - 5vw);
-}
-
-.sidebar-content .chartContainer3 {
-  top: calc(50% + 5vw);
-  left: 0%;
-  right: 50%;
-  bottom: 0;
-}
-
-.sidebar-content .chartContainer4 {
-  top: calc(50% + 5vw); 
-  left: 50%;
-  right: 0;
-  bottom: 0;
-}
-
 @container sidebarArea (max-width: 600px) {
-  .sidebar-content .chartContainer1 {
-    top: calc(0.1% + 10vw);
-    left: 0;
-    right: 0;
-    bottom: calc(75.1% - 7.5vw);
-  }
-
-  .sidebar-content .chartContainer2 {
-    top: calc(25.1% + 7.5vw);
-    left: 0;
-    right: 0;
-    bottom: calc(50.1% -5vw);
-  }
-
-  .sidebar-content .chartContainer3 {
-    top: calc(50.1% + 5vw);
-    left: 0%;
-    right: 0;
-    bottom: calc(25.1% -2.5vw);
-  }
-
-  .sidebar-content .chartContainer4 {
-    top: calc(75.1% + 2.5vw); 
-    left: 0;
-    right: 0;
-    bottom: 0;
+  .sidebar [class^="chartContainer"] {
+    flex-basis: 100%
   }
 }
