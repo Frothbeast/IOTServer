@@ -26,14 +26,14 @@
   flex-direction: column;
 }
 
-.lastRun {
+.lastRun{
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2cqw;
-  border-bottom: 1px solid var(--menu-colour);
+  font-size: 1cqw;
 }
+
 .buttonRow {
   flex: 1;
   display: flex;
@@ -52,29 +52,23 @@
 }
 
 .chartSection {
-  flex: 0 0 50%; /* Quadrant width */
-  height: 50%;   /* Quadrant height */
   position: relative;
   margin: 0;
-  padding: 0;    /* No padding for reference look */
-  border-left: 1px solid var(--menu-colour);
-  border-bottom: 1px solid var(--menu-colour);
+  padding: 0;
   box-sizing: border-box;
   overflow: hidden;
-  display: block;
+  display: flex;
+  flex-wrap: wrap;
+  flex-basis: 30%;
 }
-
+.chartContainer {
+  flex: 0 0 50%;
+  box-sizing: border-box;
+  height: 50%;
+}
 .chartContainer canvas {
   width: 100% !important;
   height: 100% !important;
-}
-
-.lastRun{
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1cqw;
 }
 
 .chart-watermark {
