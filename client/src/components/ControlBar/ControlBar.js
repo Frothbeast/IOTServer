@@ -66,6 +66,7 @@ const ControlBar = ({ selectedHours, onHoursChange, columnStats, sumpRecords, to
             ]}
             options={getOptions(400, 1024)}
           />
+        </div>
         <div className="chartContainer2">
           <div className="chart-watermark">TIME</div>
           <SumpChart
