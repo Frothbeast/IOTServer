@@ -8,17 +8,6 @@
   background: rgba(44, 62, 80, 0.541);
 }
 
-.tableWrapper { 
-  margin-top: 0; 
-  position: relative;
-}
-.statsSummary {
-  display: flex;
-  gap: 20px;
-  padding: 10px;
-  background: #f8f9fa;
-}
-
 .brand {
   position: absolute;
   top: 0;
@@ -30,16 +19,17 @@
   font-size: 8cqw;
   text-align: center;
 }
-
-.selectedHours {
-  position: absolute;
-  top:50%;
-  left:50%;
-  right:30%;
-  bottom: 25%;
-  object-fit:cover;
+.lastRun {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 2cqw;
-  text-align: center;
+  border-bottom: 1px solid var(--menu-colour);
+}
+.buttonRow {
+  flex: 1;
+  display: flex;
 }
 
 .selectedHours :hover{
@@ -47,66 +37,45 @@
   color: chartreuse;
 }
 
-.sidebarButton {
-  position: absolute;
-  top:50%;
-  left:30%;
-  right:50%;
-  bottom: 25%;
-  object-fit: cover;
+.sidebarButton .selectedHours {
+  flex: 1;
+  display: flex;
+  align-items: center;
   font-size: 2cqw;
   text-align: center;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.miniChartContainer {
+  flex: 0 0 50%; /* Quadrant width */
+  height: 50%;   /* Quadrant height */
+  position: relative;
+  margin: 0;
+  padding: 0;    /* No padding for reference look */
+  border-left: 1px solid var(--menu-colour);
+  border-bottom: 1px solid var(--menu-colour);
+  box-sizing: border-box;
+  overflow: hidden;
+  display: block;
+}
+
+.miniChartContainer canvas {
+  width: 100% !important;
+  height: 100% !important;
 }
 
 .lastRun{
-  position: absolute;
-  top:0;
-  left:30%;
-  right:30%;
-  bottom: 50%;
-  object-fit: cover;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 3cqw;
 }
 
-.controlBar [class^="chartContainer"] {
-  position: absolute;
-  object-fit: cover;
-  border: 1px solid rgb(120, 121, 120);
-  border-radius: 1px;
-  padding: 0;
-  margin: 1px;
-}
-
-.controlBar .chartContainer1{
-  top:0%;
-  left:70%;
-  right:15%;
-  bottom: 50%;
-}
-.controlBar .chartContainer2{
-  top:0%;
-  left:85%;
-  right:0%;
-  bottom: 50%;
-}
-.controlBar .chartContainer3{
-  top:50%;
-  left:70%;
-  right: 15%;
-  bottom: 0;
-}
-.controlBar .chartContainer4{
-  top:50%; 
-  left:85%;
-  right:0%;
-  bottom: 0%;
-}
 .chart-watermark {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
