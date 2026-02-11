@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { useSumpData } from './hooks/useSumpData';
 import SumpTable from './components/sumpTable/sumpTable';
 import ControlBar from './components/ControlBar/ControlBar';
-import Sidebar from './components/sidebar';
+import Sidebar from './components/sidebar/sidebar';
 import { calculateColumnStats } from './utils/sumpStats'; // Import logic
 import './App.css';
 
