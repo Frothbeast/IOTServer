@@ -19,7 +19,7 @@ app = Flask(__name__, static_folder='../client/build', static_url_path='/')
 
 CORS(app)
 location = os.getenv('LOCATION')
-
+print(f"Current location environment variable: {location}", flush=True)
 db_config = {
     'host': os.getenv('DB_HOST'),
     'user': os.getenv('DB_USER'),
