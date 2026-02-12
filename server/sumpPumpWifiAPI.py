@@ -14,7 +14,7 @@ import urllib3
 import subprocess
 import sys
 
-
+lastRunTime = datetime.now()
 load_dotenv()
 app = Flask(__name__, static_folder='../client/build', static_url_path='/')
 
@@ -39,22 +39,25 @@ def serve(path):
 
 @app.route('/api/sumpData', methods=['GET'])
 def get_sump_data():
-   
+
     if location == 'work':
-        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-        url = "https://api.cl1p.net/frothbeast"
-        try:
-            result = subprocess.run(["curl", "-k", "-L", url], capture_output=True, text=True)
-            if result.returncode == 0:
-                data = result.stdout
-                sys.stderr.write(f"DEBUG: Data retrieved successfully from cl1p: {data}\n")
+        now = datetime.now()
+        if lastRunTime is None or now >= lastRunTime + timedelta(hours=2)):
+            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+            url = "https://api.cl1p.net/frothbeast"
+            try:
+                result = subprocess.run(["curl", "-k", "-L", url], capture_output=True, text=True)
+                if result.returncode == 0:
+                    data = result.stdout
+                    sys.stderr.write(f"DEBUG: Data retrieved successfully from cl1p: {data}\n")
+                    sys.stderr.flush()
+                else:
+                    sys.stderr.write(f"DEBUG: Failed to retrieve data via curl. Error: {result.stderr}\n")
+                    sys.stderr.flush()
+            except Exception as e:
+                sys.stderr.write(f"DEBUG: An error occurred: {e}\n")
                 sys.stderr.flush()
-            else:
-                sys.stderr.write(f"DEBUG: Failed to retrieve data via curl. Error: {result.stderr}\n")
-                sys.stderr.flush()
-        except Exception as e:
-            sys.stderr.write(f"DEBUG: An error occurred: {e}\n")
-            sys.stderr.flush()
+
 
     try:
         hours = request.args.get('hours', default=24, type=int)
