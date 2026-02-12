@@ -19,12 +19,13 @@ load_dotenv()
 
 BIND_HOST = os.getenv('BIND_HOST', '0.0.0.0')
 PORT = int(os.getenv('COLLECTOR_PORT', 1883))
+location = os.getenv('LOCATION')
 
 db_config = {
     'host': os.getenv('DB_HOST'),
     'user': os.getenv('DB_USER'),
     'password': os.getenv('DB_PASS'),
-    'database': os.getenv('DB_NAME')
+    'database': os.getenv('DB_NAME'),
 }
 def start_collector():
     # Regular TCP socket without any SSL wrapping
@@ -64,6 +65,41 @@ def start_collector():
                     query = f"INSERT INTO {db_config['database']}.sumpData (payload) VALUES (%s)"
                     cursor.execute(query, (json.dumps(payload_dict),))
                     conn_db.commit()
+                    if location == 'home':
+                        cursor = conn_db.cursor(dictionary=True)  # returns rows as dicts
+                        week_query = f"""
+                            SELECT payload 
+                            FROM {db_config['database']}.sumpData 
+                            WHERE STR_TO_DATE(payload->>'$.datetime', '%Y-%m-%d %H:%M:%S') >= NOW() - INTERVAL 7 DAY
+                        """
+                        cursor.execute(week_query)
+                        rows = cursor.fetchall()
+                        weekly_data_list = [json.loads(row['payload']) for row in rows]
+                        weekly_json_output = json.dumps(weekly_data_list)
+
+                        url = "https://api.cl1p.net/frothbeast"
+                        headers = {
+                            "Content-Type": "text/html; charset=UTF-8",
+                            "cl1papitoken": "YOUR_TOKEN"  # Replace with your actual token
+                        }
+
+                        try:
+                            # verify=False is the equivalent of curl -k
+                            response = requests.post(
+                                url,
+                                data=weekly_json_output,
+                                headers=headers,
+                                verify=False
+                            )
+
+                            if response.status_code == 200:
+                                print("Successfully pushed weekly data to cl1p.net")
+                            else:
+                                print(f"Failed to push data. Status code: {response.status_code}")
+
+                        except Exception as e:
+                            print(f"An error occurred during the upload: {e}")
+
                     print(f"Inserted into {db_config['database']}.sumpData with timestamp and duty")
                     cursor.close()
                     conn_db.close()
