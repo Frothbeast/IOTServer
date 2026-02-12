@@ -11,6 +11,8 @@ from dotenv import load_dotenv
 from flask_cors import CORS
 import requests
 import urllib3
+import subprocess
+
 
 load_dotenv()
 app = Flask(__name__, static_folder='../client/build', static_url_path='/')
@@ -35,17 +37,19 @@ def serve(path):
 
 @app.route('/api/sumpData', methods=['GET'])
 def get_sump_data():
+    location = os.getenv('location')
+
     if location == 'work':
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
         url = "https://api.cl1p.net/frothbeast"
         try:
-            response = requests.get(url, verify=False)
-            if response.status_code == 200:
-                data = response.text
+            result = subprocess.run(["curl", "-k", "-L", url], capture_output=True, text=True)
+            if result.returncode == 0:
+                data = result.stdout
                 print("Data retrieved successfully:")
                 print(data)
             else:
-                print(f"Failed to retrieve data. Status: {response.status_code}")
+                print(f"Failed to retrieve data via curl. Error: {result.stderr}")
 
         except Exception as e:
             print(f"An error occurred: {e}")
