@@ -67,6 +67,7 @@
   flex-wrap: wrap;
   flex-basis: 30%;
   align-items: stretch;
+  height: 100%;
 }
 .chartContainer {
   flex-basis: 50%;
