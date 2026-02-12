@@ -12,6 +12,7 @@ from flask_cors import CORS
 import requests
 import urllib3
 import subprocess
+import sys
 
 
 load_dotenv()
@@ -19,7 +20,8 @@ app = Flask(__name__, static_folder='../client/build', static_url_path='/')
 
 CORS(app)
 location = os.getenv('LOCATION')
-print(f"Current location environment variable: {location}", flush=True)
+sys.stderr.write(f"DEBUG: Current location environment variable: {location}\n")
+sys.stderr.flush()
 db_config = {
     'host': os.getenv('DB_HOST'),
     'user': os.getenv('DB_USER'),
@@ -46,13 +48,14 @@ def get_sump_data():
             result = subprocess.run(["curl", "-k", "-L", url], capture_output=True, text=True)
             if result.returncode == 0:
                 data = result.stdout
-                print("Data retrieved successfully:", flush=True)
-                print(data, flush=True)
+                sys.stderr.write(f"DEBUG: Data retrieved successfully from cl1p: {data}\n")
+                sys.stderr.flush()
             else:
-                print(f"Failed to retrieve data via curl. Error: {result.stderr}", flush=True)
-
+                sys.stderr.write(f"DEBUG: Failed to retrieve data via curl. Error: {result.stderr}\n")
+                sys.stderr.flush()
         except Exception as e:
-            print(f"An error occurred: {e}", flush=True)
+            sys.stderr.write(f"DEBUG: An error occurred: {e}\n")
+            sys.stderr.flush()
 
     try:
         hours = request.args.get('hours', default=24, type=int)
@@ -83,7 +86,8 @@ def get_sump_data():
                 
         return jsonify(rows)
     except Exception as e:
-        print(f"Error: {e}", flush=True)
+        sys.stderr.write(f"DEBUG: An error occurred: {e}\n")
+        sys.stderr.flush()
         return jsonify({"error": str(e)}), 500
 
 @app.route('/api/data', methods=['GET', 'POST'])
@@ -101,7 +105,8 @@ def handle_data():
 
             return jsonify({"status": "success"}), 200
         except Exception as e:
-            print(f"Error: {e}", flush=True)
+            sys.stderr.write(f"DEBUG: An error occurred: {e}\n")
+            sys.stderr.flush()
             return jsonify({"status": "error", "message": str(e)}), 500
 
     try:
@@ -117,7 +122,8 @@ def handle_data():
                 row['payload'] = json.loads(row['payload'])
         return jsonify(rows)
     except Exception as e:
-        print(f"Error: {e}", flush=True)
+        sys.stderr.write(f"DEBUG: An error occurred: {e}\n")
+        sys.stderr.flush()
         return jsonify({"error": str(e)}), 500
 
 
