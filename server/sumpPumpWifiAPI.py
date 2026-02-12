@@ -42,7 +42,7 @@ def get_sump_data():
 
     if location == 'work':
         now = datetime.now()
-        if lastRunTime is None or now >= lastRunTime + timedelta(hours=2)):
+        if lastRunTime is None or now >= lastRunTime + timedelta(hours=2):
             urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
             url = "https://api.cl1p.net/frothbeast"
             try:
