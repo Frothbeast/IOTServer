@@ -39,8 +39,7 @@ def serve(path):
 
 @app.route('/api/sumpData', methods=['GET'])
 def get_sump_data():
-    location = os.getenv('location')
-
+   
     if location == 'work':
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
         url = "https://api.cl1p.net/frothbeast"
