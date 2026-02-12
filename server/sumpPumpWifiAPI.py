@@ -46,13 +46,13 @@ def get_sump_data():
             result = subprocess.run(["curl", "-k", "-L", url], capture_output=True, text=True)
             if result.returncode == 0:
                 data = result.stdout
-                print("Data retrieved successfully:")
-                print(data)
+                print("Data retrieved successfully:", flush=True)
+                print(data, flush=True)
             else:
-                print(f"Failed to retrieve data via curl. Error: {result.stderr}")
+                print(f"Failed to retrieve data via curl. Error: {result.stderr}", flush=True)
 
         except Exception as e:
-            print(f"An error occurred: {e}")
+            print(f"An error occurred: {e}", flush=True)
 
     try:
         hours = request.args.get('hours', default=24, type=int)
@@ -83,7 +83,7 @@ def get_sump_data():
                 
         return jsonify(rows)
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"Error: {e}", flush=True)
         return jsonify({"error": str(e)}), 500
 
 @app.route('/api/data', methods=['GET', 'POST'])
@@ -101,7 +101,7 @@ def handle_data():
 
             return jsonify({"status": "success"}), 200
         except Exception as e:
-            print(f"Error: {e}")
+            print(f"Error: {e}", flush=True)
             return jsonify({"status": "error", "message": str(e)}), 500
 
     try:
@@ -117,7 +117,7 @@ def handle_data():
                 row['payload'] = json.loads(row['payload'])
         return jsonify(rows)
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"Error: {e}", flush=True)
         return jsonify({"error": str(e)}), 500
 
 
