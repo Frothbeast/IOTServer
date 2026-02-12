@@ -9,7 +9,7 @@ import mysql.connector
 import time
 import json
 from datetime import datetime
-
+import requests
 # Load environment variables
 cwd = os.getcwd()
 print(f"INFO: Current Working Directory: {cwd}", file=sys.stderr)
